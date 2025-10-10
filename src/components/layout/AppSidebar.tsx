@@ -1,4 +1,4 @@
-import { ChevronDown, Heart, LayoutDashboard, LogOut, User } from "lucide-react";
+import { ChevronDown, Heart, LayoutDashboard, LogOut, User, PartyPopper } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import {
   Sidebar,
@@ -21,6 +21,7 @@ export function AppSidebar() {
   const location = useLocation();
   const [gamosOpen, setGamosOpen] = useState(true);
   const [baptismOpen, setBaptismOpen] = useState(false);
+  const [partyOpen, setPartyOpen] = useState(false);
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -115,6 +116,44 @@ export function AppSidebar() {
                   <SidebarMenuItem>
                     <SidebarMenuButton asChild isActive={isActive("/baptism/add")}>
                       <NavLink to="/baptism/add">
+                        {state === "expanded" && <span>Προσθήκη Πρόσκλησης</span>}
+                      </NavLink>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                </SidebarMenu>
+              </CollapsibleContent>
+            </Collapsible>
+
+            <Collapsible open={partyOpen} onOpenChange={setPartyOpen}>
+              <SidebarMenuItem>
+                <CollapsibleTrigger asChild>
+                  <SidebarMenuButton className="flex items-center justify-between w-full">
+                    <div className="flex items-center gap-2">
+                      <PartyPopper className="w-5 h-5" />
+                      {state === "expanded" && <span>Party</span>}
+                    </div>
+                    {state === "expanded" && (
+                      <ChevronDown
+                        className={`w-4 h-4 transition-transform ${
+                          partyOpen ? "rotate-180" : ""
+                        }`}
+                      />
+                    )}
+                  </SidebarMenuButton>
+                </CollapsibleTrigger>
+              </SidebarMenuItem>
+              <CollapsibleContent>
+                <SidebarMenu className="ml-4">
+                  <SidebarMenuItem>
+                    <SidebarMenuButton asChild isActive={isActive("/party/all")}>
+                      <NavLink to="/party/all">
+                        {state === "expanded" && <span>Όλες οι Προσκλήσεις</span>}
+                      </NavLink>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton asChild isActive={isActive("/party/add")}>
+                      <NavLink to="/party/add">
                         {state === "expanded" && <span>Προσθήκη Πρόσκλησης</span>}
                       </NavLink>
                     </SidebarMenuButton>

@@ -7,6 +7,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/layout/AppSidebar";
 import Dashboard from "./pages/Dashboard";
 import AddWedding from "./pages/AddWedding";
+import AddParty from "./pages/AddParty";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -27,6 +28,8 @@ const App = () => (
                 <Route path="/wedding/all" element={<Dashboard />} />
                 <Route path="/baptism/add" element={<Dashboard />} />
                 <Route path="/baptism/all" element={<Dashboard />} />
+                <Route path="/party/add" element={<AddParty />} />
+                <Route path="/party/all" element={<Dashboard />} />
                 <Route path="/profile" element={<Dashboard />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
