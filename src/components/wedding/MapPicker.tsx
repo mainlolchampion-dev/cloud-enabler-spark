@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
 import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { Map, Satellite } from "lucide-react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -121,22 +122,35 @@ export function MapPicker({
           placeholder="Αναζήτηση τοποθεσίας/ναού..."
         />
 
-        <Tabs value={mapType} onValueChange={setMapType} className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="map">Χάρτης</TabsTrigger>
-            <TabsTrigger value="satellite">Δορυφόρος</TabsTrigger>
-          </TabsList>
-          <TabsContent value={mapType} className="mt-2">
-            <div className="h-80 rounded-lg overflow-hidden border">
-              <MapWithTileSwitch
-                mapType={mapType}
-                position={position}
-                center={center}
-                onPositionChange={onPositionChange}
-              />
-            </div>
-          </TabsContent>
-        </Tabs>
+        <div className="flex gap-2">
+          <Button
+            type="button"
+            variant={mapType === "map" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setMapType("map")}
+          >
+            <Map className="w-4 h-4 mr-2" />
+            Χάρτης
+          </Button>
+          <Button
+            type="button"
+            variant={mapType === "satellite" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setMapType("satellite")}
+          >
+            <Satellite className="w-4 h-4 mr-2" />
+            Δορυφόρος
+          </Button>
+        </div>
+
+        <div className="h-80 rounded-lg overflow-hidden border">
+          <MapWithTileSwitch
+            mapType={mapType}
+            position={position}
+            center={center}
+            onPositionChange={onPositionChange}
+          />
+        </div>
       </div>
     </div>
   );
