@@ -1,4 +1,4 @@
-import { ChevronDown, Heart, LayoutDashboard, LogOut, User, PartyPopper } from "lucide-react";
+import { ChevronDown, Heart, LayoutDashboard, LogOut, User, PartyPopper, Baby } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import {
   Sidebar,
@@ -91,7 +91,7 @@ export function AppSidebar() {
                 <CollapsibleTrigger asChild>
                   <SidebarMenuButton className="flex items-center justify-between w-full">
                     <div className="flex items-center gap-2">
-                      <Heart className="w-5 h-5" />
+                      <Baby className="w-5 h-5" />
                       {state === "expanded" && <span>Βάπτιση</span>}
                     </div>
                     {state === "expanded" && (
