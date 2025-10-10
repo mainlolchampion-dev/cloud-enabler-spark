@@ -82,6 +82,22 @@ export default function AddParty() {
 
   const handlePublish = () => {
     if (!validateData()) return;
+    
+    // Save to invitations list
+    const invitations = JSON.parse(localStorage.getItem("party_invitations") || "[]");
+    const newInvitation = {
+      id: Date.now().toString(),
+      title: data.title,
+      partyDate: data.partyDate,
+      createdAt: new Date().toISOString(),
+      data: data,
+    };
+    invitations.push(newInvitation);
+    localStorage.setItem("party_invitations", JSON.stringify(invitations));
+    
+    // Clear draft
+    localStorage.removeItem(STORAGE_KEY);
+    
     toast.success("Η πρόσκληση δημοσιεύτηκε επιτυχώς!");
   };
 
