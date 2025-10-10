@@ -37,6 +37,40 @@ function LocationMarker({
   return position ? <Marker position={position} /> : null;
 }
 
+function MapWithTileSwitch({
+  mapType,
+  position,
+  center,
+  onPositionChange,
+}: {
+  mapType: string;
+  position: [number, number] | null;
+  center: [number, number];
+  onPositionChange: (position: [number, number]) => void;
+}) {
+  const tileUrl =
+    mapType === "satellite"
+      ? "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+      : "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+
+  const attribution =
+    mapType === "satellite"
+      ? "Tiles &copy; Esri"
+      : '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+
+  return (
+    <MapContainer
+      center={position || center}
+      zoom={position ? 15 : 6}
+      className="h-full w-full"
+      key={position ? position.join(",") : "default"}
+    >
+      <TileLayer key={mapType} url={tileUrl} attribution={attribution} />
+      <LocationMarker position={position} setPosition={onPositionChange} />
+    </MapContainer>
+  );
+}
+
 export function MapPicker({
   label,
   locationName,
@@ -45,6 +79,7 @@ export function MapPicker({
   onPositionChange,
 }: MapPickerProps) {
   const [searchQuery, setSearchQuery] = useState("");
+  const [mapType, setMapType] = useState("map");
   const center: [number, number] = [39.074208, 21.824312]; // Greece center
 
   const handleSearch = async () => {
@@ -86,41 +121,19 @@ export function MapPicker({
           placeholder="Αναζήτηση τοποθεσίας/ναού..."
         />
 
-        <Tabs defaultValue="map" className="w-full">
+        <Tabs value={mapType} onValueChange={setMapType} className="w-full">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="map">Χάρτης</TabsTrigger>
             <TabsTrigger value="satellite">Δορυφόρος</TabsTrigger>
           </TabsList>
-          <TabsContent value="map" className="mt-2">
+          <TabsContent value={mapType} className="mt-2">
             <div className="h-80 rounded-lg overflow-hidden border">
-              <MapContainer
-                center={position || center}
-                zoom={position ? 15 : 6}
-                className="h-full w-full"
-                key={position ? position.join(",") : "default"}
-              >
-                <TileLayer
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                />
-                <LocationMarker position={position} setPosition={onPositionChange} />
-              </MapContainer>
-            </div>
-          </TabsContent>
-          <TabsContent value="satellite" className="mt-2">
-            <div className="h-80 rounded-lg overflow-hidden border">
-              <MapContainer
-                center={position || center}
-                zoom={position ? 15 : 6}
-                className="h-full w-full"
-                key={position ? position.join(",") + "-sat" : "default-sat"}
-              >
-                <TileLayer
-                  url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-                  attribution="Tiles &copy; Esri"
-                />
-                <LocationMarker position={position} setPosition={onPositionChange} />
-              </MapContainer>
+              <MapWithTileSwitch
+                mapType={mapType}
+                position={position}
+                center={center}
+                onPositionChange={onPositionChange}
+              />
             </div>
           </TabsContent>
         </Tabs>
