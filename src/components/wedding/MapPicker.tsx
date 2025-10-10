@@ -1,8 +1,7 @@
-import { useState, useEffect } from "react";
-import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from "react-leaflet";
+import { useState, useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Map, Satellite } from "lucide-react";
+import { Map as MapIcon, Satellite } from "lucide-react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -22,33 +21,6 @@ interface MapPickerProps {
   onPositionChange: (position: [number, number]) => void;
 }
 
-function LocationMarker({
-  position,
-  setPosition,
-}: {
-  position: [number, number] | null;
-  setPosition: (pos: [number, number]) => void;
-}) {
-  useMapEvents({
-    click(e) {
-      setPosition([e.latlng.lat, e.latlng.lng]);
-    },
-  });
-
-  return position ? <Marker position={position} /> : null;
-}
-
-function MapUpdater({ center, zoom }: { center: [number, number]; zoom: number }) {
-  const map = useMap();
-  
-  useEffect(() => {
-    map.setView(center, zoom);
-  }, [center, zoom, map]);
-  
-  return null;
-}
-
-
 export function MapPicker({
   label,
   locationName,
@@ -57,8 +29,90 @@ export function MapPicker({
   onPositionChange,
 }: MapPickerProps) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [mapType, setMapType] = useState("map");
+  const [mapType, setMapType] = useState<"map" | "satellite">("map");
+  const mapRef = useRef<L.Map | null>(null);
+  const markerRef = useRef<L.Marker | null>(null);
+  const mapContainerRef = useRef<HTMLDivElement>(null);
   const center: [number, number] = [39.074208, 21.824312]; // Greece center
+
+  useEffect(() => {
+    if (!mapContainerRef.current || mapRef.current) return;
+
+    // Initialize map
+    const map = L.map(mapContainerRef.current).setView(position || center, position ? 15 : 6);
+    mapRef.current = map;
+
+    // Add tile layer
+    const tileLayer = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    }).addTo(map);
+
+    // Add click event
+    map.on("click", (e: L.LeafletMouseEvent) => {
+      const { lat, lng } = e.latlng;
+      onPositionChange([lat, lng]);
+    });
+
+    // Add initial marker if position exists
+    if (position) {
+      markerRef.current = L.marker(position).addTo(map);
+    }
+
+    return () => {
+      map.remove();
+      mapRef.current = null;
+      markerRef.current = null;
+    };
+  }, []);
+
+  // Update marker when position changes
+  useEffect(() => {
+    if (!mapRef.current) return;
+
+    if (position) {
+      if (markerRef.current) {
+        markerRef.current.setLatLng(position);
+      } else {
+        markerRef.current = L.marker(position).addTo(mapRef.current);
+      }
+      mapRef.current.setView(position, 15);
+    } else if (markerRef.current) {
+      markerRef.current.remove();
+      markerRef.current = null;
+    }
+  }, [position]);
+
+  // Update tile layer when map type changes
+  useEffect(() => {
+    if (!mapRef.current) return;
+
+    // Remove existing tile layers
+    mapRef.current.eachLayer((layer) => {
+      if (layer instanceof L.TileLayer) {
+        layer.remove();
+      }
+    });
+
+    // Add new tile layer based on type
+    if (mapType === "satellite") {
+      L.tileLayer(
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        {
+          attribution: "Tiles &copy; Esri",
+        }
+      ).addTo(mapRef.current);
+    } else {
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      }).addTo(mapRef.current);
+    }
+
+    // Re-add marker on top of new tile layer
+    if (position && markerRef.current) {
+      markerRef.current.remove();
+      markerRef.current = L.marker(position).addTo(mapRef.current);
+    }
+  }, [mapType, position]);
 
   const handleSearch = async () => {
     if (!searchQuery) return;
@@ -106,7 +160,7 @@ export function MapPicker({
             size="sm"
             onClick={() => setMapType("map")}
           >
-            <Map className="w-4 h-4 mr-2" />
+            <MapIcon className="w-4 h-4 mr-2" />
             Χάρτης
           </Button>
           <Button
@@ -120,31 +174,7 @@ export function MapPicker({
           </Button>
         </div>
 
-        <div className="h-80 rounded-lg overflow-hidden border">
-          <MapContainer
-            center={position || center}
-            zoom={position ? 15 : 6}
-            className="h-full w-full"
-          >
-            <TileLayer
-              url={
-                mapType === "satellite"
-                  ? "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-                  : "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              }
-              attribution={
-                mapType === "satellite"
-                  ? "Tiles &copy; Esri"
-                  : '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-              }
-            />
-            <LocationMarker position={position} setPosition={onPositionChange} />
-            <MapUpdater 
-              center={position || center} 
-              zoom={position ? 15 : 6} 
-            />
-          </MapContainer>
-        </div>
+        <div ref={mapContainerRef} className="h-80 rounded-lg overflow-hidden border" />
       </div>
     </div>
   );
