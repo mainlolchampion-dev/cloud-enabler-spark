@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
+import { useState, useEffect } from "react";
+import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from "react-leaflet";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Map, Satellite } from "lucide-react";
@@ -38,39 +38,16 @@ function LocationMarker({
   return position ? <Marker position={position} /> : null;
 }
 
-function MapWithTileSwitch({
-  mapType,
-  position,
-  center,
-  onPositionChange,
-}: {
-  mapType: string;
-  position: [number, number] | null;
-  center: [number, number];
-  onPositionChange: (position: [number, number]) => void;
-}) {
-  const tileUrl =
-    mapType === "satellite"
-      ? "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-      : "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
-
-  const attribution =
-    mapType === "satellite"
-      ? "Tiles &copy; Esri"
-      : '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
-
-  return (
-    <MapContainer
-      center={position || center}
-      zoom={position ? 15 : 6}
-      className="h-full w-full"
-      key={position ? position.join(",") : "default"}
-    >
-      <TileLayer key={mapType} url={tileUrl} attribution={attribution} />
-      <LocationMarker position={position} setPosition={onPositionChange} />
-    </MapContainer>
-  );
+function MapUpdater({ center, zoom }: { center: [number, number]; zoom: number }) {
+  const map = useMap();
+  
+  useEffect(() => {
+    map.setView(center, zoom);
+  }, [center, zoom, map]);
+  
+  return null;
 }
+
 
 export function MapPicker({
   label,
@@ -144,12 +121,29 @@ export function MapPicker({
         </div>
 
         <div className="h-80 rounded-lg overflow-hidden border">
-          <MapWithTileSwitch
-            mapType={mapType}
-            position={position}
-            center={center}
-            onPositionChange={onPositionChange}
-          />
+          <MapContainer
+            center={position || center}
+            zoom={position ? 15 : 6}
+            className="h-full w-full"
+          >
+            <TileLayer
+              url={
+                mapType === "satellite"
+                  ? "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+                  : "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              }
+              attribution={
+                mapType === "satellite"
+                  ? "Tiles &copy; Esri"
+                  : '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+              }
+            />
+            <LocationMarker position={position} setPosition={onPositionChange} />
+            <MapUpdater 
+              center={position || center} 
+              zoom={position ? 15 : 6} 
+            />
+          </MapContainer>
         </div>
       </div>
     </div>
