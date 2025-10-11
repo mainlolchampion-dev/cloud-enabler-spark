@@ -141,8 +141,8 @@ const Home = () => {
 
           <div className="grid md:grid-cols-3 gap-6">
             <Card className="p-6 hover:shadow-xl transition-all hover:-translate-y-1 border-gray-100">
-              <div className="p-4 rounded-2xl bg-gradient-to-br from-pink-100 to-pink-50 w-fit mb-4">
-                <Heart className="h-8 w-8 text-pink-600" />
+              <div className="p-4 rounded-2xl bg-gradient-to-br from-pink-500 to-pink-600 w-fit mb-4">
+                <Heart className="h-8 w-8 text-white" />
               </div>
               <h3 className="text-xl font-bold mb-3">Όμορφα Templates</h3>
               <p className="text-muted-foreground text-sm leading-relaxed">
@@ -151,8 +151,8 @@ const Home = () => {
             </Card>
 
             <Card className="p-6 hover:shadow-xl transition-all hover:-translate-y-1 border-gray-100">
-              <div className="p-4 rounded-2xl bg-gradient-to-br from-green-100 to-green-50 w-fit mb-4">
-                <CheckCircle className="h-8 w-8 text-green-600" />
+              <div className="p-4 rounded-2xl bg-gradient-to-br from-green-500 to-green-600 w-fit mb-4">
+                <CheckCircle className="h-8 w-8 text-white" />
               </div>
               <h3 className="text-xl font-bold mb-3">RSVP Διαχείριση</h3>
               <p className="text-muted-foreground text-sm leading-relaxed">
@@ -161,8 +161,8 @@ const Home = () => {
             </Card>
 
             <Card className="p-6 hover:shadow-xl transition-all hover:-translate-y-1 border-gray-100">
-              <div className="p-4 rounded-2xl bg-gradient-to-br from-purple-100 to-purple-50 w-fit mb-4">
-                <Image className="h-8 w-8 text-purple-600" />
+              <div className="p-4 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 w-fit mb-4">
+                <Image className="h-8 w-8 text-white" />
               </div>
               <h3 className="text-xl font-bold mb-3">Γκαλερί Φωτογραφιών</h3>
               <p className="text-muted-foreground text-sm leading-relaxed">
@@ -171,8 +171,8 @@ const Home = () => {
             </Card>
 
             <Card className="p-6 hover:shadow-xl transition-all hover:-translate-y-1 border-gray-100">
-              <div className="p-4 rounded-2xl bg-gradient-to-br from-blue-100 to-blue-50 w-fit mb-4">
-                <Calendar className="h-8 w-8 text-blue-600" />
+              <div className="p-4 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 w-fit mb-4">
+                <Calendar className="h-8 w-8 text-white" />
               </div>
               <h3 className="text-xl font-bold mb-3">Add to Calendar</h3>
               <p className="text-muted-foreground text-sm leading-relaxed">
@@ -181,8 +181,8 @@ const Home = () => {
             </Card>
 
             <Card className="p-6 hover:shadow-xl transition-all hover:-translate-y-1 border-gray-100">
-              <div className="p-4 rounded-2xl bg-gradient-to-br from-orange-100 to-orange-50 w-fit mb-4">
-                <Share2 className="h-8 w-8 text-orange-600" />
+              <div className="p-4 rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 w-fit mb-4">
+                <Share2 className="h-8 w-8 text-white" />
               </div>
               <h3 className="text-xl font-bold mb-3">Εύκολη Κοινοποίηση</h3>
               <p className="text-muted-foreground text-sm leading-relaxed">
@@ -191,8 +191,8 @@ const Home = () => {
             </Card>
 
             <Card className="p-6 hover:shadow-xl transition-all hover:-translate-y-1 border-gray-100">
-              <div className="p-4 rounded-2xl bg-gradient-to-br from-gray-100 to-gray-50 w-fit mb-4">
-                <Lock className="h-8 w-8 text-gray-600" />
+              <div className="p-4 rounded-2xl bg-gradient-to-br from-gray-600 to-gray-700 w-fit mb-4">
+                <Lock className="h-8 w-8 text-white" />
               </div>
               <h3 className="text-xl font-bold mb-3">Προστασία με Κωδικό</h3>
               <p className="text-muted-foreground text-sm leading-relaxed">
@@ -201,8 +201,8 @@ const Home = () => {
             </Card>
 
             <Card className="p-6 hover:shadow-xl transition-all hover:-translate-y-1 border-gray-100">
-              <div className="p-4 rounded-2xl bg-gradient-to-br from-cyan-100 to-cyan-50 w-fit mb-4">
-                <BarChart3 className="h-8 w-8 text-cyan-600" />
+              <div className="p-4 rounded-2xl bg-gradient-to-br from-teal-500 to-teal-600 w-fit mb-4">
+                <BarChart3 className="h-8 w-8 text-white" />
               </div>
               <h3 className="text-xl font-bold mb-3">Analytics & Stats</h3>
               <p className="text-muted-foreground text-sm leading-relaxed">
@@ -211,8 +211,8 @@ const Home = () => {
             </Card>
 
             <Card className="p-6 hover:shadow-xl transition-all hover:-translate-y-1 border-gray-100">
-              <div className="p-4 rounded-2xl bg-gradient-to-br from-amber-100 to-amber-50 w-fit mb-4">
-                <MessageCircle className="h-8 w-8 text-amber-600" />
+              <div className="p-4 rounded-2xl bg-gradient-to-br from-amber-500 to-amber-600 w-fit mb-4">
+                <MessageCircle className="h-8 w-8 text-white" />
               </div>
               <h3 className="text-xl font-bold mb-3">Λίστα Γάμου</h3>
               <p className="text-muted-foreground text-sm leading-relaxed">
@@ -221,8 +221,8 @@ const Home = () => {
             </Card>
 
             <Card className="p-6 hover:shadow-xl transition-all hover:-translate-y-1 border-gray-100">
-              <div className="p-4 rounded-2xl bg-gradient-to-br from-pink-100 to-pink-50 w-fit mb-4">
-                <Users className="h-8 w-8 text-pink-600" />
+              <div className="p-4 rounded-2xl bg-gradient-to-br from-pink-500 to-pink-600 w-fit mb-4">
+                <Users className="h-8 w-8 text-white" />
               </div>
               <h3 className="text-xl font-bold mb-3">Απεριόριστοι Καλεσμένοι</h3>
               <p className="text-muted-foreground text-sm leading-relaxed">
@@ -231,8 +231,8 @@ const Home = () => {
             </Card>
 
             <Card className="p-6 hover:shadow-xl transition-all hover:-translate-y-1 border-gray-100">
-              <div className="p-4 rounded-2xl bg-gradient-to-br from-purple-100 to-purple-50 w-fit mb-4">
-                <Palette className="h-8 w-8 text-purple-600" />
+              <div className="p-4 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 w-fit mb-4">
+                <Palette className="h-8 w-8 text-white" />
               </div>
               <h3 className="text-xl font-bold mb-3">Προσαρμογή Θεμάτων</h3>
               <p className="text-muted-foreground text-sm leading-relaxed">
