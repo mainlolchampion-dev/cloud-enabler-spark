@@ -7,6 +7,8 @@ import { Calendar, MapPin, Share2, PartyPopper } from "lucide-react";
 import { format } from "date-fns";
 import { el } from "date-fns/locale";
 import { RSVPForm } from "@/components/wedding/RSVPForm";
+import MusicPlayer from "@/components/wedding/MusicPlayer";
+import ConfettiAnimation from "@/components/party/ConfettiAnimation";
 import "leaflet/dist/leaflet.css";
 
 export default function PartyInvitation() {
@@ -65,8 +67,16 @@ export default function PartyInvitation() {
     window.open(`https://www.google.com/maps/dir/?api=1&destination=${position[0]},${position[1]}`, '_blank');
   };
 
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-pink-900 to-orange-900">
+    <>
+      <ConfettiAnimation colors={['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E2']} />
+      <MusicPlayer 
+        youtubeVideoId="zeip_QOwnAw"
+        primaryColor="#BB8FCE"
+        secondaryColor="#85C1E2"
+      />
+      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-pink-900 to-orange-900 relative z-10">
       {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         {data.mainImage && (
@@ -235,6 +245,7 @@ export default function PartyInvitation() {
           </Button>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }

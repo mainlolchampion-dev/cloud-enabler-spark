@@ -7,6 +7,8 @@ import { Calendar, MapPin, Share2, Sparkles } from "lucide-react";
 import { format } from "date-fns";
 import { el } from "date-fns/locale";
 import { RSVPForm } from "@/components/wedding/RSVPForm";
+import MusicPlayer from "@/components/wedding/MusicPlayer";
+import BubbleAnimation from "@/components/baptism/BubbleAnimation";
 import "leaflet/dist/leaflet.css";
 
 export default function BaptismInvitation() {
@@ -66,8 +68,16 @@ export default function BaptismInvitation() {
     window.open(`https://www.google.com/maps/dir/?api=1&destination=${position[0]},${position[1]}`, '_blank');
   };
 
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 via-pink-50 to-yellow-50">
+    <>
+      <BubbleAnimation colors={['#81D4FA', '#4FC3F7', '#29B6F6', '#03A9F4', '#B3E5FC']} />
+      <MusicPlayer 
+        youtubeVideoId="zeip_QOwnAw"
+        primaryColor="#4FC3F7"
+        secondaryColor="#29B6F6"
+      />
+      <div className="min-h-screen bg-gradient-to-b from-blue-50 via-pink-50 to-yellow-50 relative z-10">
       {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         {data.mainImage && (
@@ -329,6 +339,7 @@ export default function BaptismInvitation() {
           </Button>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }

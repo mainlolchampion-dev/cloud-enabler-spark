@@ -7,6 +7,8 @@ import { Calendar, MapPin, Share2, Heart, Phone } from "lucide-react";
 import { format } from "date-fns";
 import { el } from "date-fns/locale";
 import { RSVPForm } from "@/components/wedding/RSVPForm";
+import MusicPlayer from "@/components/wedding/MusicPlayer";
+import FlowerAnimation from "@/components/wedding/FlowerAnimation";
 import "leaflet/dist/leaflet.css";
 
 export default function WeddingInvitation() {
@@ -79,7 +81,14 @@ export default function WeddingInvitation() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-rose-50 via-pink-50 to-white">
+    <>
+      <FlowerAnimation />
+      <MusicPlayer 
+        youtubeVideoId="zeip_QOwnAw"
+        primaryColor="#FF80AB"
+        secondaryColor="#FF5A8C"
+      />
+      <div className="min-h-screen bg-gradient-to-b from-rose-50 via-pink-50 to-white relative z-10">
       {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         {data.mainImage && (
@@ -389,6 +398,7 @@ export default function WeddingInvitation() {
           </Button>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }
