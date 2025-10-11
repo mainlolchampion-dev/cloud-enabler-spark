@@ -8,13 +8,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useToast } from "@/hooks/use-toast";
 import { saveRSVP } from "@/lib/rsvpStorage";
 import { CheckCircle2, XCircle, HelpCircle } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 interface RSVPFormProps {
   invitationId: string;
   invitationType: 'wedding' | 'baptism' | 'party';
+  invitationTitle?: string;
 }
 
-export function RSVPForm({ invitationId, invitationType }: RSVPFormProps) {
+export function RSVPForm({ invitationId, invitationType, invitationTitle }: RSVPFormProps) {
   const { toast } = useToast();
   const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState({
@@ -40,7 +42,8 @@ export function RSVPForm({ invitationId, invitationType }: RSVPFormProps) {
     }
 
     try {
-      await saveRSVP({
+      // Save RSVP to database
+      const rsvp = await saveRSVP({
         invitationId,
         name: formData.name,
         email: formData.email,
@@ -50,6 +53,26 @@ export function RSVPForm({ invitationId, invitationType }: RSVPFormProps) {
         dietaryRestrictions: formData.dietaryRestrictions,
         message: formData.message,
       });
+
+      // Send confirmation email
+      try {
+        await supabase.functions.invoke('send-rsvp-confirmation', {
+          body: {
+            rsvpId: rsvp.id,
+            invitationId,
+            name: formData.name,
+            email: formData.email,
+            willAttend: formData.willAttend,
+            numberOfGuests: parseInt(formData.numberOfGuests),
+            invitationTitle,
+            invitationType,
+          },
+        });
+        console.log('✅ Confirmation email sent');
+      } catch (emailError) {
+        console.error('⚠️ Email sending failed:', emailError);
+        // Don't fail the RSVP if email fails
+      }
 
       setSubmitted(true);
       toast({

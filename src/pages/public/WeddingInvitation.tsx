@@ -359,7 +359,7 @@ export default function WeddingInvitation() {
             Θα χαρούμε πολύ να μας τιμήσετε με την παρουσία σας
           </p>
         </div>
-        <RSVPForm invitationId={id!} invitationType="wedding" />
+        <RSVPForm invitationId={id!} invitationType="wedding" invitationTitle={data.title} />
       </section>
 
       {/* Footer */}

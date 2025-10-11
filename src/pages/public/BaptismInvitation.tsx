@@ -321,7 +321,7 @@ export default function BaptismInvitation() {
             Θα χαρούμε πολύ να γιορτάσετε μαζί μας αυτή την ξεχωριστή στιγμή
           </p>
         </div>
-        <RSVPForm invitationId={id!} invitationType="baptism" />
+        <RSVPForm invitationId={id!} invitationType="baptism" invitationTitle={data.title} />
       </section>
 
       {/* Footer */}

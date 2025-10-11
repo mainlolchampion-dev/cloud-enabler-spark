@@ -1,1 +1,4 @@
 project_id = "gcaelrgcmjpkibugcbva"
+
+[functions.send-rsvp-confirmation]
+verify_jwt = false

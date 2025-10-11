@@ -227,7 +227,7 @@ export default function PartyInvitation() {
             Πες μας αν έρχεσαι να πάρτυ μαζί μας!
           </p>
         </div>
-        <RSVPForm invitationId={id!} invitationType="party" />
+        <RSVPForm invitationId={id!} invitationType="party" invitationTitle={data.title} />
       </section>
 
       {/* Footer */}
