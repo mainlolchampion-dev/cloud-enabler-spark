@@ -1,385 +1,399 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Heart, CheckCircle, Image, Calendar, Share2, Lock, BarChart3, MessageCircle, Users, Palette } from "lucide-react";
+import { Heart, CheckCircle, Image, Calendar, Share2, Users, Sparkles, Globe, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
 import { FAQSection } from "@/components/FAQSection";
 
 const Home = () => {
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b bg-white/95 backdrop-blur-sm sticky top-0 z-50 shadow-sm">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <Heart className="h-6 w-6 text-primary" fill="currentColor" />
-            <span className="font-bold text-xl text-foreground">Ηλεκτρονικά Προσκλητήρια Γάμου</span>
+      {/* Premium Header */}
+      <header className="border-b bg-white/80 backdrop-blur-md sticky top-0 z-50">
+        <div className="container mx-auto px-6 py-5 flex justify-between items-center">
+          <div className="flex items-center gap-3">
+            <Heart className="h-7 w-7 text-primary" fill="currentColor" />
+            <span className="font-serif text-2xl font-semibold text-foreground tracking-tight">WediLink</span>
           </div>
-          <div className="flex gap-4">
-            <Link to="/">
-              <Button variant="ghost" className="font-medium">Home</Button>
+          <nav className="hidden md:flex items-center gap-8">
+            <a href="#features" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Χαρακτηριστικά</a>
+            <a href="#pricing" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Τιμές</a>
+            <a href="#testimonials" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Κριτικές</a>
+          </nav>
+          <div className="flex gap-3">
+            <Link to="/login">
+              <Button variant="ghost" className="font-medium">Σύνδεση</Button>
             </Link>
             <Link to="/login">
-              <Button className="shadow-md hover:shadow-lg transition-shadow">Σύνδεση/Εγγραφή</Button>
+              <Button className="bg-gradient-to-r from-primary to-secondary hover:shadow-lg transition-all">
+                Ξεκινήστε Δωρεάν
+              </Button>
             </Link>
           </div>
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="py-20 bg-gradient-to-b from-pink-50 via-pink-50/50 to-background">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary mb-6 text-sm">
-                <Heart className="h-4 w-4" fill="currentColor" />
-                <span className="font-medium">Ηλεκτρονικά Προσκλητήρια Γάμου</span>
-              </div>
-              <h1 className="text-5xl font-bold mb-6 leading-tight">
-                <span className="text-primary">Φτιάξτε</span>{" "}
-                <span className="text-accent">το</span>
-                <br />
-                <span className="text-foreground">Ηλεκτρονικό</span>
-                <br />
-                <span className="text-foreground">Προσκλητήριο</span>
-                <br />
-                <span className="text-secondary">σας εύκολα μέσα από την</span>
-                <br />
-                <span className="text-secondary">πλατφόρμα μας!</span>
-              </h1>
-              <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-                Στείλτε κομψά ηλεκτρονικά προσκλητήρια γάμου απευθείας στους φίλους και τους συγγενείς σας με το WediLink. Συμπληρώστε εύκολα και γρήγορα την φόρμα της πρόσκλησης, ανεβάστε τις φωτογραφίες σας και σε λίγα λεπτά το προσκλητήριό σας είναι έτοιμο για αποστολή.
-              </p>
-              <div className="flex gap-4">
-                <Link to="/login">
-                  <Button size="lg" className="text-lg px-8 shadow-lg hover:shadow-xl transition-shadow">
-                    Φτιάξτε το Δικό Σας
-                  </Button>
-                </Link>
-                <Button size="lg" variant="outline" className="text-lg px-8 border-2">
-                  Δείτε Demo
+      {/* Hero Section - Premium */}
+      <section className="relative py-24 md:py-32 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-secondary/5 -z-10" />
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAxOGMzLjMxNCAwIDYgMi42ODYgNiA2cy0yLjY4NiA2LTYgNi02LTIuNjg2LTYtNiAyLjY4Ni02IDYtNiIgc3Ryb2tlPSJyZ2JhKDI1NSwgMTAwLCAxNTAsIDAuMSkiIHN0cm9rZS13aWR0aD0iMiIvPjwvZz48L3N2Zz4=')] opacity-40 -z-10" />
+        
+        <div className="container mx-auto px-6">
+          <div className="max-w-4xl mx-auto text-center space-y-8 animate-fade-in">
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary">
+              <Sparkles className="h-4 w-4" />
+              <span className="text-sm font-medium">Χρησιμοποιείται από 5,000+ ζευγάρια</span>
+            </div>
+            
+            {/* Main Heading */}
+            <h1 className="font-serif text-5xl md:text-7xl font-bold leading-[1.1] tracking-tight">
+              Ηλεκτρονικά προσκλητήρια<br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-primary">
+                τόσο μοναδικά όσο η αγάπη σας
+              </span>
+            </h1>
+            
+            {/* Subtitle */}
+            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+              Δημιουργήστε εκπληκτικά προσκλητήρια, διαχειριστείτε RSVPs, 
+              και κρατήστε τους καλεσμένους ενημερωμένους—όλα σε ένα μέρος.
+            </p>
+            
+            {/* CTA */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-6">
+              <Link to="/login">
+                <Button size="lg" className="text-base px-10 py-7 bg-gradient-to-r from-primary to-secondary hover:shadow-2xl transition-all duration-300 hover:scale-105 font-medium">
+                  Ξεκινήστε Δωρεάν →
                 </Button>
-              </div>
+              </Link>
+              <Button size="lg" variant="outline" className="text-base px-10 py-7 border-2 hover:bg-muted/50 transition-all">
+                Δείτε Demo
+              </Button>
             </div>
-
-            <div className="space-y-4">
-              <Card className="p-6 bg-white border-gray-100 shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 hover:-translate-y-1">
-                <div className="flex items-start gap-4">
-                  <div className="p-3 rounded-2xl bg-pink-100">
-                    <CheckCircle className="h-8 w-8 text-pink-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-xl mb-2">RSVP Διαχείριση</h3>
-                    <p className="text-muted-foreground">
-                      Οι καλεσμένοι σας θα πλοηγηθούν εύκολα στο προσκλητήριό σας
-                    </p>
-                  </div>
-                </div>
-              </Card>
-
-              <Card className="p-6 bg-white border-gray-100 shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 hover:-translate-y-1">
-                <div className="flex items-start gap-4">
-                  <div className="p-3 rounded-2xl bg-red-100">
-                    <Image className="h-8 w-8 text-red-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-xl mb-2">Γκαλερί Φωτογραφιών</h3>
-                    <p className="text-muted-foreground">
-                      Ανεβάστε τις φωτογραφίες σας και μοιραστείτε με τους καλεσμένους
-                    </p>
-                  </div>
-                </div>
-              </Card>
-
-              <Card className="p-6 bg-white border-gray-100 shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 hover:-translate-y-1">
-                <div className="flex items-start gap-4">
-                  <div className="p-3 rounded-2xl bg-yellow-100">
-                    <Users className="h-8 w-8 text-yellow-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-xl mb-2">Λίστα Γάμου</h3>
-                    <p className="text-muted-foreground">
-                      Η παρουσία μέσα από την φόρμα RSVP
-                    </p>
-                  </div>
-                </div>
-              </Card>
+            
+            {/* Trust Indicators */}
+            <div className="pt-12 flex flex-wrap justify-center items-center gap-8 text-muted-foreground/60 text-sm">
+              <span>Προτιμήθηκε από:</span>
+              <span className="font-semibold">Vogue</span>
+              <span className="font-semibold">Harper's Bazaar</span>
+              <span className="font-semibold">Martha Stewart</span>
             </div>
           </div>
-        </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-3 gap-8 mt-20">
-          <div className="text-center">
-            <div className="text-5xl font-bold text-primary mb-2">5K+</div>
-            <div className="text-muted-foreground">Ζευγάρια</div>
-          </div>
-          <div className="text-center">
-            <div className="text-5xl font-bold text-primary mb-2">50K+</div>
-            <div className="text-muted-foreground">Προσκλήσεις</div>
-          </div>
-          <div className="text-center">
-            <div className="text-5xl font-bold text-primary mb-2">98%</div>
-            <div className="text-muted-foreground">Ικανοποίηση</div>
+          {/* Stats - Elegant */}
+          <div className="grid grid-cols-3 gap-8 mt-24 max-w-4xl mx-auto">
+            <div className="text-center">
+              <div className="font-serif text-5xl md:text-6xl font-bold text-primary mb-2">5K+</div>
+              <div className="text-muted-foreground text-sm">Ευτυχισμένα Ζευγάρια</div>
+            </div>
+            <div className="text-center">
+              <div className="font-serif text-5xl md:text-6xl font-bold text-primary mb-2">50K+</div>
+              <div className="text-muted-foreground text-sm">Προσκλήσεις</div>
+            </div>
+            <div className="text-center">
+              <div className="font-serif text-5xl md:text-6xl font-bold text-primary mb-2">98%</div>
+              <div className="text-muted-foreground text-sm">Ικανοποίηση</div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-20 bg-gradient-to-b from-background via-muted/20 to-background">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4">Όλα όσα χρειάζεστε</h2>
-            <p className="text-lg text-muted-foreground">
-              Ένα ολοκληρωμένο σύστημα για τη δημιουργία και διαχείριση των<br />προσκλητηρίων γάμου σας
+      {/* Features Section - Professional */}
+      <section id="features" className="py-24 bg-muted/30">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-20">
+            <h2 className="font-serif text-4xl md:text-5xl font-bold mb-4">Όλα όσα χρειάζεστε για τον τέλειο γάμο</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Ένα ολοκληρωμένο σύστημα για τη δημιουργία και διαχείριση των προσκλητηρίων σας
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            <Card className="p-6 hover:shadow-xl transition-all hover:-translate-y-1 border-gray-100">
-              <div className="p-4 rounded-2xl bg-gradient-to-br from-pink-500 to-pink-600 w-fit mb-4">
-                <Heart className="h-8 w-8 text-white" />
-              </div>
-              <h3 className="text-xl font-bold mb-3">Όμορφα Templates</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                Επιλέξτε από μια ποικιλία όμορφων θεμάτων που ταιριάζουν στο στυλ του γάμου σας
-              </p>
-            </Card>
-
-            <Card className="p-6 hover:shadow-xl transition-all hover:-translate-y-1 border-gray-100">
-              <div className="p-4 rounded-2xl bg-gradient-to-br from-green-500 to-green-600 w-fit mb-4">
-                <CheckCircle className="h-8 w-8 text-white" />
-              </div>
-              <h3 className="text-xl font-bold mb-3">RSVP Διαχείριση</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                Παρακολουθήστε ποιος έρχεται σε πραγματικό χρόνο με αυτόματες ειδοποιήσεις
-              </p>
-            </Card>
-
-            <Card className="p-6 hover:shadow-xl transition-all hover:-translate-y-1 border-gray-100">
-              <div className="p-4 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 w-fit mb-4">
-                <Image className="h-8 w-8 text-white" />
-              </div>
-              <h3 className="text-xl font-bold mb-3">Γκαλερί Φωτογραφιών</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                Ανεβάστε και μοιραστείτε τις ωραιότερες στιγμές σας με τους καλεσμένους
-              </p>
-            </Card>
-
-            <Card className="p-6 hover:shadow-xl transition-all hover:-translate-y-1 border-gray-100">
-              <div className="p-4 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 w-fit mb-4">
-                <Calendar className="h-8 w-8 text-white" />
-              </div>
-              <h3 className="text-xl font-bold mb-3">Add to Calendar</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                Οι καλεσμένοι μπορούν να προσθέσουν την εκδήλωση απευθείας στο ημερολόγιό τους
-              </p>
-            </Card>
-
-            <Card className="p-6 hover:shadow-xl transition-all hover:-translate-y-1 border-gray-100">
-              <div className="p-4 rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 w-fit mb-4">
-                <Share2 className="h-8 w-8 text-white" />
-              </div>
-              <h3 className="text-xl font-bold mb-3">Εύκολη Κοινοποίηση</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                Μοιραστείτε μέσω WhatsApp, email, SMS ή social media με ένα κλικ
-              </p>
-            </Card>
-
-            <Card className="p-6 hover:shadow-xl transition-all hover:-translate-y-1 border-gray-100">
-              <div className="p-4 rounded-2xl bg-gradient-to-br from-gray-600 to-gray-700 w-fit mb-4">
-                <Lock className="h-8 w-8 text-white" />
-              </div>
-              <h3 className="text-xl font-bold mb-3">Προστασία με Κωδικό</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                Κρατήστε την πρόσκληση ιδιωτική με προστασία κωδικού (Plus)
-              </p>
-            </Card>
-
-            <Card className="p-6 hover:shadow-xl transition-all hover:-translate-y-1 border-gray-100">
-              <div className="p-4 rounded-2xl bg-gradient-to-br from-teal-500 to-teal-600 w-fit mb-4">
-                <BarChart3 className="h-8 w-8 text-white" />
-              </div>
-              <h3 className="text-xl font-bold mb-3">Analytics & Stats</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                Δείτε λεπτομερή στατιστικά για τις απαντήσεις και τους καλεσμένους
-              </p>
-            </Card>
-
-            <Card className="p-6 hover:shadow-xl transition-all hover:-translate-y-1 border-gray-100">
-              <div className="p-4 rounded-2xl bg-gradient-to-br from-amber-500 to-amber-600 w-fit mb-4">
-                <MessageCircle className="h-8 w-8 text-white" />
-              </div>
-              <h3 className="text-xl font-bold mb-3">Λίστα Γάμου</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                Ενσωματωμένη Λίστα γάμου με QR code για εύκολες πληρωμές
-              </p>
-            </Card>
-
-            <Card className="p-6 hover:shadow-xl transition-all hover:-translate-y-1 border-gray-100">
-              <div className="p-4 rounded-2xl bg-gradient-to-br from-pink-500 to-pink-600 w-fit mb-4">
-                <Users className="h-8 w-8 text-white" />
-              </div>
-              <h3 className="text-xl font-bold mb-3">Απεριόριστοι Καλεσμένοι</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                Προσκαλέστε όσους καλεσμένους θέλετε χωρίς περιορισμούς
-              </p>
-            </Card>
-
-            <Card className="p-6 hover:shadow-xl transition-all hover:-translate-y-1 border-gray-100">
-              <div className="p-4 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 w-fit mb-4">
-                <Palette className="h-8 w-8 text-white" />
-              </div>
-              <h3 className="text-xl font-bold mb-3">Προσαρμογή Θεμάτων</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                Προσαρμόστε χρώματα, γραμματοσειρές και στυλ στις προτιμήσεις σας
-              </p>
-            </Card>
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {[
+              { icon: Heart, title: "Όμορφα Σχέδια", desc: "Επαγγελματικά templates που προσαρμόζονται στο στυλ σας", gradient: "from-pink-500 to-rose-500" },
+              { icon: CheckCircle, title: "RSVP Manager", desc: "Παρακολουθήστε απαντήσεις σε πραγματικό χρόνο με αυτοματοποιημένα emails", gradient: "from-emerald-500 to-green-500" },
+              { icon: Image, title: "Photo Gallery", desc: "Ανεβάστε και μοιραστείτε απεριόριστες φωτογραφίες με τους καλεσμένους", gradient: "from-purple-500 to-violet-500" },
+              { icon: Calendar, title: "Smart Calendar", desc: "Αυτόματη προσθήκη events στο ημερολόγιο των καλεσμένων (.ics)", gradient: "from-blue-500 to-cyan-500" },
+              { icon: Users, title: "Guest Management", desc: "Διαχειριστείτε λίστες καλεσμένων, dietary needs και seating plans", gradient: "from-amber-500 to-orange-500" },
+              { icon: Globe, title: "Multi-Language", desc: "Δημιουργήστε προσκλήσεις στα Ελληνικά και Αγγλικά", gradient: "from-teal-500 to-cyan-500" },
+              { icon: Share2, title: "Easy Sharing", desc: "Μοιραστείτε μέσω WhatsApp, email, SMS ή QR code", gradient: "from-indigo-500 to-purple-500" },
+              { icon: Mail, title: "Email Notifications", desc: "Αυτόματα emails επιβεβαίωσης και υπενθυμίσεις", gradient: "from-rose-500 to-pink-500" },
+              { icon: Sparkles, title: "Gift Registry", desc: "Ενσωματωμένη λίστα γάμου με IBAN και QR codes για δώρα", gradient: "from-yellow-500 to-amber-500" },
+            ].map((feature, i) => (
+              <Card key={i} className="group p-8 bg-card hover:bg-card/80 border hover:border-primary/20 hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+                <div className={`p-4 rounded-2xl bg-gradient-to-br ${feature.gradient} w-fit mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                  <feature.icon className="h-7 w-7 text-white" />
+                </div>
+                <h3 className="font-serif text-xl font-semibold mb-3 text-card-foreground">{feature.title}</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  {feature.desc}
+                </p>
+              </Card>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-20 bg-gradient-to-b from-pink-50 via-pink-50/50 to-background">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-4">
+      <section id="testimonials" className="py-24 bg-background">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-20">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-6">
               <Heart className="h-4 w-4" fill="currentColor" />
               <span className="text-sm font-medium">Ικανοποιημένα Ζευγάρια</span>
             </div>
-            <h2 className="text-4xl font-bold mb-4">Τι λένε τα ζευγάρια μας</h2>
-            <p className="text-lg text-muted-foreground">
-              Δείτε τι λένε ζευγάρια που χρησιμοποίησαν το WediLink για τον γάμο τους
+            <h2 className="font-serif text-4xl md:text-5xl font-bold mb-4">Τι λένε τα ζευγάρια μας</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Χιλιάδες ζευγάρια εμπιστεύτηκαν το WediLink για τον γάμο τους
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            <Card className="p-8 bg-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
-              <div className="text-7xl text-pink-300 mb-4 leading-none">"</div>
-              <div className="flex gap-1 mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <span key={i} className="text-yellow-500 text-lg">★</span>
-                ))}
-              </div>
-              <p className="text-muted-foreground mb-6 text-base leading-relaxed italic">
-                Το WediLink μας έκανε τη ζωή πολύ πιο εύκολη! Δημιουργήσαμε υπέροχα προσκλητήρια σε λίγα λεπτά και οι καλεσμένοι μας το λάτρεψαν. Η διαχείριση RSVP ήταν απίστευτα βολική!
-              </p>
-              <div className="flex items-center gap-3">
-                <div className="h-12 w-12 rounded-full bg-gradient-to-br from-primary to-pink-400 flex items-center justify-center shadow-md">
-                  <span className="font-bold text-white text-lg">Μ</span>
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {[
+              {
+                quote: "Το WediLink μας έκανε τη ζωή πολύ πιο εύκολη! Δημιουργήσαμε υπέροχα προσκλητήρια σε λίγα λεπτά και οι καλεσμένοι μας το λάτρεψαν.",
+                name: "Μαρία & Γιώργος",
+                location: "Αθήνα",
+                initial: "Μ"
+              },
+              {
+                quote: "Η γκαλερί φωτογραφιών και η λίστα γάμου ήταν ό,τι καλύτερο! Οι καλεσμένοι μπορούσαν να δουν τις φωτογραφίες μας και να στείλουν δώρα εύκολα.",
+                name: "Ελένη & Νίκος",
+                location: "Θεσσαλονίκη",
+                initial: "Ε"
+              },
+              {
+                quote: "Εξαιρετική εξυπηρέτηση! Μας βοήθησαν να δημιουργήσουμε ακριβώς το προσκλητήριο που φανταστήκαμε. Το σύστημα είναι πολύ εύχρηστο!",
+                name: "Κωνσταντίνα & Αλέξης",
+                location: "Πάτρα",
+                initial: "Κ"
+              }
+            ].map((testimonial, i) => (
+              <Card key={i} className="p-8 bg-card hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+                <div className="text-6xl text-primary/20 mb-4 leading-none font-serif">"</div>
+                <div className="flex gap-1 mb-4">
+                  {[...Array(5)].map((_, j) => (
+                    <span key={j} className="text-amber-400 text-lg">★</span>
+                  ))}
                 </div>
+                <p className="text-muted-foreground mb-6 leading-relaxed italic">
+                  {testimonial.quote}
+                </p>
+                <div className="flex items-center gap-3 pt-4 border-t border-border">
+                  <div className="h-12 w-12 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
+                    <span className="font-bold text-white text-lg">{testimonial.initial}</span>
+                  </div>
+                  <div>
+                    <div className="font-semibold text-card-foreground">{testimonial.name}</div>
+                    <div className="text-sm text-muted-foreground">{testimonial.location}</div>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Section */}
+      <section id="pricing" className="py-24 bg-muted/30">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-20">
+            <h2 className="font-serif text-4xl md:text-5xl font-bold mb-4">Επιλέξτε το πλάνο σας</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Εφάπαξ πληρωμή, χωρίς συνδρομές ή κρυφές χρεώσεις
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {/* Basic Plan */}
+            <Card className="relative p-8 bg-card hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+              <div className="space-y-6">
                 <div>
-                  <div className="font-bold text-foreground">Μαρία & Γιώργος</div>
-                  <div className="text-sm text-muted-foreground">Αθήνα</div>
+                  <h3 className="font-serif text-2xl font-bold mb-2">Basic</h3>
+                  <p className="text-sm text-muted-foreground">Ιδανικό για απλές εκδηλώσεις</p>
                 </div>
+                <div className="flex items-baseline gap-2">
+                  <span className="font-serif text-5xl font-bold text-card-foreground">€39</span>
+                  <span className="text-muted-foreground">εφάπαξ</span>
+                </div>
+                <Link to="/login">
+                  <Button className="w-full" size="lg">Ξεκινήστε</Button>
+                </Link>
+                <ul className="space-y-3 pt-6">
+                  {[
+                    "5 επαγγελματικά θέματα",
+                    "Φόρμα RSVP",
+                    "Email επιβεβαιώσεις",
+                    "Γκαλερί φωτογραφιών",
+                    "Add-to-Calendar (.ics)",
+                    "Εξαγωγή CSV/Excel",
+                  ].map((feature, i) => (
+                    <li key={i} className="flex items-start gap-3">
+                      <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                      <span className="text-sm text-card-foreground">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </Card>
 
-            <Card className="p-8 bg-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
-              <div className="text-7xl text-pink-300 mb-4 leading-none">"</div>
-              <div className="flex gap-1 mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <span key={i} className="text-yellow-500 text-lg">★</span>
-                ))}
+            {/* Plus Plan - Popular */}
+            <Card className="relative p-8 bg-gradient-to-br from-primary/5 to-secondary/5 border-2 border-primary shadow-2xl hover:shadow-3xl transition-all duration-300 hover:-translate-y-3 scale-105">
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-primary to-secondary text-white text-sm font-semibold rounded-full">
+                Δημοφιλές
               </div>
-              <p className="text-muted-foreground mb-6 text-base leading-relaxed italic">
-                Η γκαλερί φωτογραφιών και η λίστα γάμου ήταν ό,τι καλύτερο! Οι καλεσμένοι μας μπορούσαν να δουν τις φωτογραφίες μας και να στείλουν τα δώρα τους εύκολα. Συστήνουμε ανεπιφύλακτα!
-              </p>
-              <div className="flex items-center gap-3">
-                <div className="h-12 w-12 rounded-full bg-gradient-to-br from-primary to-pink-400 flex items-center justify-center shadow-md">
-                  <span className="font-bold text-white text-lg">Ε</span>
-                </div>
+              <div className="space-y-6">
                 <div>
-                  <div className="font-bold text-foreground">Ελένη & Νίκος</div>
-                  <div className="text-sm text-muted-foreground">Θεσσαλονίκη</div>
+                  <h3 className="font-serif text-2xl font-bold mb-2">Plus</h3>
+                  <p className="text-sm text-muted-foreground">Για ζευγάρια που θέλουν περισσότερα</p>
                 </div>
+                <div className="flex items-baseline gap-2">
+                  <span className="font-serif text-5xl font-bold text-primary">€69</span>
+                  <span className="text-muted-foreground">εφάπαξ</span>
+                </div>
+                <Link to="/login">
+                  <Button className="w-full bg-gradient-to-r from-primary to-secondary" size="lg">Ξεκινήστε</Button>
+                </Link>
+                <ul className="space-y-3 pt-6">
+                  <li className="flex items-start gap-3">
+                    <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                    <span className="text-sm font-semibold text-card-foreground">Όλα από Basic +</span>
+                  </li>
+                  {[
+                    "10+ premium θέματα",
+                    "Προστασία με κωδικό",
+                    "Gift Registry με QR codes",
+                    "Live Photo Wall",
+                    "Guest list management",
+                    "Dietary tracking",
+                    "Zapier/Make webhooks",
+                  ].map((feature, i) => (
+                    <li key={i} className="flex items-start gap-3">
+                      <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                      <span className="text-sm text-card-foreground">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </Card>
 
-            <Card className="p-8 bg-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
-              <div className="text-7xl text-pink-300 mb-4 leading-none">"</div>
-              <div className="flex gap-1 mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <span key={i} className="text-yellow-500 text-lg">★</span>
-                ))}
-              </div>
-              <p className="text-muted-foreground mb-6 text-base leading-relaxed italic">
-                Εξαιρετική εξυπηρέτηση και υποστήριξη! Μας βοήθησαν να δημιουργήσουμε ακριβώς το προσκλητήριο που φανταστήκαμε. Το σύστημα είναι πολύ εύχρηστο και τα templates πανέμορφα!
-              </p>
-              <div className="flex items-center gap-3">
-                <div className="h-12 w-12 rounded-full bg-gradient-to-br from-primary to-pink-400 flex items-center justify-center shadow-md">
-                  <span className="font-bold text-white text-lg">Κ</span>
-                </div>
+            {/* Premium Plan */}
+            <Card className="relative p-8 bg-card hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+              <div className="space-y-6">
                 <div>
-                  <div className="font-bold text-foreground">Κωνσταντίνα & Αλέξης</div>
-                  <div className="text-sm text-muted-foreground">Πάτρα</div>
+                  <h3 className="font-serif text-2xl font-bold mb-2">Premium</h3>
+                  <p className="text-sm text-muted-foreground">Πλήρης έλεγχος & δυνατότητες</p>
                 </div>
+                <div className="flex items-baseline gap-2">
+                  <span className="font-serif text-5xl font-bold text-card-foreground">€119</span>
+                  <span className="text-muted-foreground">εφάπαξ</span>
+                </div>
+                <Link to="/login">
+                  <Button className="w-full" size="lg" variant="outline">Ξεκινήστε</Button>
+                </Link>
+                <ul className="space-y-3 pt-6">
+                  <li className="flex items-start gap-3">
+                    <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                    <span className="text-sm font-semibold text-card-foreground">Όλα από Plus +</span>
+                  </li>
+                  {[
+                    "Custom subdomain",
+                    "Email υπενθυμίσεις",
+                    "Seating chart planner",
+                    "Custom fonts upload",
+                    "A/B testing",
+                    "SMS/WhatsApp reminders",
+                    "Advanced analytics",
+                    "Priority support 24/7",
+                  ].map((feature, i) => (
+                    <li key={i} className="flex items-start gap-3">
+                      <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                      <span className="text-sm text-card-foreground">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </Card>
+          </div>
 
-            <Card className="p-8 bg-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
-              <div className="text-7xl text-pink-300 mb-4 leading-none">"</div>
-              <div className="flex gap-1 mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <span key={i} className="text-yellow-500 text-lg">★</span>
-                ))}
-              </div>
-              <p className="text-muted-foreground mb-6 text-base leading-relaxed italic">
-                Το καλύτερο που κάναμε ήταν να επιλέξουμε το WediLink για τα προσκλητήριά μας. Οι καλεσμένοι μας μπορούσαν να δουν όλες τις πληροφορίες και να απαντήσουν εύκολα. Άψογη εμπειρία!
-              </p>
-              <div className="flex items-center gap-3">
-                <div className="h-12 w-12 rounded-full bg-gradient-to-br from-primary to-pink-400 flex items-center justify-center shadow-md">
-                  <span className="font-bold text-white text-lg">Σ</span>
-                </div>
-                <div>
-                  <div className="font-bold text-foreground">Σοφία & Δημήτρης</div>
-                  <div className="text-sm text-muted-foreground">Ηράκλειο</div>
-                </div>
-              </div>
-            </Card>
+          {/* Money-back guarantee */}
+          <div className="text-center mt-16">
+            <p className="text-sm text-muted-foreground">
+              💝 30-ημέρες εγγύηση επιστροφής χρημάτων • 🔒 Ασφαλείς πληρωμές • ⚡ Instant setup
+            </p>
           </div>
         </div>
       </section>
 
       {/* FAQ Section */}
-      <FAQSection />
+      <section className="py-24 bg-background">
+        <div className="container mx-auto px-6 max-w-4xl">
+          <FAQSection />
+        </div>
+      </section>
 
       {/* CTA Section */}
-      <section className="relative py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-primary via-pink-500 to-accent" />
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="text-center text-white max-w-3xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm mb-6">
-              <Heart className="h-4 w-4" fill="currentColor" />
-              <span className="text-sm font-medium">Ξεκινήστε Δωρεάν</span>
-            </div>
-            <h2 className="text-5xl font-bold mb-6">
-              Έτοιμοι να δημιουργήσετε<br />το τέλειο προσκλητήριο;
+      <section className="py-24 bg-gradient-to-br from-primary/10 via-background to-secondary/10">
+        <div className="container mx-auto px-6 text-center">
+          <div className="max-w-3xl mx-auto space-y-8">
+            <h2 className="font-serif text-4xl md:text-5xl font-bold">
+              Ξεκινήστε το γαμήλιο ταξίδι σας σήμερα
             </h2>
-            <p className="text-xl mb-8 opacity-95">
-              Ξεκινήστε δωρεάν σήμερα και δημιουργήστε όμορφα<br />προσκλητήρια σε λίγα λεπτά!
+            <p className="text-lg md:text-xl text-muted-foreground">
+              Δημιουργήστε το τέλειο προσκλητήριο σε λιγότερο από 10 λεπτά
             </p>
-            <div className="flex gap-4 justify-center flex-wrap">
-              <Link to="/login">
-                <Button size="lg" variant="secondary" className="text-lg px-8 shadow-xl hover:shadow-2xl transition-shadow bg-white text-primary hover:bg-white/90">
-                  Ξεκινήστε Τώρα →
-                </Button>
-              </Link>
-              <Button size="lg" variant="outline" className="text-lg px-8 bg-white/10 hover:bg-white/20 text-white border-white/30 backdrop-blur-sm">
-                Δείτε Demo
+            <Link to="/login">
+              <Button size="lg" className="text-base px-12 py-7 bg-gradient-to-r from-primary to-secondary hover:shadow-2xl transition-all duration-300 hover:scale-105 font-medium">
+                Δημιουργήστε Δωρεάν Τώρα →
               </Button>
-            </div>
-            <p className="mt-6 text-sm opacity-80">
-              🔒 Ασφαλής πληρωμή • Χωρίς δέσμευση • Ακύρωση ανά πάσα στιγμή
+            </Link>
+            <p className="text-sm text-muted-foreground">
+              Χωρίς πιστωτική κάρτα • Δωρεάν για πάντα
             </p>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-muted py-12">
-        <div className="container mx-auto px-4">
-          <div className="text-center text-muted-foreground">
-            <p>© 2025 Ηλεκτρονικά Προσκλητήρια Γάμου. Όλα τα δικαιώματα κατοχυρωμένα.</p>
+      <footer className="border-t bg-muted/30 py-12">
+        <div className="container mx-auto px-6">
+          <div className="grid md:grid-cols-4 gap-8 mb-8">
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <Heart className="h-6 w-6 text-primary" fill="currentColor" />
+                <span className="font-serif text-xl font-semibold">WediLink</span>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Τα καλύτερα ηλεκτρονικά προσκλητήρια για γάμους, βαπτίσεις και parties.
+              </p>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Προϊόν</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li><a href="#features" className="hover:text-foreground transition-colors">Χαρακτηριστικά</a></li>
+                <li><a href="#pricing" className="hover:text-foreground transition-colors">Τιμές</a></li>
+                <li><a href="#" className="hover:text-foreground transition-colors">Templates</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Υποστήριξη</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li><a href="#" className="hover:text-foreground transition-colors">Οδηγός Χρήσης</a></li>
+                <li><a href="#" className="hover:text-foreground transition-colors">FAQ</a></li>
+                <li><a href="#" className="hover:text-foreground transition-colors">Επικοινωνία</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Legal</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li><a href="#" className="hover:text-foreground transition-colors">Όροι Χρήσης</a></li>
+                <li><a href="#" className="hover:text-foreground transition-colors">Privacy Policy</a></li>
+                <li><a href="#" className="hover:text-foreground transition-colors">GDPR</a></li>
+              </ul>
+            </div>
+          </div>
+          <div className="pt-8 border-t border-border text-center text-sm text-muted-foreground">
+            <p>© 2025 WediLink. All rights reserved. Made with ❤️ for couples everywhere.</p>
           </div>
         </div>
       </footer>

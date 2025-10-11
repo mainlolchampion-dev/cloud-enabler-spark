@@ -9,102 +9,112 @@ All colors MUST be HSL.
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 0 0% 0%;
+    --foreground: 222 47% 11%;
 
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 0%;
+    --card-foreground: 222 47% 11%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 0%;
+    --popover-foreground: 222 47% 11%;
 
-    --primary: 340 82% 52%;
+    --primary: 340 75% 48%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 340 82% 70%;
+    --primary-light: 340 75% 92%;
+    --primary-dark: 340 75% 38%;
 
-    --secondary: 217 33% 55%;
+    --secondary: 24 100% 50%;
     --secondary-foreground: 0 0% 100%;
+    --secondary-light: 24 100% 95%;
 
-    --muted: 340 100% 97%;
-    --muted-foreground: 217 33% 45%;
+    --muted: 220 13% 96%;
+    --muted-foreground: 220 9% 46%;
 
-    --accent: 27 96% 61%;
-    --accent-foreground: 0 0% 0%;
+    --accent: 340 75% 48%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 340 100% 95%;
-    --input: 340 100% 95%;
-    --ring: 340 82% 52%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 340 75% 48%;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 262 52% 47%;
+    --sidebar-background: 222 47% 11%;
     --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 340 82% 52%;
+    --sidebar-primary: 340 75% 48%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 262 52% 42%;
+    --sidebar-accent: 340 75% 38%;
     --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 262 52% 42%;
-    --sidebar-ring: 340 82% 52%;
+    --sidebar-border: 220 13% 18%;
+    --sidebar-ring: 340 75% 48%;
 
-    /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(340 82% 52%), hsl(340 82% 70%));
-    --gradient-romantic: linear-gradient(135deg, hsl(340 82% 52%) 0%, hsl(330 70% 60%) 100%);
-    --gradient-soft: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(340 50% 98%) 100%);
+    /* Premium Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(340 75% 48%) 0%, hsl(24 100% 50%) 100%);
+    --gradient-soft: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(340 75% 98%) 50%, hsl(0 0% 100%) 100%);
+    --gradient-card: linear-gradient(135deg, hsl(0 0% 100%) 0%, hsl(340 75% 99%) 100%);
     
-    /* Shadows */
-    --shadow-elegant: 0 10px 40px -10px hsl(340 82% 52% / 0.3);
-    --shadow-glow: 0 0 50px hsl(340 82% 70% / 0.4);
+    /* Professional Shadows */
+    --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.05);
+    --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.1), 0 2px 4px -2px hsl(0 0% 0% / 0.1);
+    --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.1), 0 4px 6px -4px hsl(0 0% 0% / 0.1);
+    --shadow-xl: 0 20px 25px -5px hsl(0 0% 0% / 0.1), 0 8px 10px -6px hsl(0 0% 0% / 0.1);
+    --shadow-elegant: 0 10px 40px -10px hsl(340 75% 48% / 0.2);
   }
 
   .dark {
-    --background: 0 0% 7%;
+    --background: 222 47% 11%;
     --foreground: 0 0% 98%;
 
-    --card: 0 0% 10%;
+    --card: 222 47% 15%;
     --card-foreground: 0 0% 98%;
 
-    --popover: 0 0% 10%;
+    --popover: 222 47% 15%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 340 82% 52%;
+    --primary: 340 75% 55%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 340 82% 70%;
+    --primary-light: 340 75% 25%;
+    --primary-dark: 340 75% 65%;
 
-    --secondary: 217 33% 55%;
+    --secondary: 24 100% 55%;
     --secondary-foreground: 0 0% 100%;
+    --secondary-light: 24 100% 20%;
 
-    --muted: 0 0% 15%;
-    --muted-foreground: 217 33% 65%;
+    --muted: 220 13% 20%;
+    --muted-foreground: 220 9% 70%;
 
-    --accent: 27 96% 61%;
-    --accent-foreground: 0 0% 0%;
+    --accent: 340 75% 55%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 20%;
-    --input: 0 0% 20%;
-    --ring: 340 82% 52%;
+    --border: 220 13% 25%;
+    --input: 220 13% 25%;
+    --ring: 340 75% 55%;
     
-    --sidebar-background: 262 52% 25%;
+    --sidebar-background: 222 47% 8%;
     --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 340 82% 52%;
+    --sidebar-primary: 340 75% 55%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 262 52% 30%;
+    --sidebar-accent: 340 75% 45%;
     --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 262 52% 20%;
-    --sidebar-ring: 340 82% 52%;
+    --sidebar-border: 220 13% 18%;
+    --sidebar-ring: 340 75% 55%;
 
-    /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(340 82% 42%), hsl(340 82% 60%));
-    --gradient-romantic: linear-gradient(135deg, hsl(340 82% 42%) 0%, hsl(330 70% 50%) 100%);
-    --gradient-soft: linear-gradient(180deg, hsl(222.2 84% 4.9%) 0%, hsl(340 40% 8%) 100%);
+    /* Premium Gradients - Dark */
+    --gradient-hero: linear-gradient(135deg, hsl(340 75% 45%) 0%, hsl(24 100% 45%) 100%);
+    --gradient-soft: linear-gradient(180deg, hsl(222 47% 11%) 0%, hsl(340 75% 15%) 50%, hsl(222 47% 11%) 100%);
+    --gradient-card: linear-gradient(135deg, hsl(222 47% 15%) 0%, hsl(340 75% 18%) 100%);
     
-    /* Shadows */
-    --shadow-elegant: 0 10px 40px -10px hsl(340 82% 32% / 0.5);
-    --shadow-glow: 0 0 50px hsl(340 82% 50% / 0.6);
+    /* Professional Shadows - Dark */
+    --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.5);
+    --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.5), 0 2px 4px -2px hsl(0 0% 0% / 0.5);
+    --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.5), 0 4px 6px -4px hsl(0 0% 0% / 0.5);
+    --shadow-xl: 0 20px 25px -5px hsl(0 0% 0% / 0.5), 0 8px 10px -6px hsl(0 0% 0% / 0.5);
+    --shadow-elegant: 0 10px 40px -10px hsl(340 75% 35% / 0.4);
   }
 }
 
@@ -116,10 +126,14 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 600;
+    letter-spacing: -0.02em;
   }
 }
 
