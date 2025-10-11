@@ -1,8 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { ImagePlus, X } from "lucide-react";
-import { useRef } from "react";
+import { ImagePlus, X, Loader2 } from "lucide-react";
+import { useRef, useState } from "react";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { uploadImage, deleteImage } from "@/lib/imageUpload";
+import { toast } from "sonner";
 
 interface GalleryImage {
   id: string;
@@ -18,7 +20,7 @@ interface DraggableImageProps {
   image: GalleryImage;
   index: number;
   moveImage: (dragIndex: number, hoverIndex: number) => void;
-  onRemove: (id: string) => void;
+  onRemove: (id: string, url: string) => void;
 }
 
 const DraggableImage = ({ image, index, moveImage, onRemove }: DraggableImageProps) => {
@@ -60,7 +62,7 @@ const DraggableImage = ({ image, index, moveImage, onRemove }: DraggableImagePro
         variant="destructive"
         size="icon"
         className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-        onClick={() => onRemove(image.id)}
+        onClick={() => onRemove(image.id, image.url)}
       >
         <X className="w-4 h-4" />
       </Button>
@@ -70,30 +72,36 @@ const DraggableImage = ({ image, index, moveImage, onRemove }: DraggableImagePro
 
 export function GalleryManager({ images, onImagesChange }: GalleryManagerProps) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     if (files.length === 0) return;
 
-    const readPromises = files.map((file) => {
-      return new Promise<GalleryImage>((resolve) => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          resolve({
-            id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-            url: reader.result as string,
-          });
+    try {
+      setUploading(true);
+      
+      // Upload all files in parallel
+      const uploadPromises = files.map(async (file) => {
+        const url = await uploadImage(file, 'gallery');
+        return {
+          id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+          url,
         };
-        reader.readAsDataURL(file);
       });
-    });
 
-    Promise.all(readPromises).then((newImages) => {
+      const newImages = await Promise.all(uploadPromises);
       onImagesChange([...images, ...newImages]);
-    });
-    
-    // Reset input value so the same file can be selected again
-    e.target.value = '';
+      
+      toast.success(`${files.length} φωτογραφίες ανέβηκαν επιτυχώς!`);
+    } catch (error: any) {
+      console.error('Error uploading images:', error);
+      toast.error(error.message || "Σφάλμα κατά το ανέβασμα των φωτογραφιών");
+    } finally {
+      setUploading(false);
+      // Reset input value so the same file can be selected again
+      e.target.value = '';
+    }
   };
 
   const moveImage = (dragIndex: number, hoverIndex: number) => {
@@ -104,8 +112,18 @@ export function GalleryManager({ images, onImagesChange }: GalleryManagerProps) 
     onImagesChange(newImages);
   };
 
-  const removeImage = (id: string) => {
-    onImagesChange(images.filter((img) => img.id !== id));
+  const removeImage = async (id: string, url: string) => {
+    try {
+      // Only delete if it's a Supabase Storage URL
+      if (url.includes('supabase')) {
+        await deleteImage(url, 'gallery');
+      }
+      onImagesChange(images.filter((img) => img.id !== id));
+      toast.success("Η φωτογραφία διαγράφηκε");
+    } catch (error: any) {
+      console.error('Error deleting image:', error);
+      toast.error("Σφάλμα κατά τη διαγραφή της φωτογραφίας");
+    }
   };
 
   return (
@@ -113,9 +131,21 @@ export function GalleryManager({ images, onImagesChange }: GalleryManagerProps) 
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="text-base font-semibold">Gallery Φωτογραφιών</h3>
-          <Button onClick={() => inputRef.current?.click()}>
-            <ImagePlus className="w-4 h-4 mr-2" />
-            Προσθήκη στη Συλλογή
+          <Button 
+            onClick={() => inputRef.current?.click()}
+            disabled={uploading}
+          >
+            {uploading ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Ανέβασμα...
+              </>
+            ) : (
+              <>
+                <ImagePlus className="w-4 h-4 mr-2" />
+                Προσθήκη στη Συλλογή
+              </>
+            )}
           </Button>
         </div>
 
@@ -140,10 +170,11 @@ export function GalleryManager({ images, onImagesChange }: GalleryManagerProps) 
         <input
           ref={inputRef}
           type="file"
-          accept="image/*"
+          accept="image/jpeg,image/jpg,image/png,image/webp"
           multiple
           className="hidden"
           onChange={handleFileChange}
+          disabled={uploading}
         />
       </div>
     </DndProvider>
