@@ -45,8 +45,21 @@ export default function BaptismInvitation() {
 
   if (!invitation) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <p className="text-muted-foreground">Η πρόσκληση δεν βρέθηκε</p>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-50 via-pink-50 to-yellow-50 p-6">
+        <div className="text-center space-y-6 max-w-md">
+          <Sparkles className="w-20 h-20 mx-auto text-blue-500 animate-pulse" />
+          <h1 className="font-serif text-4xl text-foreground">Η πρόσκληση δεν βρέθηκε</h1>
+          <p className="text-muted-foreground text-lg">
+            Αυτή η πρόσκληση δεν υπάρχει ή έχει διαγραφεί. Παρακαλούμε ελέγξτε το link που σας έχει σταλεί.
+          </p>
+          <Button 
+            onClick={() => window.location.href = '/'} 
+            size="lg"
+            className="mt-6"
+          >
+            Επιστροφή στην Αρχική
+          </Button>
+        </div>
       </div>
     );
   }

@@ -44,8 +44,21 @@ export default function PartyInvitation() {
 
   if (!invitation) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <p className="text-muted-foreground">Η πρόσκληση δεν βρέθηκε</p>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-900 via-pink-900 to-orange-900 p-6">
+        <div className="text-center space-y-6 max-w-md">
+          <PartyPopper className="w-20 h-20 mx-auto text-pink-400 animate-bounce" />
+          <h1 className="font-serif text-4xl text-white">Η πρόσκληση δεν βρέθηκε</h1>
+          <p className="text-pink-200 text-lg">
+            Αυτή η πρόσκληση δεν υπάρχει ή έχει διαγραφεί. Παρακαλούμε ελέγξτε το link που σας έχει σταλεί.
+          </p>
+          <Button 
+            onClick={() => window.location.href = '/'} 
+            size="lg"
+            className="mt-6 bg-pink-600 hover:bg-pink-700"
+          >
+            Επιστροφή στην Αρχική
+          </Button>
+        </div>
       </div>
     );
   }

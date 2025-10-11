@@ -43,8 +43,21 @@ export default function WeddingInvitation() {
 
   if (!invitation) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <p className="text-muted-foreground">Η πρόσκληση δεν βρέθηκε</p>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-rose-50 via-pink-50 to-white p-6">
+        <div className="text-center space-y-6 max-w-md">
+          <Heart className="w-20 h-20 mx-auto text-primary animate-pulse" />
+          <h1 className="font-serif text-4xl text-foreground">Η πρόσκληση δεν βρέθηκε</h1>
+          <p className="text-muted-foreground text-lg">
+            Αυτή η πρόσκληση δεν υπάρχει ή έχει διαγραφεί. Παρακαλούμε ελέγξτε το link που σας έχει σταλεί.
+          </p>
+          <Button 
+            onClick={() => window.location.href = '/'} 
+            size="lg"
+            className="mt-6"
+          >
+            Επιστροφή στην Αρχική
+          </Button>
+        </div>
       </div>
     );
   }

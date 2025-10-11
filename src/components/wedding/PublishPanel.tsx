@@ -30,25 +30,11 @@ export function PublishPanel({ onSaveDraft, onPreview, onPublish }: PublishPanel
         <div className="space-y-3 pt-3 border-t">
           <div className="flex items-center justify-between text-sm">
             <span className="text-muted-foreground">Κατάσταση:</span>
-            <div className="flex items-center gap-2">
-              <span className="font-medium">Προσχέδιο</span>
-              <Button variant="link" size="sm" className="h-auto p-0 text-xs">
-                Επεξεργασία
-              </Button>
-            </div>
+            <span className="font-medium">Προσχέδιο</span>
           </div>
           <div className="flex items-center justify-between text-sm">
             <span className="text-muted-foreground">Ορατότητα:</span>
-            <div className="flex items-center gap-2">
-              <span className="font-medium">Δημόσιο</span>
-              <Button variant="link" size="sm" className="h-auto p-0 text-xs">
-                Επεξεργασία
-              </Button>
-            </div>
-          </div>
-          <div className="text-sm">
-            <span className="text-muted-foreground">Section:</span>
-            <span className="ml-2 font-medium">Γάμος</span>
+            <span className="font-medium">Δημόσιο</span>
           </div>
         </div>
 
