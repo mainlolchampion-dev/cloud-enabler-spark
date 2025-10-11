@@ -31,40 +31,43 @@ const Home = () => {
       </header>
 
       {/* Hero Section */}
-      <section className="relative py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#FF4B7E] via-[#FF6B8A] to-[#FFB347]" />
-        <div className="container mx-auto px-4 relative z-10">
+      <section className="py-20 bg-gradient-to-b from-pink-50 via-pink-50/50 to-background">
+        <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm mb-6 text-sm">
-                <Heart className="h-4 w-4 text-white" fill="currentColor" />
-                <span className="font-medium text-white">Ξεκινήστε Δωρεάν</span>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary mb-6 text-sm">
+                <Heart className="h-4 w-4" fill="currentColor" />
+                <span className="font-medium">Ηλεκτρονικά Προσκλητήρια Γάμου</span>
               </div>
-              <h1 className="text-5xl font-bold mb-6 leading-tight text-white">
-                Έτοιμοι να δημιουργήσετε
+              <h1 className="text-5xl font-bold mb-6 leading-tight">
+                <span className="text-primary">Φτιάξτε</span>{" "}
+                <span className="text-accent">το</span>
                 <br />
-                το τέλειο προσκλητήριο;
+                <span className="text-foreground">Ηλεκτρονικό</span>
+                <br />
+                <span className="text-foreground">Προσκλητήριο</span>
+                <br />
+                <span className="text-secondary">σας εύκολα μέσα από την</span>
+                <br />
+                <span className="text-secondary">πλατφόρμα μας!</span>
               </h1>
-              <p className="text-lg text-white/90 mb-8 leading-relaxed">
-                Ξεκινήστε δωρεάν σήμερα και δημιουργήστε όμορφα προσκλητήρια σε λίγα λεπτά!
+              <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
+                Στείλτε κομψά ηλεκτρονικά προσκλητήρια γάμου απευθείας στους φίλους και τους συγγενείς σας με το WediLink. Συμπληρώστε εύκολα και γρήγορα την φόρμα της πρόσκλησης, ανεβάστε τις φωτογραφίες σας και σε λίγα λεπτά το προσκλητήριό σας είναι έτοιμο για αποστολή.
               </p>
               <div className="flex gap-4">
                 <Link to="/login">
-                  <Button size="lg" className="text-lg px-8 shadow-lg hover:shadow-xl transition-shadow bg-white text-[#FF4B7E] hover:bg-white/90">
-                    Ξεκινήστε Τώρα →
+                  <Button size="lg" className="text-lg px-8 shadow-lg hover:shadow-xl transition-shadow">
+                    Φτιάξτε το Δικό Σας
                   </Button>
                 </Link>
-                <Button size="lg" variant="outline" className="text-lg px-8 border-2 border-white text-white hover:bg-white/10">
+                <Button size="lg" variant="outline" className="text-lg px-8 border-2">
                   Δείτε Demo
                 </Button>
               </div>
-              <p className="mt-6 text-sm text-white/80">
-                🎊 Δωρεάν δοκιμή • Χωρίς κάρτα • Ακύρωση ανά πάσα στιγμή
-              </p>
             </div>
 
             <div className="space-y-4">
-              <Card className="p-6 bg-white/95 backdrop-blur-sm border-white/20 shadow-lg">
+              <Card className="p-6 bg-white border-gray-100 shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 hover:-translate-y-1">
                 <div className="flex items-start gap-4">
                   <div className="p-3 rounded-2xl bg-pink-100">
                     <CheckCircle className="h-8 w-8 text-pink-600" />
@@ -72,13 +75,13 @@ const Home = () => {
                   <div>
                     <h3 className="font-bold text-xl mb-2">RSVP Διαχείριση</h3>
                     <p className="text-muted-foreground">
-                      Οι καλεσμένοι σας θα πληροφορηθούν εύκολα στο προσκλητήριό σας
+                      Οι καλεσμένοι σας θα πλοηγηθούν εύκολα στο προσκλητήριό σας
                     </p>
                   </div>
                 </div>
               </Card>
 
-              <Card className="p-6 bg-white/95 backdrop-blur-sm border-white/20 shadow-lg">
+              <Card className="p-6 bg-white border-gray-100 shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 hover:-translate-y-1">
                 <div className="flex items-start gap-4">
                   <div className="p-3 rounded-2xl bg-red-100">
                     <Image className="h-8 w-8 text-red-600" />
@@ -92,7 +95,7 @@ const Home = () => {
                 </div>
               </Card>
 
-              <Card className="p-6 bg-white/95 backdrop-blur-sm border-white/20 shadow-lg">
+              <Card className="p-6 bg-white border-gray-100 shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 hover:-translate-y-1">
                 <div className="flex items-start gap-4">
                   <div className="p-3 rounded-2xl bg-yellow-100">
                     <Users className="h-8 w-8 text-yellow-600" />
@@ -112,16 +115,16 @@ const Home = () => {
         {/* Stats */}
         <div className="grid grid-cols-3 gap-8 mt-20">
           <div className="text-center">
-            <div className="text-5xl font-bold text-white mb-2">5K+</div>
-            <div className="text-white/80">Ζευγάρια</div>
+            <div className="text-5xl font-bold text-primary mb-2">5K+</div>
+            <div className="text-muted-foreground">Ζευγάρια</div>
           </div>
           <div className="text-center">
-            <div className="text-5xl font-bold text-white mb-2">50K+</div>
-            <div className="text-white/80">Προσκλήσεις</div>
+            <div className="text-5xl font-bold text-primary mb-2">50K+</div>
+            <div className="text-muted-foreground">Προσκλήσεις</div>
           </div>
           <div className="text-center">
-            <div className="text-5xl font-bold text-white mb-2">98%</div>
-            <div className="text-white/80">Ικανοποίηση</div>
+            <div className="text-5xl font-bold text-primary mb-2">98%</div>
+            <div className="text-muted-foreground">Ικανοποίηση</div>
           </div>
         </div>
       </section>
