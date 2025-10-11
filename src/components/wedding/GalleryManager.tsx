@@ -73,21 +73,27 @@ export function GalleryManager({ images, onImagesChange }: GalleryManagerProps) 
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    const newImages: GalleryImage[] = [];
+    if (files.length === 0) return;
 
-    files.forEach((file) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        newImages.push({
-          id: Date.now().toString() + Math.random(),
-          url: reader.result as string,
-        });
-        if (newImages.length === files.length) {
-          onImagesChange([...images, ...newImages]);
-        }
-      };
-      reader.readAsDataURL(file);
+    const readPromises = files.map((file) => {
+      return new Promise<GalleryImage>((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          resolve({
+            id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+            url: reader.result as string,
+          });
+        };
+        reader.readAsDataURL(file);
+      });
     });
+
+    Promise.all(readPromises).then((newImages) => {
+      onImagesChange([...images, ...newImages]);
+    });
+    
+    // Reset input value so the same file can be selected again
+    e.target.value = '';
   };
 
   const moveImage = (dragIndex: number, hoverIndex: number) => {
