@@ -253,15 +253,15 @@ const Home = () => {
           </div>
 
           <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            <Card className="p-8 bg-white shadow-lg hover:shadow-xl transition-shadow">
-              <div className="text-6xl text-muted-foreground/20 mb-4">"</div>
+            <Card className="p-8 bg-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+              <div className="text-6xl text-pink-200 mb-4">"</div>
               <div className="flex gap-1 mb-4">
                 {[...Array(5)].map((_, i) => (
                   <span key={i} className="text-yellow-500 text-lg">★</span>
                 ))}
               </div>
               <p className="text-muted-foreground mb-6 text-base leading-relaxed italic">
-                Το WediLink μας έκανε τη ζωή πολύ πιο εύκολη! Δημιουργήσαμε υπέροχα προσκλητήρια σε λίγα λεπτά και το RSVP ήταν καταπληκτικά εύκολο!
+                Το WediLink μας έκανε τη ζωή πολύ πιο εύκολη! Δημιουργήσαμε υπέροχα προσκλητήρια σε λίγα λεπτά και οι καλεσμένοι μας το λάτρεψαν. Η διαχείριση RSVP ήταν απίστευτα βολική!
               </p>
               <div className="flex items-center gap-3">
                 <div className="h-12 w-12 rounded-full bg-gradient-to-br from-primary to-pink-400 flex items-center justify-center shadow-md">
@@ -274,15 +274,15 @@ const Home = () => {
               </div>
             </Card>
 
-            <Card className="p-8 bg-white shadow-lg hover:shadow-xl transition-shadow">
-              <div className="text-6xl text-muted-foreground/20 mb-4">"</div>
+            <Card className="p-8 bg-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+              <div className="text-6xl text-pink-200 mb-4">"</div>
               <div className="flex gap-1 mb-4">
                 {[...Array(5)].map((_, i) => (
                   <span key={i} className="text-yellow-500 text-lg">★</span>
                 ))}
               </div>
               <p className="text-muted-foreground mb-6 text-base leading-relaxed italic">
-                Η εύκολη διαχείριση των καλεσμένων ήταν το κλειδί! Η οικογένειά μας μπορούσε να δει ποιος θα έρθει και να αποφύγουμε κάθε έκπληξη. Συστήνουμε ανεπιφύλακτα!
+                Η γκαλερί φωτογραφιών και η λίστα γάμου ήταν ό,τι καλύτερο! Οι καλεσμένοι μας μπορούσαν να δουν τις φωτογραφίες μας και να στείλουν τα δώρα τους εύκολα. Συστήνουμε ανεπιφύλακτα!
               </p>
               <div className="flex items-center gap-3">
                 <div className="h-12 w-12 rounded-full bg-gradient-to-br from-primary to-pink-400 flex items-center justify-center shadow-md">
@@ -295,15 +295,15 @@ const Home = () => {
               </div>
             </Card>
 
-            <Card className="p-8 bg-white shadow-lg hover:shadow-xl transition-shadow">
-              <div className="text-6xl text-muted-foreground/20 mb-4">"</div>
+            <Card className="p-8 bg-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+              <div className="text-6xl text-pink-200 mb-4">"</div>
               <div className="flex gap-1 mb-4">
                 {[...Array(5)].map((_, i) => (
                   <span key={i} className="text-yellow-500 text-lg">★</span>
                 ))}
               </div>
               <p className="text-muted-foreground mb-6 text-base leading-relaxed italic">
-                Φανταστικό! Η δημιουργία ήταν εύκολη και γρήγορη! Με βοήθησε να φτιάξω προσκλητήρια πανέμορφα, οι φίλοι μου ήταν πολύ ενθουσιασμένοι και τα έστειλα αμέσως!
+                Εξαιρετική εξυπηρέτηση και υποστήριξη! Μας βοήθησαν να δημιουργήσουμε ακριβώς το προσκλητήριο που φανταστήκαμε. Το σύστημα είναι πολύ εύχρηστο και τα templates πανέμορφα!
               </p>
               <div className="flex items-center gap-3">
                 <div className="h-12 w-12 rounded-full bg-gradient-to-br from-primary to-pink-400 flex items-center justify-center shadow-md">
@@ -316,15 +316,15 @@ const Home = () => {
               </div>
             </Card>
 
-            <Card className="p-8 bg-white shadow-lg hover:shadow-xl transition-shadow">
-              <div className="text-6xl text-muted-foreground/20 mb-4">"</div>
+            <Card className="p-8 bg-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+              <div className="text-6xl text-pink-200 mb-4">"</div>
               <div className="flex gap-1 mb-4">
                 {[...Array(5)].map((_, i) => (
                   <span key={i} className="text-yellow-500 text-lg">★</span>
                 ))}
               </div>
               <p className="text-muted-foreground mb-6 text-base leading-relaxed italic">
-                Τα analytics που παρέχει ήταν από τα καλύτερα στο WediLink για τα προσκλητήριά μας. Οι οικογένειές μας μπορούσαν να δουν όλες τις πληροφορίες και να ενημερώνονται άμεσα!
+                Το καλύτερο που κάναμε ήταν να επιλέξουμε το WediLink για τα προσκλητήριά μας. Οι καλεσμένοι μας μπορούσαν να δουν όλες τις πληροφορίες και να απαντήσουν εύκολα. Άψογη εμπειρία!
               </p>
               <div className="flex items-center gap-3">
                 <div className="h-12 w-12 rounded-full bg-gradient-to-br from-primary to-pink-400 flex items-center justify-center shadow-md">
