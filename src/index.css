@@ -46,6 +46,11 @@ All colors MUST be HSL.
     --sidebar-accent-foreground: 0 0% 100%;
     --sidebar-border: 262 52% 42%;
     --sidebar-ring: 340 82% 52%;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(340 82% 52%), hsl(340 82% 62%));
+    --gradient-romantic: linear-gradient(135deg, hsl(340 82% 52%), hsl(217 33% 55%));
+    --gradient-soft: linear-gradient(180deg, hsl(340 100% 97%), hsl(217 33% 95%));
   }
 
   .dark {
@@ -85,6 +90,11 @@ All colors MUST be HSL.
     --sidebar-accent-foreground: 0 0% 98%;
     --sidebar-border: 262 52% 20%;
     --sidebar-ring: 340 82% 52%;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(340 82% 52%), hsl(340 82% 42%));
+    --gradient-romantic: linear-gradient(135deg, hsl(340 82% 52%), hsl(217 33% 45%));
+    --gradient-soft: linear-gradient(180deg, hsl(0 0% 10%), hsl(0 0% 15%));
   }
 }
 

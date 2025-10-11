@@ -9,6 +9,8 @@ import { el } from "date-fns/locale";
 import { RSVPForm } from "@/components/wedding/RSVPForm";
 import MusicPlayer from "@/components/wedding/MusicPlayer";
 import FlowerAnimation from "@/components/wedding/FlowerAnimation";
+import { CountdownTimer } from "@/components/CountdownTimer";
+import weddingHeroSample from "@/assets/wedding-hero-sample.jpg";
 import "leaflet/dist/leaflet.css";
 
 export default function WeddingInvitation() {
@@ -104,84 +106,101 @@ export default function WeddingInvitation() {
       <div className="min-h-screen bg-gradient-to-b from-rose-50 via-pink-50 to-white relative" style={{ zIndex: 10 }}>
       {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        {data.mainImage && (
-          <div 
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url(${data.mainImage})` }}
-          >
-            <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-rose-900/50" />
-          </div>
-        )}
+        <div 
+          className="absolute inset-0 bg-cover bg-center transform scale-105 animate-[scale-in_20s_ease-in-out_infinite_alternate]"
+          style={{ backgroundImage: `url(${data.mainImage || weddingHeroSample})` }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-primary/30 to-secondary/40 backdrop-blur-[1px]" />
+        </div>
         
-        <div className="relative z-10 text-center text-white px-4 space-y-6">
-          <Heart className="w-12 h-12 mx-auto fill-current animate-pulse" />
-          <h1 className="font-serif text-6xl md:text-9xl mb-4 animate-fade-in drop-shadow-2xl">
+        <div className="relative z-10 text-center text-white px-4 space-y-6 animate-fade-in">
+          <Heart className="w-16 h-16 mx-auto fill-current animate-pulse drop-shadow-2xl" />
+          <h1 className="font-serif text-6xl md:text-9xl mb-4 drop-shadow-2xl leading-tight">
             {data.groomName}
-            <span className="block text-5xl md:text-7xl my-4">&</span>
+            <span className="block text-5xl md:text-7xl my-6 opacity-90">&</span>
             {data.brideName}
           </h1>
-          <div className="w-24 h-1 bg-white/80 mx-auto"></div>
-          <p className="text-xl md:text-3xl tracking-[0.3em] uppercase font-light">
+          <div className="w-32 h-1 bg-gradient-to-r from-transparent via-white to-transparent mx-auto animate-pulse"></div>
+          <p className="text-2xl md:text-4xl tracking-[0.4em] uppercase font-light drop-shadow-lg">
             Παντρευόμαστε
           </p>
           {formattedDate && (
-            <p className="text-lg md:text-2xl font-light capitalize mt-4">
+            <p className="text-xl md:text-3xl font-light capitalize mt-6 drop-shadow-lg">
               {formattedDate}
             </p>
           )}
         </div>
       </section>
 
+      {/* Countdown Timer */}
+      {data.weddingDate && (
+        <section className="bg-gradient-to-b from-background via-muted/20 to-background py-16">
+          <CountdownTimer targetDate={data.weddingDate} targetTime={data.weddingTime} />
+        </section>
+      )}
+
       {/* Invitation Text */}
       {data.invitationText && (
         <section className="max-w-4xl mx-auto px-4 py-16">
-          <div 
-            className="prose prose-lg mx-auto text-center"
-            dangerouslySetInnerHTML={{ __html: data.invitationText }}
-          />
+          <div className="bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 rounded-3xl p-8 md:p-12 shadow-2xl border border-primary/10">
+            <div 
+              className="prose prose-lg prose-primary mx-auto text-center"
+              dangerouslySetInnerHTML={{ __html: data.invitationText }}
+            />
+          </div>
         </section>
       )}
 
       {/* Couple Details */}
-      <section className="max-w-6xl mx-auto px-4 py-16">
-        <div className="grid md:grid-cols-2 gap-12">
+      <section className="max-w-6xl mx-auto px-4 py-20 bg-gradient-to-b from-muted/30 to-background">
+        <h2 className="font-serif text-5xl text-center mb-16 text-primary">Το Ζευγάρι</h2>
+        <div className="grid md:grid-cols-2 gap-16">
           {/* Groom */}
-          <div className="text-center space-y-4">
-            {data.groomPhoto && (
-              <div className="w-48 h-48 mx-auto rounded-full overflow-hidden border-4 border-primary/20">
-                <img src={data.groomPhoto} alt={data.groomName} className="w-full h-full object-cover" />
-              </div>
-            )}
-            <h3 className="font-serif text-3xl">{data.groomName}</h3>
-            <p className="text-muted-foreground">Ο Γαμπρός</p>
+          <div className="text-center space-y-6 group">
+            <div className="relative w-56 h-56 mx-auto">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary to-secondary rounded-full blur-2xl opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
+              {data.groomPhoto && (
+                <div className="relative w-56 h-56 mx-auto rounded-full overflow-hidden border-4 border-primary/30 shadow-2xl ring-4 ring-primary/10 group-hover:scale-105 transition-transform duration-500">
+                  <img src={data.groomPhoto} alt={data.groomName} className="w-full h-full object-cover" />
+                </div>
+              )}
+            </div>
+            <h3 className="font-serif text-4xl text-primary">{data.groomName}</h3>
+            <p className="text-muted-foreground text-lg font-medium">Ο Γαμπρός</p>
           </div>
           
           {/* Bride */}
-          <div className="text-center space-y-4">
-            {data.bridePhoto && (
-              <div className="w-48 h-48 mx-auto rounded-full overflow-hidden border-4 border-primary/20">
-                <img src={data.bridePhoto} alt={data.brideName} className="w-full h-full object-cover" />
-              </div>
-            )}
-            <h3 className="font-serif text-3xl">{data.brideName}</h3>
-            <p className="text-muted-foreground">Η Νύφη</p>
+          <div className="text-center space-y-6 group">
+            <div className="relative w-56 h-56 mx-auto">
+              <div className="absolute inset-0 bg-gradient-to-br from-secondary to-accent rounded-full blur-2xl opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
+              {data.bridePhoto && (
+                <div className="relative w-56 h-56 mx-auto rounded-full overflow-hidden border-4 border-secondary/30 shadow-2xl ring-4 ring-secondary/10 group-hover:scale-105 transition-transform duration-500">
+                  <img src={data.bridePhoto} alt={data.brideName} className="w-full h-full object-cover" />
+                </div>
+              )}
+            </div>
+            <h3 className="font-serif text-4xl text-secondary">{data.brideName}</h3>
+            <p className="text-muted-foreground text-lg font-medium">Η Νύφη</p>
           </div>
         </div>
       </section>
 
       {/* Koumbaroi */}
       {data.koumbaroi && data.koumbaroi.length > 0 && (
-        <section className="max-w-6xl mx-auto px-4 py-16 bg-rose-50/50">
-          <h2 className="font-serif text-4xl text-center mb-12">Κουμπάροι</h2>
+        <section className="max-w-6xl mx-auto px-4 py-20 bg-gradient-to-br from-primary/5 via-background to-secondary/5">
+          <h2 className="font-serif text-5xl text-center mb-16 text-primary">Κουμπάροι</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {data.koumbaroi.map((koumparos: any, idx: number) => (
-              <div key={idx} className="text-center space-y-3">
+              <div key={idx} className="text-center space-y-4 group">
                 {koumparos.col2 && (
-                  <div className="w-32 h-32 mx-auto rounded-full overflow-hidden border-2 border-primary/20">
-                    <img src={koumparos.col2} alt={koumparos.col1} className="w-full h-full object-cover" />
+                  <div className="relative w-36 h-36 mx-auto">
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary to-accent rounded-full blur-xl opacity-0 group-hover:opacity-30 transition-opacity duration-500"></div>
+                    <div className="relative w-36 h-36 mx-auto rounded-full overflow-hidden border-3 border-primary/30 shadow-lg ring-2 ring-primary/10 group-hover:scale-110 transition-transform duration-300">
+                      <img src={koumparos.col2} alt={koumparos.col1} className="w-full h-full object-cover" />
+                    </div>
                   </div>
                 )}
-                <p className="font-medium">{koumparos.col1}</p>
+                <p className="font-semibold text-lg">{koumparos.col1}</p>
               </div>
             ))}
           </div>
@@ -189,14 +208,16 @@ export default function WeddingInvitation() {
       )}
 
       {/* Date & Time */}
-      <section className="max-w-4xl mx-auto px-4 py-16">
-        <div className="bg-white rounded-2xl shadow-xl p-12 text-center space-y-6">
-          <Calendar className="w-12 h-12 mx-auto text-primary" />
-          <h2 className="font-serif text-4xl">Ημερομηνία & Ώρα</h2>
-          <p className="text-2xl capitalize">{formattedDate}</p>
-          <p className="text-3xl font-semibold">{data.weddingTime}</p>
-          <Button onClick={addToCalendar} size="lg" className="mt-4">
-            <Calendar className="w-4 h-4 mr-2" />
+      <section className="max-w-4xl mx-auto px-4 py-20">
+        <div className="bg-gradient-to-br from-primary/10 via-secondary/10 to-accent/10 rounded-3xl shadow-2xl p-12 md:p-16 text-center space-y-8 border border-primary/20 backdrop-blur-sm">
+          <Calendar className="w-16 h-16 mx-auto text-primary animate-pulse" />
+          <h2 className="font-serif text-5xl text-primary">Ημερομηνία & Ώρα</h2>
+          <div className="space-y-4">
+            <p className="text-3xl capitalize font-light text-muted-foreground">{formattedDate}</p>
+            <p className="text-5xl font-bold text-primary font-serif">{data.weddingTime}</p>
+          </div>
+          <Button onClick={addToCalendar} size="lg" className="mt-8 text-lg px-8 py-6 shadow-xl hover:scale-105 transition-transform">
+            <Calendar className="w-5 h-5 mr-2" />
             Προσθήκη στο Ημερολόγιο
           </Button>
         </div>

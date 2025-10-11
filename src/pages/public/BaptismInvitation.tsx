@@ -9,6 +9,8 @@ import { el } from "date-fns/locale";
 import { RSVPForm } from "@/components/wedding/RSVPForm";
 import MusicPlayer from "@/components/wedding/MusicPlayer";
 import BubbleAnimation from "@/components/baptism/BubbleAnimation";
+import { CountdownTimer } from "@/components/CountdownTimer";
+import baptismHeroSample from "@/assets/baptism-hero-sample.jpg";
 import "leaflet/dist/leaflet.css";
 
 export default function BaptismInvitation() {
@@ -106,43 +108,56 @@ export default function BaptismInvitation() {
       <div className="min-h-screen bg-gradient-to-b from-blue-50 via-pink-50 to-yellow-50 relative" style={{ zIndex: 10 }}>
       {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        {data.mainImage && (
-          <div 
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url(${data.mainImage})` }}
-          >
-            <div className="absolute inset-0 bg-gradient-to-b from-blue-500/30 to-pink-500/30" />
-          </div>
-        )}
+        <div 
+          className="absolute inset-0 bg-cover bg-center transform scale-105 animate-[scale-in_20s_ease-in-out_infinite_alternate]"
+          style={{ backgroundImage: `url(${data.mainImage || baptismHeroSample})` }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-b from-blue-400/40 via-pink-400/30 to-yellow-400/40 backdrop-blur-[1px]" />
+        </div>
         
-        <div className="relative z-10 text-center text-white px-4">
-          <Sparkles className="w-16 h-16 mx-auto mb-6 animate-pulse" />
-          <h1 className="font-serif text-5xl md:text-7xl mb-4 animate-fade-in">
-            Η Βάπτιση {data.childName ? `του ${data.childName}` : 'μας'}
+        <div className="relative z-10 text-center text-white px-4 animate-fade-in">
+          <Sparkles className="w-20 h-20 mx-auto mb-8 animate-pulse drop-shadow-2xl" />
+          <h1 className="font-serif text-6xl md:text-8xl mb-6 drop-shadow-2xl">
+            Η Βάπτιση
           </h1>
+          {data.childName && (
+            <p className="text-4xl md:text-6xl font-serif drop-shadow-xl">{data.childName}</p>
+          )}
         </div>
       </section>
+
+      {/* Countdown Timer */}
+      {data.baptismDate && (
+        <section className="bg-gradient-to-b from-background via-blue-50/30 to-background py-16">
+          <CountdownTimer targetDate={data.baptismDate} targetTime={data.baptismTime} />
+        </section>
+      )}
 
       {/* Invitation Text */}
       {data.invitationText && (
         <section className="max-w-4xl mx-auto px-4 py-16">
-          <div 
-            className="prose prose-lg mx-auto text-center"
-            dangerouslySetInnerHTML={{ __html: data.invitationText }}
-          />
+          <div className="bg-gradient-to-br from-blue-100/60 via-pink-100/60 to-yellow-100/60 rounded-3xl p-8 md:p-12 shadow-2xl border border-blue-200/50">
+            <div 
+              className="prose prose-lg mx-auto text-center"
+              dangerouslySetInnerHTML={{ __html: data.invitationText }}
+            />
+          </div>
         </section>
       )}
 
       {/* Child Details */}
       {data.childName && (
-        <section className="max-w-4xl mx-auto px-4 py-16">
-          <div className="text-center space-y-6">
+        <section className="max-w-4xl mx-auto px-4 py-20">
+          <div className="text-center space-y-8 group">
             {data.childPhoto && (
-              <div className="w-64 h-64 mx-auto rounded-full overflow-hidden border-8 border-blue-200 shadow-2xl">
-                <img src={data.childPhoto} alt={data.childName} className="w-full h-full object-cover" />
+              <div className="relative w-72 h-72 mx-auto">
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-400 to-pink-400 rounded-full blur-3xl opacity-30 group-hover:opacity-50 transition-opacity duration-500"></div>
+                <div className="relative w-72 h-72 mx-auto rounded-full overflow-hidden border-8 border-blue-300/50 shadow-2xl ring-8 ring-blue-100/30 group-hover:scale-105 transition-transform duration-500">
+                  <img src={data.childPhoto} alt={data.childName} className="w-full h-full object-cover" />
+                </div>
               </div>
             )}
-            <h2 className="font-serif text-5xl">{data.childName}</h2>
+            <h2 className="font-serif text-6xl text-primary">{data.childName}</h2>
           </div>
         </section>
       )}
