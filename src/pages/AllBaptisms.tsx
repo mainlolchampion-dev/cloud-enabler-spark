@@ -121,7 +121,7 @@ export default function AllBaptisms() {
                               variant="link"
                               size="sm"
                               className="h-auto p-0 text-xs"
-                              onClick={() => window.location.href = `/rsvp/${invitation.id}`}
+                              onClick={() => navigate(`/rsvp/${invitation.id}`)}
                             >
                               RSVP ({invitation.data?._rsvpCount || 0})
                             </Button>

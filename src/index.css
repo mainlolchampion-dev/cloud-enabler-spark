@@ -19,6 +19,7 @@ All colors MUST be HSL.
 
     --primary: 340 82% 52%;
     --primary-foreground: 0 0% 100%;
+    --primary-glow: 340 82% 70%;
 
     --secondary: 217 33% 55%;
     --secondary-foreground: 0 0% 100%;
@@ -48,9 +49,13 @@ All colors MUST be HSL.
     --sidebar-ring: 340 82% 52%;
 
     /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(340 82% 52%), hsl(340 82% 62%));
-    --gradient-romantic: linear-gradient(135deg, hsl(340 82% 52%), hsl(217 33% 55%));
-    --gradient-soft: linear-gradient(180deg, hsl(340 100% 97%), hsl(217 33% 95%));
+    --gradient-primary: linear-gradient(135deg, hsl(340 82% 52%), hsl(340 82% 70%));
+    --gradient-romantic: linear-gradient(135deg, hsl(340 82% 52%) 0%, hsl(330 70% 60%) 100%);
+    --gradient-soft: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(340 50% 98%) 100%);
+    
+    /* Shadows */
+    --shadow-elegant: 0 10px 40px -10px hsl(340 82% 52% / 0.3);
+    --shadow-glow: 0 0 50px hsl(340 82% 70% / 0.4);
   }
 
   .dark {
@@ -65,6 +70,7 @@ All colors MUST be HSL.
 
     --primary: 340 82% 52%;
     --primary-foreground: 0 0% 100%;
+    --primary-glow: 340 82% 70%;
 
     --secondary: 217 33% 55%;
     --secondary-foreground: 0 0% 100%;
@@ -92,9 +98,13 @@ All colors MUST be HSL.
     --sidebar-ring: 340 82% 52%;
 
     /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(340 82% 52%), hsl(340 82% 42%));
-    --gradient-romantic: linear-gradient(135deg, hsl(340 82% 52%), hsl(217 33% 45%));
-    --gradient-soft: linear-gradient(180deg, hsl(0 0% 10%), hsl(0 0% 15%));
+    --gradient-primary: linear-gradient(135deg, hsl(340 82% 42%), hsl(340 82% 60%));
+    --gradient-romantic: linear-gradient(135deg, hsl(340 82% 42%) 0%, hsl(330 70% 50%) 100%);
+    --gradient-soft: linear-gradient(180deg, hsl(222.2 84% 4.9%) 0%, hsl(340 40% 8%) 100%);
+    
+    /* Shadows */
+    --shadow-elegant: 0 10px 40px -10px hsl(340 82% 32% / 0.5);
+    --shadow-glow: 0 0 50px hsl(340 82% 50% / 0.6);
   }
 }
 

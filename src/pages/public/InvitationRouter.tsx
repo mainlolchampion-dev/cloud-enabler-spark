@@ -24,15 +24,28 @@ export default function InvitationRouter() {
   // Loading state
   if (invitation === undefined) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-accent/20">
-        <div className="animate-pulse text-xl">Φόρτωση...</div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-rose-50 via-pink-50 to-white">
+        <div className="text-center space-y-4">
+          <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto"></div>
+          <p className="text-lg font-medium text-muted-foreground">Φόρτωση πρόσκλησης...</p>
+        </div>
       </div>
     );
   }
 
   // Not found
   if (!invitation) {
-    return <NotFound />;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-rose-50 via-pink-50 to-white p-6">
+        <div className="text-center space-y-6 max-w-md">
+          <div className="text-8xl">💌</div>
+          <h1 className="font-serif text-4xl md:text-5xl text-foreground">Η πρόσκληση δεν βρέθηκε</h1>
+          <p className="text-muted-foreground text-lg">
+            Αυτή η πρόσκληση δεν υπάρχει ή έχει διαγραφεί. Παρακαλούμε ελέγξτε το link που σας έχει σταλεί.
+          </p>
+        </div>
+      </div>
+    );
   }
 
   // Render appropriate invitation type
@@ -48,5 +61,15 @@ export default function InvitationRouter() {
     return <PartyInvitation />;
   }
 
-  return <NotFound />;
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-rose-50 via-pink-50 to-white p-6">
+      <div className="text-center space-y-6 max-w-md">
+        <div className="text-8xl">⚠️</div>
+        <h1 className="font-serif text-4xl md:text-5xl text-foreground">Μη έγκυρος τύπος</h1>
+        <p className="text-muted-foreground text-lg">
+          Αυτός ο τύπος πρόσκλησης δεν υποστηρίζεται.
+        </p>
+      </div>
+    </div>
+  );
 }

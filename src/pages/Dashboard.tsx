@@ -3,10 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Heart, FileText, Users, Check, PartyPopper } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { getInvitationsIndex } from "@/lib/invitationStorage";
 import { supabase } from "@/integrations/supabase/client";
 
 export default function Dashboard() {
+  const navigate = useNavigate();
   const [stats, setStats] = useState({
     total: 0,
     weddings: 0,
@@ -140,15 +142,15 @@ export default function Dashboard() {
               <CardTitle>Γρήγορες Ενέργειες</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
-              <Button className="w-full" onClick={() => window.location.href = '/wedding/add'}>
+              <Button className="w-full" onClick={() => navigate('/wedding/add')}>
                 <Heart className="w-4 h-4 mr-2" />
                 Νέα Πρόσκληση Γάμου
               </Button>
-              <Button className="w-full" variant="outline" onClick={() => window.location.href = '/baptism/add'}>
+              <Button className="w-full" variant="outline" onClick={() => navigate('/baptism/add')}>
                 <Users className="w-4 h-4 mr-2" />
                 Νέα Πρόσκληση Βάπτισης
               </Button>
-              <Button className="w-full" variant="outline" onClick={() => window.location.href = '/party/add'}>
+              <Button className="w-full" variant="outline" onClick={() => navigate('/party/add')}>
                 <PartyPopper className="w-4 h-4 mr-2" />
                 Νέα Πρόσκληση Πάρτι
               </Button>
