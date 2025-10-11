@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/layout/AppSidebar";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
@@ -25,27 +26,35 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <SidebarProvider>
-          <div className="min-h-screen flex w-full">
-            <AppSidebar />
-            <main className="flex-1 overflow-auto">
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/wedding/add" element={<AddWedding />} />
-                <Route path="/wedding/all" element={<AllWeddings />} />
-                <Route path="/baptism/add" element={<AddBaptism />} />
-                <Route path="/baptism/all" element={<AllBaptisms />} />
-                <Route path="/party/add" element={<AddParty />} />
-                <Route path="/party/all" element={<AllParties />} />
-                <Route path="/profile" element={<Profile />} />
-                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </main>
-          </div>
-        </SidebarProvider>
+        <Routes>
+          {/* Public routes without sidebar */}
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          
+          {/* Protected routes with sidebar */}
+          <Route path="/*" element={
+            <ProtectedRoute>
+              <SidebarProvider>
+                <div className="min-h-screen flex w-full">
+                  <AppSidebar />
+                  <main className="flex-1 overflow-auto">
+                    <Routes>
+                      <Route path="/dashboard" element={<Dashboard />} />
+                      <Route path="/wedding/add" element={<AddWedding />} />
+                      <Route path="/wedding/all" element={<AllWeddings />} />
+                      <Route path="/baptism/add" element={<AddBaptism />} />
+                      <Route path="/baptism/all" element={<AllBaptisms />} />
+                      <Route path="/party/add" element={<AddParty />} />
+                      <Route path="/party/all" element={<AllParties />} />
+                      <Route path="/profile" element={<Profile />} />
+                      <Route path="*" element={<NotFound />} />
+                    </Routes>
+                  </main>
+                </div>
+              </SidebarProvider>
+            </ProtectedRoute>
+          } />
+        </Routes>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

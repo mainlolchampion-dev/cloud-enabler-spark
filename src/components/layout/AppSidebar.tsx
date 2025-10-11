@@ -1,5 +1,7 @@
 import { ChevronDown, Heart, LayoutDashboard, LogOut, User, PartyPopper, Baby } from "lucide-react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import { useToast } from "@/hooks/use-toast";
 import {
   Sidebar,
   SidebarContent,
@@ -19,11 +21,23 @@ import { useState } from "react";
 export function AppSidebar() {
   const { state } = useSidebar();
   const location = useLocation();
+  const navigate = useNavigate();
+  const { signOut } = useAuth();
+  const { toast } = useToast();
   const [gamosOpen, setGamosOpen] = useState(true);
   const [baptismOpen, setBaptismOpen] = useState(false);
   const [partyOpen, setPartyOpen] = useState(false);
 
   const isActive = (path: string) => location.pathname === path;
+
+  const handleLogout = async () => {
+    await signOut();
+    toast({
+      title: "Αποσύνδεση επιτυχής",
+      description: "Έχετε αποσυνδεθεί με επιτυχία",
+    });
+    navigate("/");
+  };
 
   return (
     <Sidebar className="border-r-0">
@@ -40,8 +54,8 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild isActive={isActive("/")}>
-                <NavLink to="/" className="flex items-center gap-2">
+              <SidebarMenuButton asChild isActive={isActive("/dashboard")}>
+                <NavLink to="/dashboard" className="flex items-center gap-2">
                   <LayoutDashboard className="w-5 h-5" />
                   {state === "expanded" && <span>Πίνακας Ελέγχου</span>}
                 </NavLink>
@@ -173,7 +187,7 @@ export function AppSidebar() {
 
             <SidebarMenuItem>
               <SidebarMenuButton asChild>
-                <button className="flex items-center gap-2 w-full">
+                <button onClick={handleLogout} className="flex items-center gap-2 w-full">
                   <LogOut className="w-5 h-5" />
                   {state === "expanded" && <span>Έξοδος</span>}
                 </button>
