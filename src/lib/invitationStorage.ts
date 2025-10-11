@@ -101,6 +101,7 @@ export async function saveDraft(invitation: Partial<BaseInvitation>): Promise<st
 }
 
 // Publish invitation
+// Publish invitation
 export async function publishInvitation(
   id: string,
   data: any,
@@ -113,6 +114,8 @@ export async function publishInvitation(
     throw new Error('User must be logged in to publish invitations');
   }
 
+  console.log('Publishing invitation to database:', { id, type, title, dataKeys: Object.keys(data) });
+
   const { error } = await supabase
     .from('invitations')
     .upsert({
@@ -123,13 +126,14 @@ export async function publishInvitation(
       status: 'published',
       data,
       published_at: new Date().toISOString(),
-    })
-    .eq('user_id', user.id);
+    });
 
   if (error) {
     console.error('Error publishing invitation:', error);
     throw error;
   }
+  
+  console.log('Invitation published successfully');
 }
 
 // Get invitation by ID (public - anyone can access published invitations)

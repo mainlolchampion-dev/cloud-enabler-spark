@@ -150,6 +150,13 @@ export default function AddWedding() {
     
     try {
       const id = generateUUID();
+      console.log('Publishing invitation with data:', data);
+      console.log('Gallery items:', data.gallery);
+      console.log('Koumbaroi:', data.koumbaroi);
+      console.log('BankAccounts:', data.bankAccounts);
+      console.log('GroomFamily:', data.groomFamily);
+      console.log('BrideFamily:', data.brideFamily);
+      
       await publishInvitation(id, data, 'wedding', data.title);
       
       // Clear draft

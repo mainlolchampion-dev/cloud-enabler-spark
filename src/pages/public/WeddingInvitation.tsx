@@ -17,8 +17,11 @@ export default function WeddingInvitation() {
   useEffect(() => {
     const fetchInvitation = async () => {
       if (id) {
+        console.log('Fetching invitation with ID:', id);
         const data = await getInvitation(id);
+        console.log('Fetched invitation data:', data);
         if (data && data.type === 'wedding') {
+          console.log('Wedding data:', data.data);
           setInvitation(data);
           
           // Set OpenGraph meta tags
@@ -27,6 +30,8 @@ export default function WeddingInvitation() {
           if (metaDescription) {
             metaDescription.setAttribute('content', `Πρόσκληση Γάμου: ${data.data.groomName} & ${data.data.brideName}`);
           }
+        } else {
+          console.log('No wedding data found or wrong type');
         }
       }
     };
