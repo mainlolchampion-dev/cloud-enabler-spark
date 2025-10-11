@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
@@ -10,6 +11,7 @@ import { RepeatableTable } from "@/components/wedding/RepeatableTable";
 import { GalleryManager } from "@/components/wedding/GalleryManager";
 import { generateUUID, publishInvitation } from "@/lib/invitationStorage";
 import { ShareModal } from "@/components/wedding/ShareModal";
+import { supabase } from "@/integrations/supabase/client";
 
 interface PartyData {
   title: string;
@@ -27,30 +29,67 @@ interface PartyData {
 const STORAGE_KEY = "party_draft";
 
 export default function AddParty() {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const isEditMode = !!id;
+  const [loading, setLoading] = useState(isEditMode);
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const [publishedId, setPublishedId] = useState<string | null>(null);
   
-  const [data, setData] = useState<PartyData>(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    return saved
-      ? JSON.parse(saved)
-      : {
-          title: "Το Party μας",
-          mainImage: "",
-          invitationText: "",
-          partyDate: "",
-          partyTime: "",
-          venueLocation: "",
-          venuePosition: null,
-          contactInfo: "",
-          hosts: [],
-          gallery: [],
-        };
+  const [data, setData] = useState<PartyData>({
+    title: "Το Party μας",
+    mainImage: "",
+    invitationText: "",
+    partyDate: "",
+    partyTime: "",
+    venueLocation: "",
+    venuePosition: null,
+    contactInfo: "",
+    hosts: [],
+    gallery: [],
   });
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  }, [data]);
+    if (isEditMode && id) {
+      loadInvitation(id);
+    } else {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        setData(JSON.parse(saved));
+      }
+    }
+  }, [id, isEditMode]);
+
+  useEffect(() => {
+    if (!isEditMode) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+  }, [data, isEditMode]);
+
+  const loadInvitation = async (invitationId: string) => {
+    try {
+      setLoading(true);
+      const { data: invitation, error } = await supabase
+        .from('invitations')
+        .select('*')
+        .eq('id', invitationId)
+        .single();
+
+      if (error) throw error;
+      
+      if (invitation && invitation.data) {
+        setData(invitation.data as unknown as PartyData);
+      }
+      
+      toast.success("Η πρόσκληση φορτώθηκε επιτυχώς");
+    } catch (error) {
+      console.error("Error loading invitation:", error);
+      toast.error("Σφάλμα κατά τη φόρτωση της πρόσκλησης");
+      navigate("/party/all");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const updateData = (field: keyof PartyData, value: any) => {
     setData((prev) => ({ ...prev, [field]: value }));
@@ -76,35 +115,46 @@ export default function AddParty() {
   };
 
   const handleSaveDraft = () => {
-    toast.success("Το προσχέδιο αποθηκεύτηκε επιτυχώς");
+    toast.success(isEditMode ? "Οι αλλαγές αποθηκεύτηκαν" : "Το προσχέδιο αποθηκεύτηκε επιτυχώς");
   };
 
   const handlePreview = () => {
     if (!validateData()) return;
     toast.info("Προεπισκόπηση: Θα ανοίξει σε νέο παράθυρο");
-    console.log("Preview data:", data);
   };
 
   const handlePublish = async () => {
     if (!validateData()) return;
     
     try {
-      const id = generateUUID();
-      await publishInvitation(id, data, 'party', data.title);
+      const invitationId = isEditMode ? id! : generateUUID();
+      await publishInvitation(invitationId, data, 'party', data.title);
       
-      // Clear draft
-      localStorage.removeItem(STORAGE_KEY);
+      if (!isEditMode) {
+        localStorage.removeItem(STORAGE_KEY);
+      }
       
-      // Show share modal
-      setPublishedId(id);
+      setPublishedId(invitationId);
       setShareModalOpen(true);
       
-      toast.success("Η πρόσκληση δημοσιεύτηκε επιτυχώς!");
+      toast.success(isEditMode ? "Η πρόσκληση ενημερώθηκε επιτυχώς!" : "Η πρόσκληση δημοσιεύτηκε επιτυχώς!");
+      
+      if (isEditMode) {
+        setTimeout(() => navigate("/party/all"), 2000);
+      }
     } catch (error) {
       console.error('Error publishing invitation:', error);
       toast.error("Σφάλμα κατά τη δημοσίευση της πρόσκλησης");
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-lg">Φόρτωση πρόσκλησης...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background p-6">

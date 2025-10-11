@@ -42,13 +42,16 @@ const App = () => (
                   <AppSidebar />
                   <main className="flex-1 overflow-auto">
                     <Routes>
-                      <Route path="/dashboard" element={<Dashboard />} />
-                      <Route path="/wedding/add" element={<AddWedding />} />
-                      <Route path="/wedding/all" element={<AllWeddings />} />
-                      <Route path="/baptism/add" element={<AddBaptism />} />
-                      <Route path="/baptism/all" element={<AllBaptisms />} />
-                      <Route path="/party/add" element={<AddParty />} />
-                      <Route path="/party/all" element={<AllParties />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/wedding/add" element={<AddWedding />} />
+              <Route path="/wedding/edit/:id" element={<AddWedding />} />
+              <Route path="/wedding/all" element={<AllWeddings />} />
+              <Route path="/baptism/add" element={<AddBaptism />} />
+              <Route path="/baptism/edit/:id" element={<AddBaptism />} />
+              <Route path="/baptism/all" element={<AllBaptisms />} />
+              <Route path="/party/add" element={<AddParty />} />
+              <Route path="/party/edit/:id" element={<AddParty />} />
+              <Route path="/party/all" element={<AllParties />} />
                       <Route path="/rsvp/:id" element={<RSVPManagement />} />
                       <Route path="/profile" element={<Profile />} />
                       <Route path="*" element={<NotFound />} />

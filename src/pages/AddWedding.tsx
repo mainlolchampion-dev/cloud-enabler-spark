@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
@@ -12,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { generateUUID, publishInvitation } from "@/lib/invitationStorage";
 import { ShareModal } from "@/components/wedding/ShareModal";
+import { supabase } from "@/integrations/supabase/client";
 
 interface WeddingData {
   title: string;
@@ -38,31 +40,31 @@ interface WeddingData {
 const STORAGE_KEY = "wedding_draft";
 
 export default function AddWedding() {
-  const [data, setData] = useState<WeddingData>(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    return saved
-      ? JSON.parse(saved)
-      : {
-          title: "Ο Γάμος μας",
-          mainImage: "",
-          invitationText: "",
-          groomName: "",
-          groomPhoto: "",
-          brideName: "",
-          bridePhoto: "",
-          koumbaroi: [],
-          weddingDate: "",
-          weddingTime: "",
-          churchLocation: "",
-          churchPosition: null,
-          receptionLocation: "",
-          receptionPosition: null,
-          bankAccounts: [],
-          contactInfo: "",
-          groomFamily: [],
-          brideFamily: [],
-          gallery: [],
-        };
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const isEditMode = !!id;
+  const [loading, setLoading] = useState(isEditMode);
+
+  const [data, setData] = useState<WeddingData>({
+    title: "Ο Γάμος μας",
+    mainImage: "",
+    invitationText: "",
+    groomName: "",
+    groomPhoto: "",
+    brideName: "",
+    bridePhoto: "",
+    koumbaroi: [],
+    weddingDate: "",
+    weddingTime: "",
+    churchLocation: "",
+    churchPosition: null,
+    receptionLocation: "",
+    receptionPosition: null,
+    bankAccounts: [],
+    contactInfo: "",
+    groomFamily: [],
+    brideFamily: [],
+    gallery: [],
   });
 
   const [newGroomFamily, setNewGroomFamily] = useState("");
@@ -71,8 +73,47 @@ export default function AddWedding() {
   const [publishedId, setPublishedId] = useState<string | null>(null);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  }, [data]);
+    if (isEditMode && id) {
+      loadInvitation(id);
+    } else {
+      // Load from localStorage for new invitations
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        setData(JSON.parse(saved));
+      }
+    }
+  }, [id, isEditMode]);
+
+  useEffect(() => {
+    if (!isEditMode) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+  }, [data, isEditMode]);
+
+  const loadInvitation = async (invitationId: string) => {
+    try {
+      setLoading(true);
+      const { data: invitation, error } = await supabase
+        .from('invitations')
+        .select('*')
+        .eq('id', invitationId)
+        .single();
+
+      if (error) throw error;
+      
+      if (invitation && invitation.data) {
+        setData(invitation.data as unknown as WeddingData);
+      }
+      
+      toast.success("Η πρόσκληση φορτώθηκε επιτυχώς");
+    } catch (error) {
+      console.error("Error loading invitation:", error);
+      toast.error("Σφάλμα κατά τη φόρτωση της πρόσκλησης");
+      navigate("/wedding/all");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const updateData = (field: keyof WeddingData, value: any) => {
     setData((prev) => ({ ...prev, [field]: value }));
@@ -136,7 +177,7 @@ export default function AddWedding() {
   };
 
   const handleSaveDraft = () => {
-    toast.success("Το προσχέδιο αποθηκεύτηκε επιτυχώς");
+    toast.success(isEditMode ? "Οι αλλαγές αποθηκεύτηκαν" : "Το προσχέδιο αποθηκεύτηκε επιτυχώς");
   };
 
   const handlePreview = () => {
@@ -149,29 +190,35 @@ export default function AddWedding() {
     if (!validateData()) return;
     
     try {
-      const id = generateUUID();
-      console.log('Publishing invitation with data:', data);
-      console.log('Gallery items:', data.gallery);
-      console.log('Koumbaroi:', data.koumbaroi);
-      console.log('BankAccounts:', data.bankAccounts);
-      console.log('GroomFamily:', data.groomFamily);
-      console.log('BrideFamily:', data.brideFamily);
+      const invitationId = isEditMode ? id! : generateUUID();
+      await publishInvitation(invitationId, data, 'wedding', data.title);
       
-      await publishInvitation(id, data, 'wedding', data.title);
+      if (!isEditMode) {
+        // Clear draft only for new invitations
+        localStorage.removeItem(STORAGE_KEY);
+      }
       
-      // Clear draft
-      localStorage.removeItem(STORAGE_KEY);
-      
-      // Show share modal
-      setPublishedId(id);
+      setPublishedId(invitationId);
       setShareModalOpen(true);
       
-      toast.success("Η πρόσκληση δημοσιεύτηκε επιτυχώς!");
+      toast.success(isEditMode ? "Η πρόσκληση ενημερώθηκε επιτυχώς!" : "Η πρόσκληση δημοσιεύτηκε επιτυχώς!");
+      
+      if (isEditMode) {
+        setTimeout(() => navigate("/wedding/all"), 2000);
+      }
     } catch (error) {
       console.error('Error publishing invitation:', error);
       toast.error("Σφάλμα κατά τη δημοσίευση της πρόσκλησης");
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-lg">Φόρτωση πρόσκλησης...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background p-6">
