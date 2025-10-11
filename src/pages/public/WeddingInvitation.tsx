@@ -88,7 +88,7 @@ export default function WeddingInvitation() {
         primaryColor="#FF80AB"
         secondaryColor="#FF5A8C"
       />
-      <div className="min-h-screen bg-gradient-to-b from-rose-50 via-pink-50 to-white relative z-10">
+      <div className="min-h-screen bg-gradient-to-b from-rose-50 via-pink-50 to-white relative" style={{ zIndex: 10 }}>
       {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         {data.mainImage && (

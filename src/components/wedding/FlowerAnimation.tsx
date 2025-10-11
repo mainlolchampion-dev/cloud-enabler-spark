@@ -134,8 +134,8 @@ const FlowerAnimation: React.FC<FlowerAnimationProps> = ({
   return (
     <canvas 
       ref={canvasRef} 
-      className="fixed top-0 left-0 w-full h-full pointer-events-none z-0"
-      style={{ opacity: 0.6 }}
+      className="fixed top-0 left-0 w-full h-full pointer-events-none"
+      style={{ opacity: 0.8, zIndex: 1 }}
     />
   );
 };

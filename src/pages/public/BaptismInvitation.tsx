@@ -19,10 +19,23 @@ export default function BaptismInvitation() {
   useEffect(() => {
     const fetchInvitation = async () => {
       if (id) {
+        console.log('🎈 Baptism Invitation - Fetching invitation with ID:', id);
         const data = await getInvitation(id);
+        console.log('🎈 Baptism Invitation - Received data:', data);
         if (data && data.type === 'baptism') {
+          console.log('🎈 Baptism Invitation - Data fields:', {
+            title: data.data.title,
+            mainImage: data.data.mainImage ? 'Exists' : 'Missing',
+            invitationText: data.data.invitationText ? 'Exists' : 'Missing',
+            godparents: Array.isArray(data.data.godparents) ? `${data.data.godparents.length} items` : 'Missing',
+            gallery: Array.isArray(data.data.gallery) ? `${data.data.gallery.length} items` : 'Missing',
+            venuePosition: data.data.venuePosition ? 'Exists' : 'Missing',
+            contactInfo: data.data.contactInfo ? 'Exists' : 'Missing',
+          });
           setInvitation(data);
           document.title = data.title;
+        } else {
+          console.log('🎈 Baptism Invitation - Invalid data or wrong type');
         }
       }
     };
@@ -77,7 +90,7 @@ export default function BaptismInvitation() {
         primaryColor="#4FC3F7"
         secondaryColor="#29B6F6"
       />
-      <div className="min-h-screen bg-gradient-to-b from-blue-50 via-pink-50 to-yellow-50 relative z-10">
+      <div className="min-h-screen bg-gradient-to-b from-blue-50 via-pink-50 to-yellow-50 relative" style={{ zIndex: 10 }}>
       {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         {data.mainImage && (

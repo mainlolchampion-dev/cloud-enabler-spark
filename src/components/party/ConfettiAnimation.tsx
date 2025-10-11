@@ -124,8 +124,8 @@ const ConfettiAnimation: React.FC<ConfettiAnimationProps> = ({
   return (
     <canvas 
       ref={canvasRef} 
-      className="fixed top-0 left-0 w-full h-full pointer-events-none z-0"
-      style={{ opacity: 0.7 }}
+      className="fixed top-0 left-0 w-full h-full pointer-events-none"
+      style={{ opacity: 0.8, zIndex: 1 }}
     />
   );
 };

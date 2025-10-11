@@ -18,10 +18,23 @@ export default function PartyInvitation() {
   useEffect(() => {
     const fetchInvitation = async () => {
       if (id) {
+        console.log('🎉 Party Invitation - Fetching invitation with ID:', id);
         const data = await getInvitation(id);
+        console.log('🎉 Party Invitation - Received data:', data);
         if (data && data.type === 'party') {
+          console.log('🎉 Party Invitation - Data fields:', {
+            title: data.data.title,
+            mainImage: data.data.mainImage ? 'Exists' : 'Missing',
+            invitationText: data.data.invitationText ? 'Exists' : 'Missing',
+            hosts: Array.isArray(data.data.hosts) ? `${data.data.hosts.length} items` : 'Missing',
+            gallery: Array.isArray(data.data.gallery) ? `${data.data.gallery.length} items` : 'Missing',
+            venuePosition: data.data.venuePosition ? 'Exists' : 'Missing',
+            contactInfo: data.data.contactInfo ? 'Exists' : 'Missing',
+          });
           setInvitation(data);
           document.title = data.title;
+        } else {
+          console.log('🎉 Party Invitation - Invalid data or wrong type');
         }
       }
     };
@@ -76,7 +89,7 @@ export default function PartyInvitation() {
         primaryColor="#BB8FCE"
         secondaryColor="#85C1E2"
       />
-      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-pink-900 to-orange-900 relative z-10">
+      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-pink-900 to-orange-900 relative" style={{ zIndex: 10 }}>
       {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         {data.mainImage && (
