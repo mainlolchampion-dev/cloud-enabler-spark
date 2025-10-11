@@ -254,7 +254,7 @@ const Home = () => {
 
           <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
             <Card className="p-8 bg-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
-              <div className="text-6xl text-pink-200 mb-4">"</div>
+              <div className="text-7xl text-pink-300 mb-4 leading-none">"</div>
               <div className="flex gap-1 mb-4">
                 {[...Array(5)].map((_, i) => (
                   <span key={i} className="text-yellow-500 text-lg">★</span>
@@ -275,7 +275,7 @@ const Home = () => {
             </Card>
 
             <Card className="p-8 bg-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
-              <div className="text-6xl text-pink-200 mb-4">"</div>
+              <div className="text-7xl text-pink-300 mb-4 leading-none">"</div>
               <div className="flex gap-1 mb-4">
                 {[...Array(5)].map((_, i) => (
                   <span key={i} className="text-yellow-500 text-lg">★</span>
@@ -296,7 +296,7 @@ const Home = () => {
             </Card>
 
             <Card className="p-8 bg-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
-              <div className="text-6xl text-pink-200 mb-4">"</div>
+              <div className="text-7xl text-pink-300 mb-4 leading-none">"</div>
               <div className="flex gap-1 mb-4">
                 {[...Array(5)].map((_, i) => (
                   <span key={i} className="text-yellow-500 text-lg">★</span>
@@ -317,7 +317,7 @@ const Home = () => {
             </Card>
 
             <Card className="p-8 bg-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
-              <div className="text-6xl text-pink-200 mb-4">"</div>
+              <div className="text-7xl text-pink-300 mb-4 leading-none">"</div>
               <div className="flex gap-1 mb-4">
                 {[...Array(5)].map((_, i) => (
                   <span key={i} className="text-yellow-500 text-lg">★</span>
