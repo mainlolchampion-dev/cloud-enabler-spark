@@ -50,6 +50,56 @@ export type Database = {
         }
         Relationships: []
       }
+      rsvps: {
+        Row: {
+          created_at: string
+          dietary_restrictions: string | null
+          email: string
+          id: string
+          invitation_id: string
+          message: string | null
+          name: string
+          number_of_guests: number
+          phone: string | null
+          updated_at: string
+          will_attend: string
+        }
+        Insert: {
+          created_at?: string
+          dietary_restrictions?: string | null
+          email: string
+          id?: string
+          invitation_id: string
+          message?: string | null
+          name: string
+          number_of_guests?: number
+          phone?: string | null
+          updated_at?: string
+          will_attend: string
+        }
+        Update: {
+          created_at?: string
+          dietary_restrictions?: string | null
+          email?: string
+          id?: string
+          invitation_id?: string
+          message?: string | null
+          name?: string
+          number_of_guests?: number
+          phone?: string | null
+          updated_at?: string
+          will_attend?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rsvps_invitation_id_fkey"
+            columns: ["invitation_id"]
+            isOneToOne: false
+            referencedRelation: "invitations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

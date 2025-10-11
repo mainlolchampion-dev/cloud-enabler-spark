@@ -121,6 +121,15 @@ export default function AllParties() {
                               variant="link"
                               size="sm"
                               className="h-auto p-0 text-xs"
+                              onClick={() => window.location.href = `/rsvp/${invitation.id}`}
+                            >
+                              RSVP ({invitation.data?._rsvpCount || 0})
+                            </Button>
+                            <span className="text-muted-foreground">|</span>
+                            <Button
+                              variant="link"
+                              size="sm"
+                              className="h-auto p-0 text-xs"
                               onClick={() => handleView(invitation.id)}
                             >
                               Προβολή

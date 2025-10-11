@@ -18,6 +18,7 @@ import AllParties from "./pages/AllParties";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 import InvitationRouter from "./pages/public/InvitationRouter";
+import RSVPManagement from "./pages/RSVPManagement";
 
 const queryClient = new QueryClient();
 
@@ -48,6 +49,7 @@ const App = () => (
                       <Route path="/baptism/all" element={<AllBaptisms />} />
                       <Route path="/party/add" element={<AddParty />} />
                       <Route path="/party/all" element={<AllParties />} />
+                      <Route path="/rsvp/:id" element={<RSVPManagement />} />
                       <Route path="/profile" element={<Profile />} />
                       <Route path="*" element={<NotFound />} />
                     </Routes>

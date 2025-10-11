@@ -27,7 +27,7 @@ export function RSVPForm({ invitationId, invitationType }: RSVPFormProps) {
     message: '',
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!formData.name || !formData.email) {
@@ -39,22 +39,31 @@ export function RSVPForm({ invitationId, invitationType }: RSVPFormProps) {
       return;
     }
 
-    saveRSVP({
-      invitationId,
-      name: formData.name,
-      email: formData.email,
-      phone: formData.phone,
-      numberOfGuests: parseInt(formData.numberOfGuests),
-      willAttend: formData.willAttend,
-      dietaryRestrictions: formData.dietaryRestrictions,
-      message: formData.message,
-    });
+    try {
+      await saveRSVP({
+        invitationId,
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        numberOfGuests: parseInt(formData.numberOfGuests),
+        willAttend: formData.willAttend,
+        dietaryRestrictions: formData.dietaryRestrictions,
+        message: formData.message,
+      });
 
-    setSubmitted(true);
-    toast({
-      title: "Επιτυχία!",
-      description: "Η απάντησή σας καταχωρήθηκε με επιτυχία.",
-    });
+      setSubmitted(true);
+      toast({
+        title: "Επιτυχία!",
+        description: "Η απάντησή σας καταχωρήθηκε με επιτυχία.",
+      });
+    } catch (error) {
+      console.error('Error submitting RSVP:', error);
+      toast({
+        title: "Σφάλμα",
+        description: "Υπήρξε πρόβλημα κατά την αποστολή της απάντησής σας. Παρακαλώ δοκιμάστε ξανά.",
+        variant: "destructive",
+      });
+    }
   };
 
   if (submitted) {
