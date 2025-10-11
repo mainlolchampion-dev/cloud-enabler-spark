@@ -31,97 +31,97 @@ const Home = () => {
       </header>
 
       {/* Hero Section */}
-      <section className="container mx-auto px-4 py-20 bg-gradient-to-br from-muted via-background to-muted">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary mb-6 text-sm">
-              <Heart className="h-4 w-4" fill="currentColor" />
-              <span className="font-medium">Ηλεκτρονικά Προσκλητήρια Γάμου</span>
-            </div>
-            <h1 className="text-5xl font-bold mb-6 leading-tight">
-              <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Φτιάξτε το</span>
-              <br />
-              <span className="text-foreground">Ηλεκτρονικό</span>
-              <br />
-              <span className="text-foreground">Προσκλητήριο</span>
-              <br />
-              <span className="text-secondary">σας εύκολα μέσα από την</span>
-              <br />
-              <span className="text-secondary">πλατφόρμα μας!</span>
-            </h1>
-            <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-              Στείλτε κομψά ηλεκτρονικά προσκλητήρια γάμου απευθείας στους φίλους και τους συγγενείς σας με το WediLink. Συμπληρώστε εύκολα και γρήγορα την φόρμα της πρόσκλησης, ανεβάστε τις φωτογραφίες σας και σε λίγα λεπτά το προσκλητήριό σας είναι έτοιμο για αποστολή.
-            </p>
-            <div className="flex gap-4">
-              <Link to="/login">
-                <Button size="lg" className="text-lg px-8 shadow-lg hover:shadow-xl transition-shadow">
-                  Φτιάξτε το Δικό Σας
+      <section className="relative py-20 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-[#FF4B7E] via-[#FF6B8A] to-[#FFB347]" />
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm mb-6 text-sm">
+                <Heart className="h-4 w-4 text-white" fill="currentColor" />
+                <span className="font-medium text-white">Ξεκινήστε Δωρεάν</span>
+              </div>
+              <h1 className="text-5xl font-bold mb-6 leading-tight text-white">
+                Έτοιμοι να δημιουργήσετε
+                <br />
+                το τέλειο προσκλητήριο;
+              </h1>
+              <p className="text-lg text-white/90 mb-8 leading-relaxed">
+                Ξεκινήστε δωρεάν σήμερα και δημιουργήστε όμορφα προσκλητήρια σε λίγα λεπτά!
+              </p>
+              <div className="flex gap-4">
+                <Link to="/login">
+                  <Button size="lg" className="text-lg px-8 shadow-lg hover:shadow-xl transition-shadow bg-white text-[#FF4B7E] hover:bg-white/90">
+                    Ξεκινήστε Τώρα →
+                  </Button>
+                </Link>
+                <Button size="lg" variant="outline" className="text-lg px-8 border-2 border-white text-white hover:bg-white/10">
+                  Δείτε Demo
                 </Button>
-              </Link>
-              <Button size="lg" variant="outline" className="text-lg px-8 border-2">
-                Δείτε Demo
-              </Button>
+              </div>
+              <p className="mt-6 text-sm text-white/80">
+                🎊 Δωρεάν δοκιμή • Χωρίς κάρτα • Ακύρωση ανά πάσα στιγμή
+              </p>
             </div>
-          </div>
 
-          <div className="space-y-4">
-            <Card className="p-6 bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20 shadow-lg">
-              <div className="flex items-start gap-4">
-                <div className="p-3 rounded-2xl bg-primary/20">
-                  <CheckCircle className="h-8 w-8 text-primary" />
+            <div className="space-y-4">
+              <Card className="p-6 bg-white/95 backdrop-blur-sm border-white/20 shadow-lg">
+                <div className="flex items-start gap-4">
+                  <div className="p-3 rounded-2xl bg-pink-100">
+                    <CheckCircle className="h-8 w-8 text-pink-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-xl mb-2">RSVP Διαχείριση</h3>
+                    <p className="text-muted-foreground">
+                      Οι καλεσμένοι σας θα πληροφορηθούν εύκολα στο προσκλητήριό σας
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-bold text-xl mb-2">RSVP Διαχείριση</h3>
-                  <p className="text-muted-foreground">
-                    Οι καλεσμένοι σας θα πληγηθούν εύκολα στο προσκλητήριό σας
-                  </p>
-                </div>
-              </div>
-            </Card>
+              </Card>
 
-            <Card className="p-6 bg-gradient-to-br from-red-50 to-red-100/50 border-red-200 shadow-lg">
-              <div className="flex items-start gap-4">
-                <div className="p-3 rounded-2xl bg-red-200/50">
-                  <Image className="h-8 w-8 text-red-600" />
+              <Card className="p-6 bg-white/95 backdrop-blur-sm border-white/20 shadow-lg">
+                <div className="flex items-start gap-4">
+                  <div className="p-3 rounded-2xl bg-red-100">
+                    <Image className="h-8 w-8 text-red-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-xl mb-2">Γκαλερί Φωτογραφιών</h3>
+                    <p className="text-muted-foreground">
+                      Ανεβάστε τις φωτογραφίες σας και μοιραστείτε με τους καλεσμένους
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-bold text-xl mb-2">Γκαλερί Φωτογραφιών</h3>
-                  <p className="text-muted-foreground">
-                    Ανεβάστε τις φωτογραφίες σας και μοιραστείτε με τους καλεσμένους
-                  </p>
-                </div>
-              </div>
-            </Card>
+              </Card>
 
-            <Card className="p-6 bg-gradient-to-br from-yellow-50 to-yellow-100/50 border-yellow-200 shadow-lg">
-              <div className="flex items-start gap-4">
-                <div className="p-3 rounded-2xl bg-yellow-200/50">
-                  <Users className="h-8 w-8 text-yellow-600" />
+              <Card className="p-6 bg-white/95 backdrop-blur-sm border-white/20 shadow-lg">
+                <div className="flex items-start gap-4">
+                  <div className="p-3 rounded-2xl bg-yellow-100">
+                    <Users className="h-8 w-8 text-yellow-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-xl mb-2">Λίστα Γάμου</h3>
+                    <p className="text-muted-foreground">
+                      Η παρουσία μέσα από την φόρμα RSVP
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-bold text-xl mb-2">Λίστα Γάμου</h3>
-                  <p className="text-muted-foreground">
-                    Η παρουσία μέσα από την φόρμα RSVP
-                  </p>
-                </div>
-              </div>
-            </Card>
+              </Card>
+            </div>
           </div>
         </div>
 
         {/* Stats */}
         <div className="grid grid-cols-3 gap-8 mt-20">
           <div className="text-center">
-            <div className="text-5xl font-bold text-primary mb-2">5K+</div>
-            <div className="text-muted-foreground">Ζευγάρια</div>
+            <div className="text-5xl font-bold text-white mb-2">5K+</div>
+            <div className="text-white/80">Ζευγάρια</div>
           </div>
           <div className="text-center">
-            <div className="text-5xl font-bold text-primary mb-2">50K+</div>
-            <div className="text-muted-foreground">Προσκλήσεις</div>
+            <div className="text-5xl font-bold text-white mb-2">50K+</div>
+            <div className="text-white/80">Προσκλήσεις</div>
           </div>
           <div className="text-center">
-            <div className="text-5xl font-bold text-primary mb-2">98%</div>
-            <div className="text-muted-foreground">Ικανοποίηση</div>
+            <div className="text-5xl font-bold text-white mb-2">98%</div>
+            <div className="text-white/80">Ικανοποίηση</div>
           </div>
         </div>
       </section>
@@ -263,7 +263,7 @@ const Home = () => {
                 ))}
               </div>
               <p className="text-muted-foreground mb-6 text-base leading-relaxed italic">
-                Το WediLink μας κάνει τη ζωή πολύ πιο εύκολη! Δημιουργήσαμε υπέροχα προσκλητήρια σε λίγα λεπτά και τα κάναμε RSVP καταπληκτικά εύκολα!
+                Το WediLink μας έκανε τη ζωή πολύ πιο εύκολη! Δημιουργήσαμε υπέροχα προσκλητήρια σε λίγα λεπτά και το RSVP ήταν καταπληκτικά εύκολο!
               </p>
               <div className="flex items-center gap-3">
                 <div className="h-12 w-12 rounded-full bg-gradient-to-br from-primary to-pink-400 flex items-center justify-center shadow-md">
@@ -284,7 +284,7 @@ const Home = () => {
                 ))}
               </div>
               <p className="text-muted-foreground mb-6 text-base leading-relaxed italic">
-                Η εύκολη διαχείριση των καλεσμένων ήταν το κλειδί! Η καλαλήγραψη μας μπορούσε να δουν ποιος θα έρθει και να αποφύγουμε κάθε έκπληξη. Συστήνουμε ανεπιφύλακτα!
+                Η εύκολη διαχείριση των καλεσμένων ήταν το κλειδί! Η οικογένειά μας μπορούσε να δει ποιος θα έρθει και να αποφύγουμε κάθε έκπληξη. Συστήνουμε ανεπιφύλακτα!
               </p>
               <div className="flex items-center gap-3">
                 <div className="h-12 w-12 rounded-full bg-gradient-to-br from-primary to-pink-400 flex items-center justify-center shadow-md">
@@ -305,7 +305,7 @@ const Home = () => {
                 ))}
               </div>
               <p className="text-muted-foreground mb-6 text-base leading-relaxed italic">
-                Ο δραματικό! Δημιουργήσα και επον απεφτά! Μου βοήθησε να δημιουργήσω καλούς πανέμορφους, τα ηχανικά μου φίλοι ήταν πολύ ικανούς και τα έστειλα παράλληλα!
+                Φανταστικό! Η δημιουργία ήταν εύκολη και γρήγορη! Με βοήθησε να φτιάξω προσκλητήρια πανέμορφα, οι φίλοι μου ήταν πολύ ενθουσιασμένοι και τα έστειλα αμέσως!
               </p>
               <div className="flex items-center gap-3">
                 <div className="h-12 w-12 rounded-full bg-gradient-to-br from-primary to-pink-400 flex items-center justify-center shadow-md">
@@ -326,7 +326,7 @@ const Home = () => {
                 ))}
               </div>
               <p className="text-muted-foreground mb-6 text-base leading-relaxed italic">
-                Το analytics που παρέχει ήταν απο το καλύτερο με WediLink για τα προσκλήτηρια μας. Οι καλλιγραφήσες μας μπορούσαν να δουν όλες τις πληροφορίες και να αποστέλλουν παράλληλα!
+                Τα analytics που παρέχει ήταν από τα καλύτερα στο WediLink για τα προσκλητήριά μας. Οι οικογένειές μας μπορούσαν να δουν όλες τις πληροφορίες και να ενημερώνονται άμεσα!
               </p>
               <div className="flex items-center gap-3">
                 <div className="h-12 w-12 rounded-full bg-gradient-to-br from-primary to-pink-400 flex items-center justify-center shadow-md">
@@ -377,10 +377,10 @@ const Home = () => {
 
             <AccordionItem value="item-3" className="bg-background rounded-lg px-6">
               <AccordionTrigger>
-                Μπορείτε να αναλύσετε ταις την δημιουργία της πρόσκλησης μου;
+                Μπορείτε να αναλάβετε εσείς την δημιουργία της πρόσκλησης μου;
               </AccordionTrigger>
               <AccordionContent>
-                Ναι, μπορείτε να επεξεργαστείτε το προσκλητήριό σας ανά πάσα στιγμή πριν το στείλετε στους καλεσμένους σας.
+                Ναι, παρέχουμε υπηρεσία πλήρους δημιουργίας προσκλητηρίου. Επικοινωνήστε μαζί μας για περισσότερες πληροφορίες.
               </AccordionContent>
             </AccordionItem>
 
@@ -395,10 +395,10 @@ const Home = () => {
 
             <AccordionItem value="item-5" className="bg-background rounded-lg px-6">
               <AccordionTrigger>
-                Πως αντιμετωπίζω την την παρουσία των καλεσμένων μου;
+                Πως ενημερώνομαι για την παρουσία των καλεσμένων μου;
               </AccordionTrigger>
               <AccordionContent>
-                Το σύστημά μας διαθέτει ενσωματωμένη λειτουργία RSVP όπου οι καλεσμένοι μπορούν να επιβεβαιώσουν την παρουσία τους.
+                Το σύστημά μας διαθέτει ενσωματωμένη λειτουργία RSVP όπου οι καλεσμένοι μπορούν να επιβεβαιώσουν την παρουσία τους και εσείς λαμβάνετε άμεσες ειδοποιήσεις.
               </AccordionContent>
             </AccordionItem>
 
@@ -408,6 +408,51 @@ const Home = () => {
               </AccordionTrigger>
               <AccordionContent>
                 Όχι, μπορείτε να προστατεύσετε την πρόσκλησή σας με κωδικό (διαθέσιμο στο Plus πακέτο).
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="item-7" className="bg-background rounded-lg px-6">
+              <AccordionTrigger>
+                Για πόσο καιρό θα μείνει δημοσιευμένη η πρόσκληση μου;
+              </AccordionTrigger>
+              <AccordionContent>
+                Η πρόσκλησή σας παραμένει ενεργή για 12 μήνες από την ημερομηνία δημοσίευσης. Μετά μπορείτε να την ανανεώσετε αν το επιθυμείτε.
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="item-8" className="bg-background rounded-lg px-6">
+              <AccordionTrigger>
+                Με ποιον τρόπο μπορώ να πληρώσω;
+              </AccordionTrigger>
+              <AccordionContent>
+                Δεχόμαστε όλες τις κύριες πιστωτικές και χρεωστικές κάρτες (Visa, Mastercard, American Express), καθώς και πληρωμές μέσω PayPal και τραπεζικής κατάθεσης.
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="item-9" className="bg-background rounded-lg px-6">
+              <AccordionTrigger>
+                Πότε πρέπει να πληρώσω;
+              </AccordionTrigger>
+              <AccordionContent>
+                Η πληρωμή γίνεται κατά τη δημιουργία του προσκλητηρίου, πριν από τη δημοσίευσή του. Προσφέρουμε επίσης δωρεάν δοκιμή για να δείτε πρώτα το αποτέλεσμα.
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="item-10" className="bg-background rounded-lg px-6">
+              <AccordionTrigger>
+                Τι είναι το ψηφιακό album;
+              </AccordionTrigger>
+              <AccordionContent>
+                Το ψηφιακό album είναι μια γκαλερί φωτογραφιών όπου μπορείτε να ανεβάσετε φωτογραφίες από τον γάμο σας και να τις μοιραστείτε με τους καλεσμένους σας. Οι καλεσμένοι μπορούν επίσης να ανεβάσουν τις δικές τους φωτογραφίες.
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="item-11" className="bg-background rounded-lg px-6">
+              <AccordionTrigger>
+                Το προσκλητήριο έχει πολλά πεδία που δεν μου χρειάζονται. Μπορούν να απενεργοποιηθούν;
+              </AccordionTrigger>
+              <AccordionContent>
+                Ναι, μπορείτε να προσαρμόσετε πλήρως το προσκλητήριό σας και να απενεργοποιήσετε οποιαδήποτε πεδία δεν χρειάζεστε. Έχετε πλήρη έλεγχο στο τι θα εμφανίζεται.
               </AccordionContent>
             </AccordionItem>
           </Accordion>
@@ -440,7 +485,7 @@ const Home = () => {
               </Button>
             </div>
             <p className="mt-6 text-sm opacity-80">
-              🔒 Ασφαλής πληρωμή • Ψηφιός άδεια • Καμία δέσμευση οποτηδήποτε σταματήστε
+              🔒 Ασφαλής πληρωμή • Χωρίς δέσμευση • Ακύρωση ανά πάσα στιγμή
             </p>
           </div>
         </div>
