@@ -12,6 +12,7 @@ import AddParty from "./pages/AddParty";
 import AllWeddings from "./pages/AllWeddings";
 import AllBaptisms from "./pages/AllBaptisms";
 import AllParties from "./pages/AllParties";
+import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -34,7 +35,7 @@ const App = () => (
                 <Route path="/baptism/all" element={<AllBaptisms />} />
                 <Route path="/party/add" element={<AddParty />} />
                 <Route path="/party/all" element={<AllParties />} />
-                <Route path="/profile" element={<Dashboard />} />
+                <Route path="/profile" element={<Profile />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
