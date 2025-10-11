@@ -14,6 +14,219 @@ export type Database = {
   }
   public: {
     Tables: {
+      events_timeline: {
+        Row: {
+          created_at: string
+          event_date: string
+          event_description: string | null
+          event_name: string
+          event_order: number | null
+          event_time: string | null
+          id: string
+          invitation_id: string
+          location_address: string | null
+          location_lat: number | null
+          location_lng: number | null
+          location_name: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          event_date: string
+          event_description?: string | null
+          event_name: string
+          event_order?: number | null
+          event_time?: string | null
+          id?: string
+          invitation_id: string
+          location_address?: string | null
+          location_lat?: number | null
+          location_lng?: number | null
+          location_name?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          event_date?: string
+          event_description?: string | null
+          event_name?: string
+          event_order?: number | null
+          event_time?: string | null
+          id?: string
+          invitation_id?: string
+          location_address?: string | null
+          location_lat?: number | null
+          location_lng?: number | null
+          location_name?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "events_timeline_invitation_id_fkey"
+            columns: ["invitation_id"]
+            isOneToOne: false
+            referencedRelation: "invitations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gift_registry: {
+        Row: {
+          created_at: string
+          id: string
+          image_url: string | null
+          invitation_id: string
+          item_description: string | null
+          item_name: string
+          price: number | null
+          priority: number | null
+          purchased: boolean | null
+          purchased_at: string | null
+          purchased_by: string | null
+          store_name: string | null
+          store_url: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          invitation_id: string
+          item_description?: string | null
+          item_name: string
+          price?: number | null
+          priority?: number | null
+          purchased?: boolean | null
+          purchased_at?: string | null
+          purchased_by?: string | null
+          store_name?: string | null
+          store_url?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          invitation_id?: string
+          item_description?: string | null
+          item_name?: string
+          price?: number | null
+          priority?: number | null
+          purchased?: boolean | null
+          purchased_at?: string | null
+          purchased_by?: string | null
+          store_name?: string | null
+          store_url?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gift_registry_invitation_id_fkey"
+            columns: ["invitation_id"]
+            isOneToOne: false
+            referencedRelation: "invitations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      guest_table_assignments: {
+        Row: {
+          created_at: string
+          guest_id: string
+          id: string
+          table_id: string
+        }
+        Insert: {
+          created_at?: string
+          guest_id: string
+          id?: string
+          table_id: string
+        }
+        Update: {
+          created_at?: string
+          guest_id?: string
+          id?: string
+          table_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "guest_table_assignments_guest_id_fkey"
+            columns: ["guest_id"]
+            isOneToOne: true
+            referencedRelation: "guests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "guest_table_assignments_table_id_fkey"
+            columns: ["table_id"]
+            isOneToOne: false
+            referencedRelation: "tables"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      guests: {
+        Row: {
+          category: string | null
+          created_at: string
+          dietary_restrictions: string | null
+          email: string | null
+          first_name: string
+          id: string
+          invitation_id: string
+          invitation_sent: boolean | null
+          invitation_sent_at: string | null
+          last_name: string
+          notes: string | null
+          phone: string | null
+          plus_one_allowed: boolean | null
+          plus_one_name: string | null
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          dietary_restrictions?: string | null
+          email?: string | null
+          first_name: string
+          id?: string
+          invitation_id: string
+          invitation_sent?: boolean | null
+          invitation_sent_at?: string | null
+          last_name: string
+          notes?: string | null
+          phone?: string | null
+          plus_one_allowed?: boolean | null
+          plus_one_name?: string | null
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          dietary_restrictions?: string | null
+          email?: string | null
+          first_name?: string
+          id?: string
+          invitation_id?: string
+          invitation_sent?: boolean | null
+          invitation_sent_at?: string | null
+          last_name?: string
+          notes?: string | null
+          phone?: string | null
+          plus_one_allowed?: boolean | null
+          plus_one_name?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "guests_invitation_id_fkey"
+            columns: ["invitation_id"]
+            isOneToOne: false
+            referencedRelation: "invitations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       invitations: {
         Row: {
           created_at: string
@@ -93,6 +306,44 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "rsvps_invitation_id_fkey"
+            columns: ["invitation_id"]
+            isOneToOne: false
+            referencedRelation: "invitations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tables: {
+        Row: {
+          capacity: number
+          created_at: string
+          id: string
+          invitation_id: string
+          table_name: string | null
+          table_number: number
+          updated_at: string
+        }
+        Insert: {
+          capacity?: number
+          created_at?: string
+          id?: string
+          invitation_id: string
+          table_name?: string | null
+          table_number: number
+          updated_at?: string
+        }
+        Update: {
+          capacity?: number
+          created_at?: string
+          id?: string
+          invitation_id?: string
+          table_name?: string | null
+          table_number?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tables_invitation_id_fkey"
             columns: ["invitation_id"]
             isOneToOne: false
             referencedRelation: "invitations"

@@ -130,6 +130,15 @@ export default function AllParties() {
                               variant="link"
                               size="sm"
                               className="h-auto p-0 text-xs"
+                              onClick={() => navigate(`/guests/${invitation.id}`)}
+                            >
+                              Καλεσμένοι
+                            </Button>
+                            <span className="text-muted-foreground">|</span>
+                            <Button
+                              variant="link"
+                              size="sm"
+                              className="h-auto p-0 text-xs"
                               onClick={() => handleView(invitation.id)}
                             >
                               Προβολή

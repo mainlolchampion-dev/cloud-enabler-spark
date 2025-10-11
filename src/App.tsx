@@ -19,6 +19,7 @@ import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 import InvitationRouter from "./pages/public/InvitationRouter";
 import RSVPManagement from "./pages/RSVPManagement";
+import GuestManagement from "./pages/GuestManagement";
 
 const queryClient = new QueryClient();
 
@@ -54,6 +55,7 @@ const App = () => (
               <Route path="/party/edit/:id" element={<AddParty />} />
               <Route path="/party/all" element={<AllParties />} />
                       <Route path="/rsvp/:id" element={<RSVPManagement />} />
+                      <Route path="/guests/:id" element={<GuestManagement />} />
                       <Route path="/profile" element={<Profile />} />
                       <Route path="*" element={<NotFound />} />
                     </Routes>
