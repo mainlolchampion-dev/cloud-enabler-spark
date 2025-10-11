@@ -8,6 +8,8 @@ import { RichTextEditor } from "@/components/wedding/RichTextEditor";
 import { MapPicker } from "@/components/wedding/MapPicker";
 import { RepeatableTable } from "@/components/wedding/RepeatableTable";
 import { GalleryManager } from "@/components/wedding/GalleryManager";
+import { generateUUID, publishInvitation } from "@/lib/invitationStorage";
+import { ShareModal } from "@/components/wedding/ShareModal";
 
 interface PartyData {
   title: string;
@@ -25,6 +27,9 @@ interface PartyData {
 const STORAGE_KEY = "party_draft";
 
 export default function AddParty() {
+  const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [publishedId, setPublishedId] = useState<string | null>(null);
+  
   const [data, setData] = useState<PartyData>(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
     return saved
@@ -83,20 +88,15 @@ export default function AddParty() {
   const handlePublish = () => {
     if (!validateData()) return;
     
-    // Save to invitations list
-    const invitations = JSON.parse(localStorage.getItem("party_invitations") || "[]");
-    const newInvitation = {
-      id: Date.now().toString(),
-      title: data.title,
-      partyDate: data.partyDate,
-      createdAt: new Date().toISOString(),
-      data: data,
-    };
-    invitations.push(newInvitation);
-    localStorage.setItem("party_invitations", JSON.stringify(invitations));
+    const id = generateUUID();
+    publishInvitation(id, data, 'party', data.title);
     
     // Clear draft
     localStorage.removeItem(STORAGE_KEY);
+    
+    // Show share modal
+    setPublishedId(id);
+    setShareModalOpen(true);
     
     toast.success("Η πρόσκληση δημοσιεύτηκε επιτυχώς!");
   };
@@ -230,6 +230,15 @@ export default function AddParty() {
           </div>
         </div>
       </div>
+      
+      {publishedId && (
+        <ShareModal
+          open={shareModalOpen}
+          onOpenChange={setShareModalOpen}
+          invitationUrl={`${window.location.origin}/prosklisi/${publishedId}`}
+          title={data.title}
+        />
+      )}
     </div>
   );
 }
