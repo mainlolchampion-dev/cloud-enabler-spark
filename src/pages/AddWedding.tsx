@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { generateUUID, publishInvitation } from "@/lib/invitationStorage";
 import { ShareModal } from "@/components/wedding/ShareModal";
+import { PreviewModal } from "@/components/wedding/PreviewModal";
 import { supabase } from "@/integrations/supabase/client";
 
 interface WeddingData {
@@ -70,6 +71,7 @@ export default function AddWedding() {
   const [newGroomFamily, setNewGroomFamily] = useState("");
   const [newBrideFamily, setNewBrideFamily] = useState("");
   const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [previewModalOpen, setPreviewModalOpen] = useState(false);
   const [publishedId, setPublishedId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -182,8 +184,7 @@ export default function AddWedding() {
 
   const handlePreview = () => {
     if (!validateData()) return;
-    toast.info("Προεπισκόπηση: Θα ανοίξει σε νέο παράθυρο");
-    console.log("Preview data:", data);
+    setPreviewModalOpen(true);
   };
 
   const handlePublish = async () => {
@@ -479,6 +480,17 @@ export default function AddWedding() {
         </div>
       </div>
       
+      <PreviewModal
+        open={previewModalOpen}
+        onOpenChange={setPreviewModalOpen}
+        invitationType="wedding"
+        data={data}
+        onPublish={() => {
+          setPreviewModalOpen(false);
+          handlePublish();
+        }}
+      />
+
       {publishedId && (
         <ShareModal
           open={shareModalOpen}

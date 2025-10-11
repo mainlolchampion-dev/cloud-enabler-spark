@@ -11,6 +11,7 @@ import { RepeatableTable } from "@/components/wedding/RepeatableTable";
 import { GalleryManager } from "@/components/wedding/GalleryManager";
 import { generateUUID, publishInvitation } from "@/lib/invitationStorage";
 import { ShareModal } from "@/components/wedding/ShareModal";
+import { PreviewModal } from "@/components/wedding/PreviewModal";
 import { supabase } from "@/integrations/supabase/client";
 
 interface PartyData {
@@ -34,6 +35,7 @@ export default function AddParty() {
   const isEditMode = !!id;
   const [loading, setLoading] = useState(isEditMode);
   const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [previewModalOpen, setPreviewModalOpen] = useState(false);
   const [publishedId, setPublishedId] = useState<string | null>(null);
   
   const [data, setData] = useState<PartyData>({
@@ -120,7 +122,7 @@ export default function AddParty() {
 
   const handlePreview = () => {
     if (!validateData()) return;
-    toast.info("Προεπισκόπηση: Θα ανοίξει σε νέο παράθυρο");
+    setPreviewModalOpen(true);
   };
 
   const handlePublish = async () => {
@@ -286,6 +288,17 @@ export default function AddParty() {
         </div>
       </div>
       
+      <PreviewModal
+        open={previewModalOpen}
+        onOpenChange={setPreviewModalOpen}
+        invitationType="party"
+        data={data}
+        onPublish={() => {
+          setPreviewModalOpen(false);
+          handlePublish();
+        }}
+      />
+
       {publishedId && (
         <ShareModal
           open={shareModalOpen}

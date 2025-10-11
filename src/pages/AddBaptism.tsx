@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { generateUUID, publishInvitation } from "@/lib/invitationStorage";
 import { ShareModal } from "@/components/wedding/ShareModal";
+import { PreviewModal } from "@/components/wedding/PreviewModal";
 import { supabase } from "@/integrations/supabase/client";
 
 interface BaptismData {
@@ -63,6 +64,7 @@ export default function AddBaptism() {
 
   const [newParent, setNewParent] = useState("");
   const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [previewModalOpen, setPreviewModalOpen] = useState(false);
   const [publishedId, setPublishedId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -158,7 +160,7 @@ export default function AddBaptism() {
 
   const handlePreview = () => {
     if (!validateData()) return;
-    toast.info("Προεπισκόπηση: Θα ανοίξει σε νέο παράθυρο");
+    setPreviewModalOpen(true);
   };
 
   const handlePublish = async () => {
@@ -408,6 +410,17 @@ export default function AddBaptism() {
         </div>
       </div>
       
+      <PreviewModal
+        open={previewModalOpen}
+        onOpenChange={setPreviewModalOpen}
+        invitationType="baptism"
+        data={data}
+        onPublish={() => {
+          setPreviewModalOpen(false);
+          handlePublish();
+        }}
+      />
+
       {publishedId && (
         <ShareModal
           open={shareModalOpen}
