@@ -3,9 +3,10 @@ import { useEffect, useState } from "react";
 import { getInvitation } from "@/lib/invitationStorage";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { Button } from "@/components/ui/button";
-import { Calendar, MapPin, Share2, Heart } from "lucide-react";
+import { Calendar, MapPin, Share2, Heart, Phone } from "lucide-react";
 import { format } from "date-fns";
 import { el } from "date-fns/locale";
+import { RSVPForm } from "@/components/wedding/RSVPForm";
 import "leaflet/dist/leaflet.css";
 
 export default function WeddingInvitation() {
@@ -69,7 +70,7 @@ export default function WeddingInvitation() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-rose-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-rose-50 via-pink-50 to-white">
       {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         {data.mainImage && (
@@ -77,20 +78,26 @@ export default function WeddingInvitation() {
             className="absolute inset-0 bg-cover bg-center"
             style={{ backgroundImage: `url(${data.mainImage})` }}
           >
-            <div className="absolute inset-0 bg-black/30" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-rose-900/50" />
           </div>
         )}
         
-        <div className="relative z-10 text-center text-white px-4">
-          <h1 className="font-serif text-6xl md:text-8xl mb-4 animate-fade-in">
-            {data.groomName} & {data.brideName}
+        <div className="relative z-10 text-center text-white px-4 space-y-6">
+          <Heart className="w-12 h-12 mx-auto fill-current animate-pulse" />
+          <h1 className="font-serif text-6xl md:text-9xl mb-4 animate-fade-in drop-shadow-2xl">
+            {data.groomName}
+            <span className="block text-5xl md:text-7xl my-4">&</span>
+            {data.brideName}
           </h1>
-          <p className="text-2xl md:text-3xl tracking-widest uppercase mb-8">
+          <div className="w-24 h-1 bg-white/80 mx-auto"></div>
+          <p className="text-xl md:text-3xl tracking-[0.3em] uppercase font-light">
             Παντρευόμαστε
           </p>
-          <div className="flex items-center justify-center gap-2">
-            <Heart className="w-6 h-6 fill-current" />
-          </div>
+          {formattedDate && (
+            <p className="text-lg md:text-2xl font-light capitalize mt-4">
+              {formattedDate}
+            </p>
+          )}
         </div>
       </section>
 
@@ -313,11 +320,11 @@ export default function WeddingInvitation() {
           <h2 className="font-serif text-4xl text-center mb-12">Gallery Φωτογραφιών</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {data.gallery.map((img: any) => (
-              <div key={img.id} className="aspect-square overflow-hidden rounded-lg">
+              <div key={img.id} className="aspect-square overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-shadow">
                 <img 
                   src={img.url} 
                   alt="" 
-                  className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+                  className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
                   loading="lazy"
                 />
               </div>
@@ -325,6 +332,17 @@ export default function WeddingInvitation() {
           </div>
         </section>
       )}
+
+      {/* RSVP Section */}
+      <section className="max-w-7xl mx-auto px-4 py-16 bg-gradient-to-b from-rose-50 to-pink-100">
+        <div className="text-center mb-12">
+          <h2 className="font-serif text-5xl mb-4">Επιβεβαίωση Παρουσίας</h2>
+          <p className="text-lg text-muted-foreground">
+            Θα χαρούμε πολύ να μας τιμήσετε με την παρουσία σας
+          </p>
+        </div>
+        <RSVPForm invitationId={id!} invitationType="wedding" />
+      </section>
 
       {/* Footer */}
       <footer className="bg-primary/5 py-8 mt-16">
@@ -337,16 +355,17 @@ export default function WeddingInvitation() {
       </footer>
 
       {/* Sticky Bottom Bar (Mobile) */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg p-4 md:hidden z-50">
+      <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-t shadow-2xl p-3 md:hidden z-50">
         <div className="flex gap-2">
           {data.contactInfo && (
             <Button variant="outline" className="flex-1" size="sm">
+              <Phone className="w-4 h-4 mr-1" />
               Κλήση
             </Button>
           )}
           {data.churchPosition && (
             <Button 
-              variant="outline" 
+              variant="default" 
               className="flex-1" 
               size="sm"
               onClick={() => openDirections(data.churchPosition)}
@@ -357,7 +376,7 @@ export default function WeddingInvitation() {
           )}
           <Button variant="outline" className="flex-1" size="sm">
             <Share2 className="w-4 h-4 mr-1" />
-            Κοινοποίηση
+            Μοιραστείτε
           </Button>
         </div>
       </div>

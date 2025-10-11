@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar, MapPin, Share2, PartyPopper } from "lucide-react";
 import { format } from "date-fns";
 import { el } from "date-fns/locale";
+import { RSVPForm } from "@/components/wedding/RSVPForm";
 import "leaflet/dist/leaflet.css";
 
 export default function PartyInvitation() {
@@ -177,11 +178,11 @@ export default function PartyInvitation() {
           <h2 className="font-serif text-5xl text-center mb-12 text-white">Gallery</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {data.gallery.map((img: any) => (
-              <div key={img.id} className="aspect-square overflow-hidden rounded-lg shadow-2xl border-2 border-pink-500">
+              <div key={img.id} className="aspect-square overflow-hidden rounded-2xl shadow-2xl border-4 border-pink-500/50 hover:border-pink-400 transition-colors">
                 <img 
                   src={img.url} 
                   alt="" 
-                  className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+                  className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
                   loading="lazy"
                 />
               </div>
@@ -189,6 +190,18 @@ export default function PartyInvitation() {
           </div>
         </section>
       )}
+
+      {/* RSVP Section */}
+      <section className="max-w-7xl mx-auto px-4 py-16">
+        <div className="text-center mb-12">
+          <PartyPopper className="w-16 h-16 mx-auto text-pink-400 mb-4 animate-bounce" />
+          <h2 className="font-serif text-6xl mb-4 text-white">Επιβεβαίωση Παρουσίας</h2>
+          <p className="text-xl text-pink-200">
+            Πες μας αν έρχεσαι να πάρτυ μαζί μας!
+          </p>
+        </div>
+        <RSVPForm invitationId={id!} invitationType="party" />
+      </section>
 
       {/* Footer */}
       <footer className="bg-black/50 py-8 mt-16 border-t border-pink-500">

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar, MapPin, Share2, Sparkles } from "lucide-react";
 import { format } from "date-fns";
 import { el } from "date-fns/locale";
+import { RSVPForm } from "@/components/wedding/RSVPForm";
 import "leaflet/dist/leaflet.css";
 
 export default function BaptismInvitation() {
@@ -271,11 +272,11 @@ export default function BaptismInvitation() {
           <h2 className="font-serif text-4xl text-center mb-12">Gallery Φωτογραφιών</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {data.gallery.map((img: any) => (
-              <div key={img.id} className="aspect-square overflow-hidden rounded-lg shadow-lg">
+              <div key={img.id} className="aspect-square overflow-hidden rounded-2xl shadow-xl hover:shadow-2xl transition-shadow">
                 <img 
                   src={img.url} 
                   alt="" 
-                  className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+                  className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
                   loading="lazy"
                 />
               </div>
@@ -283,6 +284,18 @@ export default function BaptismInvitation() {
           </div>
         </section>
       )}
+
+      {/* RSVP Section */}
+      <section className="max-w-7xl mx-auto px-4 py-16 bg-gradient-to-br from-blue-50 via-pink-50 to-purple-50">
+        <div className="text-center mb-12">
+          <Sparkles className="w-12 h-12 mx-auto text-blue-500 mb-4" />
+          <h2 className="font-serif text-5xl mb-4">Επιβεβαίωση Παρουσίας</h2>
+          <p className="text-lg text-muted-foreground">
+            Θα χαρούμε πολύ να γιορτάσετε μαζί μας αυτή την ξεχωριστή στιγμή
+          </p>
+        </div>
+        <RSVPForm invitationId={id!} invitationType="baptism" />
+      </section>
 
       {/* Footer */}
       <footer className="bg-blue-100 py-8 mt-16">
