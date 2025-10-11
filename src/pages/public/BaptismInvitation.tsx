@@ -15,13 +15,17 @@ export default function BaptismInvitation() {
   const [activeTab, setActiveTab] = useState<'map' | 'satellite'>('map');
 
   useEffect(() => {
-    if (id) {
-      const data = getInvitation(id);
-      if (data && data.type === 'baptism') {
-        setInvitation(data);
-        document.title = data.title;
+    const fetchInvitation = async () => {
+      if (id) {
+        const data = await getInvitation(id);
+        if (data && data.type === 'baptism') {
+          setInvitation(data);
+          document.title = data.title;
+        }
       }
-    }
+    };
+    
+    fetchInvitation();
   }, [id]);
 
   if (!invitation) {

@@ -1,4 +1,5 @@
-// Storage module for invitations - can be replaced with API later
+// Invitation storage using Lovable Cloud (Supabase)
+import { supabase } from "@/integrations/supabase/client";
 
 export type InvitationType = 'wedding' | 'baptism' | 'party';
 
@@ -9,112 +10,174 @@ export interface BaseInvitation {
   status: 'draft' | 'published';
   createdAt: string;
   updatedAt: string;
+  publishedAt?: string;
   data: any;
 }
 
-const INVITATIONS_INDEX_KEY = 'invites:index';
-
 // Generate UUID v4
 export function generateUUID(): string {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    const r = Math.random() * 16 | 0;
-    const v = c === 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-  });
+  return crypto.randomUUID();
 }
 
-// Get all invitations index
-export function getInvitationsIndex(): BaseInvitation[] {
-  const index = localStorage.getItem(INVITATIONS_INDEX_KEY);
-  return index ? JSON.parse(index) : [];
-}
+// Get all invitations for the current user
+export async function getInvitationsIndex(): Promise<BaseInvitation[]> {
+  const { data: { user } } = await supabase.auth.getUser();
+  
+  if (!user) {
+    return [];
+  }
 
-// Save invitations index
-function saveInvitationsIndex(index: BaseInvitation[]) {
-  localStorage.setItem(INVITATIONS_INDEX_KEY, JSON.stringify(index));
+  const { data, error } = await supabase
+    .from('invitations')
+    .select('*')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching invitations:', error);
+    return [];
+  }
+
+  return data.map(inv => ({
+    id: inv.id,
+    type: inv.type as InvitationType,
+    title: inv.title,
+    status: inv.status as 'draft' | 'published',
+    createdAt: inv.created_at,
+    updatedAt: inv.updated_at,
+    publishedAt: inv.published_at || undefined,
+    data: inv.data,
+  }));
 }
 
 // Save draft
-export function saveDraft(invitation: Partial<BaseInvitation>): BaseInvitation {
-  const index = getInvitationsIndex();
-  const now = new Date().toISOString();
+export async function saveDraft(invitation: Partial<BaseInvitation>): Promise<string> {
+  const { data: { user } } = await supabase.auth.getUser();
   
-  let savedInvitation: BaseInvitation;
-  
+  if (!user) {
+    throw new Error('User must be logged in to save drafts');
+  }
+
+  // If invitation has an ID, update it
   if (invitation.id) {
-    // Update existing
-    const existingIndex = index.findIndex(inv => inv.id === invitation.id);
-    savedInvitation = {
-      ...index[existingIndex],
-      ...invitation,
-      updatedAt: now,
-    } as BaseInvitation;
-    
-    if (existingIndex >= 0) {
-      index[existingIndex] = savedInvitation;
-    } else {
-      index.push(savedInvitation);
+    const { error } = await supabase
+      .from('invitations')
+      .update({
+        title: invitation.title,
+        type: invitation.type,
+        data: invitation.data,
+        status: 'draft',
+      })
+      .eq('id', invitation.id)
+      .eq('user_id', user.id);
+
+    if (error) {
+      console.error('Error updating draft:', error);
+      throw error;
     }
-  } else {
-    // Create new
-    savedInvitation = {
-      id: generateUUID(),
+
+    return invitation.id;
+  }
+
+  // Create new invitation
+  const { data, error } = await supabase
+    .from('invitations')
+    .insert({
+      user_id: user.id,
       type: invitation.type || 'wedding',
       title: invitation.title || 'Untitled',
       status: 'draft',
-      createdAt: now,
-      updatedAt: now,
       data: invitation.data || {},
-    };
-    index.push(savedInvitation);
+    })
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Error creating draft:', error);
+    throw error;
   }
-  
-  // Save to index and individual key
-  saveInvitationsIndex(index);
-  localStorage.setItem(`invite:${savedInvitation.id}`, JSON.stringify(savedInvitation));
-  
-  return savedInvitation;
+
+  return data.id;
 }
 
 // Publish invitation
-export function publishInvitation(id: string, data: any, type: InvitationType, title: string): BaseInvitation {
-  const index = getInvitationsIndex();
-  const now = new Date().toISOString();
+export async function publishInvitation(
+  id: string,
+  data: any,
+  type: InvitationType,
+  title: string
+): Promise<void> {
+  const { data: { user } } = await supabase.auth.getUser();
   
-  const existingIndex = index.findIndex(inv => inv.id === id);
-  
-  const publishedInvitation: BaseInvitation = {
-    id,
-    type,
-    title,
-    status: 'published',
-    createdAt: existingIndex >= 0 ? index[existingIndex].createdAt : now,
-    updatedAt: now,
-    data,
-  };
-  
-  if (existingIndex >= 0) {
-    index[existingIndex] = publishedInvitation;
-  } else {
-    index.push(publishedInvitation);
+  if (!user) {
+    throw new Error('User must be logged in to publish invitations');
   }
-  
-  saveInvitationsIndex(index);
-  localStorage.setItem(`invite:${id}`, JSON.stringify(publishedInvitation));
-  
-  return publishedInvitation;
+
+  const { error } = await supabase
+    .from('invitations')
+    .upsert({
+      id,
+      user_id: user.id,
+      type,
+      title,
+      status: 'published',
+      data,
+      published_at: new Date().toISOString(),
+    })
+    .eq('user_id', user.id);
+
+  if (error) {
+    console.error('Error publishing invitation:', error);
+    throw error;
+  }
 }
 
-// Get invitation by ID
-export function getInvitation(id: string): BaseInvitation | null {
-  const stored = localStorage.getItem(`invite:${id}`);
-  return stored ? JSON.parse(stored) : null;
+// Get invitation by ID (public - anyone can access published invitations)
+export async function getInvitation(id: string): Promise<BaseInvitation | null> {
+  const { data, error } = await supabase
+    .from('invitations')
+    .select('*')
+    .eq('id', id)
+    .eq('status', 'published')
+    .maybeSingle();
+
+  if (error) {
+    console.error('Error fetching invitation:', error);
+    return null;
+  }
+
+  if (!data) {
+    return null;
+  }
+
+  return {
+    id: data.id,
+    type: data.type as InvitationType,
+    title: data.title,
+    status: data.status as 'draft' | 'published',
+    createdAt: data.created_at,
+    updatedAt: data.updated_at,
+    publishedAt: data.published_at || undefined,
+    data: data.data,
+  };
 }
 
 // Delete invitation
-export function deleteInvitation(id: string): void {
-  const index = getInvitationsIndex();
-  const newIndex = index.filter(inv => inv.id !== id);
-  saveInvitationsIndex(newIndex);
-  localStorage.removeItem(`invite:${id}`);
+export async function deleteInvitation(id: string): Promise<void> {
+  const { data: { user } } = await supabase.auth.getUser();
+  
+  if (!user) {
+    throw new Error('User must be logged in to delete invitations');
+  }
+
+  const { error } = await supabase
+    .from('invitations')
+    .delete()
+    .eq('id', id)
+    .eq('user_id', user.id);
+
+  if (error) {
+    console.error('Error deleting invitation:', error);
+    throw error;
+  }
 }

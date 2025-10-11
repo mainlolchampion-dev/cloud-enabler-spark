@@ -11,10 +11,14 @@ export default function InvitationRouter() {
   const [invitation, setInvitation] = useState<BaseInvitation | null | undefined>(undefined);
 
   useEffect(() => {
-    if (id) {
-      const data = getInvitation(id);
-      setInvitation(data);
-    }
+    const fetchInvitation = async () => {
+      if (id) {
+        const data = await getInvitation(id);
+        setInvitation(data);
+      }
+    };
+    
+    fetchInvitation();
   }, [id]);
 
   // Loading state

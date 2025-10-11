@@ -11,35 +11,41 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-interface BaptismInvitation {
-  id: string;
-  title: string;
-  baptismDate: string;
-  createdAt: string;
-}
+import { getInvitationsIndex, deleteInvitation, BaseInvitation } from "@/lib/invitationStorage";
 
 export default function AllBaptisms() {
   const navigate = useNavigate();
-  const [invitations, setInvitations] = useState<BaptismInvitation[]>([]);
+  const [invitations, setInvitations] = useState<BaseInvitation[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     loadInvitations();
   }, []);
 
-  const loadInvitations = () => {
-    const saved = localStorage.getItem("baptism_invitations");
-    if (saved) {
-      setInvitations(JSON.parse(saved));
+  const loadInvitations = async () => {
+    try {
+      setLoading(true);
+      const allInvitations = await getInvitationsIndex();
+      const baptisms = allInvitations.filter(inv => inv.type === 'baptism');
+      setInvitations(baptisms);
+    } catch (error) {
+      console.error('Error loading invitations:', error);
+      toast.error("Σφάλμα κατά τη φόρτωση των προσκλήσεων");
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (confirm("Είστε σίγουροι ότι θέλετε να διαγράψετε αυτή την πρόσκληση;")) {
-      const updated = invitations.filter((inv) => inv.id !== id);
-      localStorage.setItem("baptism_invitations", JSON.stringify(updated));
-      setInvitations(updated);
-      toast.success("Η πρόσκληση διαγράφηκε επιτυχώς");
+      try {
+        await deleteInvitation(id);
+        setInvitations(invitations.filter((inv) => inv.id !== id));
+        toast.success("Η πρόσκληση διαγράφηκε επιτυχώς");
+      } catch (error) {
+        console.error('Error deleting invitation:', error);
+        toast.error("Σφάλμα κατά τη διαγραφή της πρόσκλησης");
+      }
     }
   };
 
@@ -48,7 +54,7 @@ export default function AllBaptisms() {
   };
 
   const handleView = (id: string) => {
-    toast.info("Προβολή πρόσκλησης: " + id);
+    window.open(`/prosklisi/${id}`, '_blank');
   };
 
   const formatDate = (dateStr: string) => {
@@ -67,7 +73,11 @@ export default function AllBaptisms() {
             </Button>
           </CardHeader>
           <CardContent>
-            {invitations.length === 0 ? (
+            {loading ? (
+              <div className="text-center py-12 text-muted-foreground">
+                Φόρτωση...
+              </div>
+            ) : invitations.length === 0 ? (
               <div className="text-center py-12 text-muted-foreground">
                 Δεν υπάρχουν προσκλήσεις. Δημιουργήστε την πρώτη σας πρόσκληση!
               </div>
@@ -77,6 +87,7 @@ export default function AllBaptisms() {
                   <TableRow>
                     <TableHead>Τίτλος</TableHead>
                     <TableHead>Ημερομηνία Βάπτισης</TableHead>
+                    <TableHead>Κατάσταση</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -117,7 +128,12 @@ export default function AllBaptisms() {
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell>{formatDate(invitation.baptismDate)}</TableCell>
+                      <TableCell>{invitation.data?.baptismDate ? formatDate(invitation.data.baptismDate) : '-'}</TableCell>
+                      <TableCell>
+                        <span className={invitation.status === 'published' ? 'text-green-600' : 'text-yellow-600'}>
+                          {invitation.status === 'published' ? 'Δημοσιευμένη' : 'Προσχέδιο'}
+                        </span>
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

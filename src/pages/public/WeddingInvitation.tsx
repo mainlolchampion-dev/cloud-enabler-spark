@@ -15,19 +15,23 @@ export default function WeddingInvitation() {
   const [activeTab, setActiveTab] = useState<'map' | 'satellite'>('map');
 
   useEffect(() => {
-    if (id) {
-      const data = getInvitation(id);
-      if (data && data.type === 'wedding') {
-        setInvitation(data);
-        
-        // Set OpenGraph meta tags
-        document.title = data.title;
-        const metaDescription = document.querySelector('meta[name="description"]');
-        if (metaDescription) {
-          metaDescription.setAttribute('content', `Πρόσκληση Γάμου: ${data.data.groomName} & ${data.data.brideName}`);
+    const fetchInvitation = async () => {
+      if (id) {
+        const data = await getInvitation(id);
+        if (data && data.type === 'wedding') {
+          setInvitation(data);
+          
+          // Set OpenGraph meta tags
+          document.title = data.title;
+          const metaDescription = document.querySelector('meta[name="description"]');
+          if (metaDescription) {
+            metaDescription.setAttribute('content', `Πρόσκληση Γάμου: ${data.data.groomName} & ${data.data.brideName}`);
+          }
         }
       }
-    }
+    };
+    
+    fetchInvitation();
   }, [id]);
 
   if (!invitation) {

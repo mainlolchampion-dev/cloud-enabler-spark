@@ -123,20 +123,25 @@ export default function AddBaptism() {
     console.log("Preview data:", data);
   };
 
-  const handlePublish = () => {
+  const handlePublish = async () => {
     if (!validateData()) return;
     
-    const id = generateUUID();
-    publishInvitation(id, data, 'baptism', data.title);
-    
-    // Clear draft
-    localStorage.removeItem(STORAGE_KEY);
-    
-    // Show share modal
-    setPublishedId(id);
-    setShareModalOpen(true);
-    
-    toast.success("Η πρόσκληση δημοσιεύτηκε επιτυχώς!");
+    try {
+      const id = generateUUID();
+      await publishInvitation(id, data, 'baptism', data.title);
+      
+      // Clear draft
+      localStorage.removeItem(STORAGE_KEY);
+      
+      // Show share modal
+      setPublishedId(id);
+      setShareModalOpen(true);
+      
+      toast.success("Η πρόσκληση δημοσιεύτηκε επιτυχώς!");
+    } catch (error) {
+      console.error('Error publishing invitation:', error);
+      toast.error("Σφάλμα κατά τη δημοσίευση της πρόσκλησης");
+    }
   };
 
   return (

@@ -14,13 +14,17 @@ export default function PartyInvitation() {
   const [invitation, setInvitation] = useState<any>(null);
 
   useEffect(() => {
-    if (id) {
-      const data = getInvitation(id);
-      if (data && data.type === 'party') {
-        setInvitation(data);
-        document.title = data.title;
+    const fetchInvitation = async () => {
+      if (id) {
+        const data = await getInvitation(id);
+        if (data && data.type === 'party') {
+          setInvitation(data);
+          document.title = data.title;
+        }
       }
-    }
+    };
+    
+    fetchInvitation();
   }, [id]);
 
   if (!invitation) {
