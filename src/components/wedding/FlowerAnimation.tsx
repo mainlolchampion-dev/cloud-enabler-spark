@@ -51,24 +51,54 @@ const FlowerAnimation: React.FC<FlowerAnimationProps> = ({
       ctx.translate(x, y);
       ctx.rotate((rotation * Math.PI) / 180);
       
-      // Draw 5 petals
+      // Add glow effect
+      ctx.shadowBlur = 15;
+      ctx.shadowColor = color;
+      
+      // Draw 5 petals with gradient
       for (let i = 0; i < 5; i++) {
         ctx.save();
-        ctx.rotate((i * 72 * Math.PI) / 180);
+        ctx.rotate((i * 2 * Math.PI) / 5);
         
+        // Create gradient for petal
+        const gradient = ctx.createRadialGradient(0, -size / 2, 0, 0, -size / 2, size / 2);
+        gradient.addColorStop(0, color);
+        gradient.addColorStop(1, color + '80');
+        
+        ctx.fillStyle = gradient;
         ctx.beginPath();
-        ctx.ellipse(0, -size / 2, size / 3, size / 2, 0, 0, Math.PI * 2);
-        ctx.fillStyle = color;
+        ctx.ellipse(0, -size / 2, size / 3, size / 1.5, 0, 0, Math.PI * 2);
         ctx.fill();
+        
+        // Add petal outline for depth
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
         
         ctx.restore();
       }
       
-      // Draw center
+      // Draw golden center with gradient
+      const centerGradient = ctx.createRadialGradient(0, 0, 0, 0, 0, size / 3);
+      centerGradient.addColorStop(0, '#FFD700');
+      centerGradient.addColorStop(0.7, '#FFA500');
+      centerGradient.addColorStop(1, '#FF8C00');
+      
+      ctx.fillStyle = centerGradient;
       ctx.beginPath();
-      ctx.arc(0, 0, size / 4, 0, Math.PI * 2);
-      ctx.fillStyle = '#FFEB3B';
+      ctx.arc(0, 0, size / 3, 0, Math.PI * 2);
       ctx.fill();
+      
+      // Add sparkle dots in center
+      ctx.fillStyle = '#FFFFFF';
+      for (let i = 0; i < 3; i++) {
+        const angle = (i * 2 * Math.PI) / 3;
+        const dotX = Math.cos(angle) * size / 6;
+        const dotY = Math.sin(angle) * size / 6;
+        ctx.beginPath();
+        ctx.arc(dotX, dotY, size / 15, 0, Math.PI * 2);
+        ctx.fill();
+      }
       
       ctx.restore();
     };
@@ -76,17 +106,17 @@ const FlowerAnimation: React.FC<FlowerAnimationProps> = ({
     // Initialize falling flowers
     const initFlowers = () => {
       flowers.current = [];
-      const flowerCount = Math.floor(window.innerWidth / 50);
+      const flowerCount = Math.floor(window.innerWidth / 40); // More flowers!
 
       for (let i = 0; i < flowerCount; i++) {
         flowers.current.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height - canvas.height,
-          size: Math.random() * 8 + 5,
+          size: Math.random() * 10 + 6, // Bigger flowers
           rotation: Math.random() * 360,
-          xSpeed: Math.random() * 1 - 0.5,
-          ySpeed: Math.random() * 1 + 1,
-          rotationSpeed: Math.random() * 2 - 1,
+          xSpeed: Math.random() * 1.5 - 0.75, // More horizontal movement
+          ySpeed: Math.random() * 1.2 + 0.8, // Varied fall speed
+          rotationSpeed: Math.random() * 3 - 1.5, // Faster rotation
           color: colors[Math.floor(Math.random() * colors.length)]
         });
       }
@@ -135,7 +165,7 @@ const FlowerAnimation: React.FC<FlowerAnimationProps> = ({
     <canvas 
       ref={canvasRef} 
       className="fixed top-0 left-0 w-full h-full pointer-events-none"
-      style={{ opacity: 0.8, zIndex: 1 }}
+      style={{ opacity: 0.9, zIndex: 1 }}
     />
   );
 };
