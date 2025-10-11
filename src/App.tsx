@@ -17,9 +17,7 @@ import AllBaptisms from "./pages/AllBaptisms";
 import AllParties from "./pages/AllParties";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
-import WeddingInvitation from "./pages/public/WeddingInvitation";
-import BaptismInvitation from "./pages/public/BaptismInvitation";
-import PartyInvitation from "./pages/public/PartyInvitation";
+import InvitationRouter from "./pages/public/InvitationRouter";
 
 const queryClient = new QueryClient();
 
@@ -33,20 +31,7 @@ const App = () => (
           {/* Public routes without sidebar */}
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/prosklisi/:id" element={
-            <>
-              {(() => {
-                const id = window.location.pathname.split('/')[2];
-                const invite = localStorage.getItem(`invite:${id}`);
-                if (!invite) return <NotFound />;
-                const data = JSON.parse(invite);
-                if (data.type === 'wedding') return <WeddingInvitation />;
-                if (data.type === 'baptism') return <BaptismInvitation />;
-                if (data.type === 'party') return <PartyInvitation />;
-                return <NotFound />;
-              })()}
-            </>
-          } />
+          <Route path="/prosklisi/:id" element={<InvitationRouter />} />
           
           {/* Protected routes with sidebar */}
           <Route path="/*" element={
