@@ -5,6 +5,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/layout/AppSidebar";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import AddWedding from "./pages/AddWedding";
 import AddBaptism from "./pages/AddBaptism";
@@ -28,7 +30,9 @@ const App = () => (
             <AppSidebar />
             <main className="flex-1 overflow-auto">
               <Routes>
-                <Route path="/" element={<Dashboard />} />
+                <Route path="/" element={<Home />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/wedding/add" element={<AddWedding />} />
                 <Route path="/wedding/all" element={<AllWeddings />} />
                 <Route path="/baptism/add" element={<AddBaptism />} />
