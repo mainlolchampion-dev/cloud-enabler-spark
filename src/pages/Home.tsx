@@ -2,12 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Heart, CheckCircle, Image, Calendar, Share2, Lock, BarChart3, MessageCircle, Users, Palette } from "lucide-react";
 import { Link } from "react-router-dom";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { FAQSection } from "@/components/FAQSection";
 
 const Home = () => {
   return (
@@ -346,121 +341,7 @@ const Home = () => {
       </section>
 
       {/* FAQ Section */}
-      <section className="bg-muted/30 py-20">
-        <div className="container mx-auto px-4 max-w-3xl">
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-4">
-              <MessageCircle className="h-4 w-4" />
-              <span className="text-sm font-medium">Συχνές Ερωτήσεις</span>
-            </div>
-            <h2 className="text-4xl font-bold mb-4">Συχνές Ερωτήσεις</h2>
-            <p className="text-lg text-muted-foreground">
-              Βρείτε απαντήσεις στις πιο συχνές ερωτήσεις μας
-            </p>
-          </div>
-
-          <Accordion type="single" collapsible className="space-y-4">
-            <AccordionItem value="item-1" className="bg-background rounded-lg px-6">
-              <AccordionTrigger>
-                Πόσο κοστίζει η δημιουργία μιας ψηφιακής πρόσκλησης;
-              </AccordionTrigger>
-              <AccordionContent>
-                Προσφέρουμε τρία πακέτα: Basic (€39), Plus (€69) και Premium (€119). Κάθε πακέτο περιλαμβάνει διαφορετικά χαρακτηριστικά για να καλύψει τις ανάγκες σας.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="item-2" className="bg-background rounded-lg px-6">
-              <AccordionTrigger>
-                Πως γίνεται η δημιουργία του προσκλητηρίου;
-              </AccordionTrigger>
-              <AccordionContent>
-                Απλά εγγραφείτε, επιλέξτε ένα θέμα, συμπληρώστε τις πληροφορίες σας, ανεβάστε φωτογραφίες και το προσκλητήριό σας είναι έτοιμο!
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="item-3" className="bg-background rounded-lg px-6">
-              <AccordionTrigger>
-                Μπορείτε να αναλάβετε εσείς την δημιουργία της πρόσκλησης μου;
-              </AccordionTrigger>
-              <AccordionContent>
-                Ναι, παρέχουμε υπηρεσία πλήρους δημιουργίας προσκλητηρίου. Επικοινωνήστε μαζί μας για περισσότερες πληροφορίες.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="item-4" className="bg-background rounded-lg px-6">
-              <AccordionTrigger>
-                Πως μπορώ να αποστείλω την πρόσκληση μου στους καλεσμένους;
-              </AccordionTrigger>
-              <AccordionContent>
-                Μπορείτε να την αποστείλετε μέσω email, WhatsApp, SMS ή να την μοιραστείτε μέσω social media με ένα μοναδικό link.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="item-5" className="bg-background rounded-lg px-6">
-              <AccordionTrigger>
-                Πως ενημερώνομαι για την παρουσία των καλεσμένων μου;
-              </AccordionTrigger>
-              <AccordionContent>
-                Το σύστημά μας διαθέτει ενσωματωμένη λειτουργία RSVP όπου οι καλεσμένοι μπορούν να επιβεβαιώσουν την παρουσία τους και εσείς λαμβάνετε άμεσες ειδοποιήσεις.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="item-6" className="bg-background rounded-lg px-6">
-              <AccordionTrigger>
-                Την πρόσκληση μου μπορούν να την δουν όλοι;
-              </AccordionTrigger>
-              <AccordionContent>
-                Όχι, μπορείτε να προστατεύσετε την πρόσκλησή σας με κωδικό (διαθέσιμο στο Plus πακέτο).
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="item-7" className="bg-background rounded-lg px-6">
-              <AccordionTrigger>
-                Για πόσο καιρό θα μείνει δημοσιευμένη η πρόσκληση μου;
-              </AccordionTrigger>
-              <AccordionContent>
-                Η πρόσκλησή σας παραμένει ενεργή για 12 μήνες από την ημερομηνία δημοσίευσης. Μετά μπορείτε να την ανανεώσετε αν το επιθυμείτε.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="item-8" className="bg-background rounded-lg px-6">
-              <AccordionTrigger>
-                Με ποιον τρόπο μπορώ να πληρώσω;
-              </AccordionTrigger>
-              <AccordionContent>
-                Δεχόμαστε όλες τις κύριες πιστωτικές και χρεωστικές κάρτες (Visa, Mastercard, American Express), καθώς και πληρωμές μέσω PayPal και τραπεζικής κατάθεσης.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="item-9" className="bg-background rounded-lg px-6">
-              <AccordionTrigger>
-                Πότε πρέπει να πληρώσω;
-              </AccordionTrigger>
-              <AccordionContent>
-                Η πληρωμή γίνεται κατά τη δημιουργία του προσκλητηρίου, πριν από τη δημοσίευσή του. Προσφέρουμε επίσης δωρεάν δοκιμή για να δείτε πρώτα το αποτέλεσμα.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="item-10" className="bg-background rounded-lg px-6">
-              <AccordionTrigger>
-                Τι είναι το ψηφιακό album;
-              </AccordionTrigger>
-              <AccordionContent>
-                Το ψηφιακό album είναι μια γκαλερί φωτογραφιών όπου μπορείτε να ανεβάσετε φωτογραφίες από τον γάμο σας και να τις μοιραστείτε με τους καλεσμένους σας. Οι καλεσμένοι μπορούν επίσης να ανεβάσουν τις δικές τους φωτογραφίες.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="item-11" className="bg-background rounded-lg px-6">
-              <AccordionTrigger>
-                Το προσκλητήριο έχει πολλά πεδία που δεν μου χρειάζονται. Μπορούν να απενεργοποιηθούν;
-              </AccordionTrigger>
-              <AccordionContent>
-                Ναι, μπορείτε να προσαρμόσετε πλήρως το προσκλητήριό σας και να απενεργοποιήσετε οποιαδήποτε πεδία δεν χρειάζεστε. Έχετε πλήρη έλεγχο στο τι θα εμφανίζεται.
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-        </div>
-      </section>
+      <FAQSection />
 
       {/* CTA Section */}
       <section className="relative py-20 overflow-hidden">
