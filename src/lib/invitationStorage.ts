@@ -111,12 +111,19 @@ export async function publishInvitation(
   const { data: { user } } = await supabase.auth.getUser();
   
   if (!user) {
+    console.error('❌ User not logged in');
     throw new Error('User must be logged in to publish invitations');
   }
 
-  console.log('Publishing invitation to database:', { id, type, title, dataKeys: Object.keys(data) });
+  console.log('📝 Publishing invitation to database:', { 
+    id, 
+    type, 
+    title, 
+    userId: user.id,
+    dataKeys: Object.keys(data) 
+  });
 
-  const { error } = await supabase
+  const { data: result, error } = await supabase
     .from('invitations')
     .upsert({
       id,
@@ -126,14 +133,15 @@ export async function publishInvitation(
       status: 'published',
       data,
       published_at: new Date().toISOString(),
-    });
+    })
+    .select();
 
   if (error) {
-    console.error('Error publishing invitation:', error);
-    throw error;
+    console.error('❌ Error publishing invitation:', error);
+    throw new Error(`Failed to publish invitation: ${error.message}`);
   }
   
-  console.log('Invitation published successfully');
+  console.log('✅ Invitation published successfully:', result);
 }
 
 // Get invitation by ID (public - anyone can access published invitations)

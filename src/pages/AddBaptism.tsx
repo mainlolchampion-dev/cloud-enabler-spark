@@ -168,6 +168,8 @@ export default function AddBaptism() {
     
     try {
       const invitationId = isEditMode ? id! : generateUUID();
+      console.log('🎯 Starting publish process:', { invitationId, isEditMode, title: data.title });
+      
       await publishInvitation(invitationId, data, 'baptism', data.title);
       
       if (!isEditMode) {
@@ -182,9 +184,9 @@ export default function AddBaptism() {
       if (isEditMode) {
         setTimeout(() => navigate("/baptism/all"), 2000);
       }
-    } catch (error) {
-      console.error('Error publishing invitation:', error);
-      toast.error("Σφάλμα κατά τη δημοσίευση της πρόσκλησης");
+    } catch (error: any) {
+      console.error('❌ Error publishing invitation:', error);
+      toast.error(error?.message || "Σφάλμα κατά τη δημοσίευση της πρόσκλησης");
     }
   };
 

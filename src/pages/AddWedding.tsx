@@ -192,6 +192,8 @@ export default function AddWedding() {
     
     try {
       const invitationId = isEditMode ? id! : generateUUID();
+      console.log('🎯 Starting publish process:', { invitationId, isEditMode, title: data.title });
+      
       await publishInvitation(invitationId, data, 'wedding', data.title);
       
       if (!isEditMode) {
@@ -207,9 +209,9 @@ export default function AddWedding() {
       if (isEditMode) {
         setTimeout(() => navigate("/wedding/all"), 2000);
       }
-    } catch (error) {
-      console.error('Error publishing invitation:', error);
-      toast.error("Σφάλμα κατά τη δημοσίευση της πρόσκλησης");
+    } catch (error: any) {
+      console.error('❌ Error publishing invitation:', error);
+      toast.error(error?.message || "Σφάλμα κατά τη δημοσίευση της πρόσκλησης");
     }
   };
 
