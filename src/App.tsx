@@ -33,6 +33,7 @@ const App = () => (
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/prosklisi/:id" element={<InvitationRouter />} />
+          <Route path="/proskisi/:id" element={<InvitationRouter />} /> {/* Alternative spelling for backwards compatibility */}
           
           {/* Protected routes with sidebar */}
           <Route path="/*" element={
