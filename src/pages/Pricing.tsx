@@ -10,40 +10,53 @@ import { supabase } from "@/integrations/supabase/client";
 const plans = [
   {
     name: "Basic",
-    price: "0€",
-    priceId: "",
+    price: "€39",
+    priceId: "price_1SHNxRKs4zHW11Kqk2Rr4ka1",
     planType: "basic",
-    features: ["1 ενεργό προσκλητήριο", "Βασικά templates", "50 καλεσμένοι max", "Email υποστήριξη"],
+    subtitle: "Ιδανικό για απλές εκδηλώσεις",
+    features: [
+      "5 επαγγελματικά θέματα",
+      "Φόρμα RSVP",
+      "Email επιβεβαίωσεις",
+      "Γκαλερί φωτογραφιών",
+      "Add-to-Calendar (.ics)",
+      "Εξαγωγή CSV/Excel",
+    ],
   },
   {
-    name: "Pro",
-    price: "9.99€/μήνα",
-    priceId: "price_1SHNxRKs4zHW11Kqk2Rr4ka1",
+    name: "Plus",
+    price: "€69",
+    priceId: "price_1SHO06Ks4zHW11KqGlbgMuqc",
     planType: "plus",
+    subtitle: "Για ζευγάρια που θέλουν περισσότερα",
     features: [
-      "5 ενεργά προσκλητήρια",
-      "Όλα τα premium templates",
-      "Απεριόριστοι καλεσμένοι",
-      "SMS ειδοποιήσεις",
-      "Προτεραιότητα υποστήριξης",
-      "Εξαγωγή guest lists",
+      "Όλα από Basic +",
+      "10+ premium θέματα",
+      "Προστασία με κωδικό",
+      "Gift Registry με QR codes",
+      "Live Photo Wall",
+      "Guest list management",
+      "Dietary tracking",
+      "Zapier/Make webhooks",
     ],
     popular: true,
   },
   {
     name: "Premium",
-    price: "19.99€/μήνα",
-    priceId: "price_1SHO06Ks4zHW11KqGlbgMuqc",
+    price: "€119",
+    priceId: "",
     planType: "premium",
+    subtitle: "Πλήρης έλεγχος & δυνατότητες",
     features: [
-      "Απεριόριστα προσκλητήρια",
-      "Όλα τα premium templates",
-      "Απεριόριστοι καλεσμένοι",
-      "SMS & Email ειδοποιήσεις",
-      "White-label branding",
-      "Custom domain",
-      "24/7 υποστήριξη",
+      "Όλα από Plus +",
+      "Custom subdomain",
+      "Email υπενθυμίσεις",
+      "Seating chart planner",
+      "Custom fonts upload",
+      "A/B testing",
+      "SMS/WhatsApp reminders",
       "Advanced analytics",
+      "Priority support 24/7",
     ],
   },
 ];
@@ -120,7 +133,11 @@ export default function Pricing() {
 
               <div className="mb-6">
                 <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
-                <div className="text-4xl font-bold mb-4">{plan.price}</div>
+                {plan.subtitle && (
+                  <p className="text-sm text-muted-foreground mb-3">{plan.subtitle}</p>
+                )}
+                <div className="text-4xl font-bold mb-1">{plan.price}</div>
+                <p className="text-sm text-muted-foreground">εφάπαξ</p>
               </div>
 
               <ul className="space-y-3 mb-8">
@@ -138,18 +155,27 @@ export default function Pricing() {
                 onClick={() => handleSelectPlan(plan.priceId, plan.planType)}
                 disabled={loading === plan.planType}
               >
-                {loading === plan.planType
-                  ? "Φόρτωση..."
-                  : plan.planType === "basic"
-                    ? "Ξεκινήστε Δωρεάν"
-                    : "Επιλογή Πλάνου"}
+                {loading === plan.planType ? "Φόρτωση..." : "Ξεκινήστε"}
               </Button>
             </Card>
           ))}
         </div>
 
-        <div className="text-center mt-12 text-sm text-muted-foreground">
-          <p>Όλα τα πλάνα περιλαμβάνουν δωρεάν δοκιμή 14 ημερών. Μπορείτε να ακυρώσετε οποιαδήποτε στιγμή.</p>
+        <div className="text-center mt-12 space-y-4">
+          <div className="flex items-center justify-center gap-8 text-sm">
+            <div className="flex items-center gap-2">
+              <span>❤️</span>
+              <span>30-ημέρες εγγύηση επιστροφής χρημάτων</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span>🔥</span>
+              <span>Ασφαλείς πληρωμές</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span>⚡</span>
+              <span>Instant setup</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
