@@ -12,6 +12,7 @@ import { CountdownTimer } from "@/components/CountdownTimer";
 import { AddToCalendar } from "@/components/wedding/AddToCalendar";
 import { LivePhotoWall } from "@/components/wedding/LivePhotoWall";
 import { PasswordProtection } from "@/components/wedding/PasswordProtection";
+import { SeatingDisplay } from "@/components/wedding/SeatingDisplay";
 import partyHeroSample from "@/assets/party-hero-sample.jpg";
 
 interface PartyInvitationProps {
@@ -187,6 +188,9 @@ export default function PartyInvitation({ invitation }: PartyInvitationProps) {
           </ul>
         </section>
       )}
+
+      {/* Seating Display */}
+      <SeatingDisplay invitationId={invitation.id} />
 
       {/* RSVP Form */}
       <section>

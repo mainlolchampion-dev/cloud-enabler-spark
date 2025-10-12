@@ -12,6 +12,7 @@ import { CountdownTimer } from "@/components/CountdownTimer";
 import { AddToCalendar } from "@/components/wedding/AddToCalendar";
 import { LivePhotoWall } from "@/components/wedding/LivePhotoWall";
 import { PasswordProtection } from "@/components/wedding/PasswordProtection";
+import { SeatingDisplay } from "@/components/wedding/SeatingDisplay";
 import baptismHeroSample from "@/assets/baptism-hero-sample.jpg";
 
 interface BaptismInvitationProps {
@@ -243,6 +244,9 @@ export default function BaptismInvitation({ invitation }: BaptismInvitationProps
           </div>
         </section>
       )}
+
+      {/* Seating Display */}
+      <SeatingDisplay invitationId={invitation.id} />
 
       {/* RSVP Form */}
       <section>
