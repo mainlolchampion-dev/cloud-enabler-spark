@@ -1,8 +1,5 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { Resend } from "npm:resend@2.0.0";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
-
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -139,15 +136,28 @@ const handler = async (req: Request): Promise<Response> => {
       </div>
     `;
 
-    // Send email to invitation owner
-    const emailResponse = await resend.emails.send({
-      from: "WediLink RSVP <onboarding@resend.dev>",
-      to: [ownerEmail],
-      subject: `Νέα απάντηση RSVP: ${guestName} - ${invitationTitle || 'Εκδήλωση'}`,
-      html: emailHtml,
+    // Send email using Resend API
+    const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+    
+    const emailResponse = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${RESEND_API_KEY}`,
+      },
+      body: JSON.stringify({
+        from: 'WediLink RSVP <onboarding@resend.dev>',
+        to: [ownerEmail],
+        subject: `Νέα απάντηση RSVP: ${guestName} - ${invitationTitle || 'Εκδήλωση'}`,
+        html: emailHtml,
+      }),
     });
 
-    console.log("✅ Notification email sent to owner:", emailResponse);
+    const emailData = await emailResponse.json();
+    const status = emailResponse.ok ? 'sent' : 'failed';
+    const errorMessage = emailResponse.ok ? null : JSON.stringify(emailData);
+
+    console.log("✅ Notification email sent to owner:", emailData);
 
     // Log to notification_history
     await supabaseClient.from("notification_history").insert({
@@ -156,11 +166,15 @@ const handler = async (req: Request): Promise<Response> => {
       type: 'email',
       subject: `Νέα απάντηση RSVP: ${guestName}`,
       recipient: ownerEmail,
-      status: 'sent',
-      error_message: null,
+      status,
+      error_message: errorMessage,
     });
 
-    return new Response(JSON.stringify({ success: true, messageId: emailResponse.id }), {
+    if (!emailResponse.ok) {
+      throw new Error(`Resend API error: ${JSON.stringify(emailData)}`);
+    }
+
+    return new Response(JSON.stringify({ success: true, messageId: emailData.id }), {
       status: 200,
       headers: { "Content-Type": "application/json", ...corsHeaders },
     });
