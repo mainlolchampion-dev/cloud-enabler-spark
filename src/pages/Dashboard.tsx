@@ -45,29 +45,49 @@ export default function Dashboard() {
     try {
       setLoading(true);
       
-      const invitations = await getInvitationsIndex();
-      
-      const weddings = invitations.filter(inv => inv.type === 'wedding').length;
-      const baptisms = invitations.filter(inv => inv.type === 'baptism').length;
-      const parties = invitations.filter(inv => inv.type === 'party').length;
-      
       const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        setStats({
+          total: 0,
+          weddings: 0,
+          baptisms: 0,
+          parties: 0,
+          totalRSVPs: 0,
+          totalGuests: 0,
+          confirmedGuests: 0,
+        });
+        return;
+      }
+
+      const { data: invitations, error } = await supabase
+        .from('invitations')
+        .select('id, type')
+        .eq('user_id', user.id);
+
+      if (error) throw error;
+
+      const invitationsList = invitations || [];
+      
+      const weddings = invitationsList.filter(inv => inv.type === 'wedding').length;
+      const baptisms = invitationsList.filter(inv => inv.type === 'baptism').length;
+      const parties = invitationsList.filter(inv => inv.type === 'party').length;
+      
       let totalRSVPs = 0;
       let totalGuests = 0;
       let confirmedGuests = 0;
       
-      if (user && invitations.length > 0) {
+      if (invitationsList.length > 0) {
         const { count: rsvpCount } = await supabase
           .from('rsvps')
           .select('*', { count: 'exact', head: true })
-          .in('invitation_id', invitations.map(inv => inv.id));
+          .in('invitation_id', invitationsList.map(inv => inv.id));
         
         totalRSVPs = rsvpCount || 0;
         
         const { count: guestsCount } = await supabase
           .from('guests')
           .select('*', { count: 'exact', head: true })
-          .in('invitation_id', invitations.map(inv => inv.id));
+          .in('invitation_id', invitationsList.map(inv => inv.id));
         
         totalGuests = guestsCount || 0;
         
@@ -75,13 +95,13 @@ export default function Dashboard() {
           .from('rsvps')
           .select('*', { count: 'exact', head: true })
           .eq('will_attend', 'yes')
-          .in('invitation_id', invitations.map(inv => inv.id));
+          .in('invitation_id', invitationsList.map(inv => inv.id));
         
         confirmedGuests = confirmedCount || 0;
       }
       
       setStats({
-        total: invitations.length,
+        total: invitationsList.length,
         weddings,
         baptisms,
         parties,
@@ -97,6 +117,16 @@ export default function Dashboard() {
   };
 
   const handleCreateInvitation = async (type: string) => {
+    if (!subscription) {
+      toast({
+        title: "Χρειάζεστε Πλάνο",
+        description: "Για να δημιουργήσετε προσκλήσεις χρειάζεστε να αγοράσετε ένα πλάνο.",
+        variant: "destructive",
+      });
+      navigate("/pricing");
+      return;
+    }
+
     const can = await canCreateInvitation();
     if (!can) {
       toast({
@@ -133,16 +163,36 @@ export default function Dashboard() {
               <Crown className="h-5 w-5 text-primary" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-serif font-bold capitalize mb-2">
-                {subLoading ? "..." : subscription?.plan_type || "Basic"}
-              </div>
-              <Button 
-                variant="link" 
-                className="p-0 h-auto text-xs text-primary"
-                onClick={() => navigate("/subscription")}
-              >
-                Διαχείριση <ArrowUpRight className="h-3 w-3 ml-1" />
-              </Button>
+              {subLoading ? (
+                <div className="text-2xl font-serif font-bold">...</div>
+              ) : subscription ? (
+                <>
+                  <div className="text-2xl font-serif font-bold capitalize mb-2">
+                    {subscription.plan_type}
+                  </div>
+                  <Button 
+                    variant="link" 
+                    className="p-0 h-auto text-xs text-primary"
+                    onClick={() => navigate("/subscription")}
+                  >
+                    Διαχείριση <ArrowUpRight className="h-3 w-3 ml-1" />
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <div className="text-lg font-semibold mb-2 text-muted-foreground">
+                    Χωρίς Πλάνο
+                  </div>
+                  <Button 
+                    variant="default"
+                    size="sm"
+                    className="w-full"
+                    onClick={() => navigate("/pricing")}
+                  >
+                    Αγορά Πλάνου
+                  </Button>
+                </>
+              )}
             </CardContent>
           </Card>
 

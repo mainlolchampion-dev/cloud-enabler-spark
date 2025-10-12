@@ -40,29 +40,14 @@ export default function SubscriptionManagement() {
         .from("user_subscriptions")
         .select("*")
         .eq("user_id", user?.id)
-        .single();
+        .eq("status", "active")
+        .maybeSingle();
 
-      if (error) {
+      if (error && error.code !== 'PGRST116') {
         console.error("Subscription fetch error:", error);
-        // Create default subscription if not exists
-        if (error.code === 'PGRST116') {
-          const { data: newSub, error: createError } = await supabase
-            .from("user_subscriptions")
-            .insert({
-              user_id: user?.id,
-              plan_type: "basic",
-              status: "active",
-            })
-            .select()
-            .single();
-          
-          if (!createError && newSub) {
-            setSubscription(newSub);
-          }
-        }
-      } else {
-        setSubscription(data);
       }
+      
+      setSubscription(data);
     } catch (error) {
       console.error("Error fetching subscription:", error);
       toast({
@@ -154,99 +139,134 @@ export default function SubscriptionManagement() {
 
         <div className="grid gap-6">
           <Card className="p-6">
-            <div className="flex items-start justify-between mb-6">
-              <div className="flex items-center gap-3">
-                <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Crown className="h-6 w-6 text-primary" />
-                </div>
-                <div>
-                  <h2 className="text-xl font-semibold capitalize">
-                    Πλάνο {subscription?.plan_type}
-                  </h2>
-                  <div className="flex gap-2 mt-1">
-                    <Badge variant={getPlanBadgeVariant(subscription?.plan_type || "basic")}>
-                      {subscription?.plan_type}
-                    </Badge>
-                    <Badge variant={getStatusBadgeVariant(subscription?.status || "active")}>
-                      {subscription?.status === "active" && "Ενεργό"}
-                      {subscription?.status === "trialing" && "Δοκιμαστική Περίοδος"}
-                      {subscription?.status === "canceled" && "Ακυρωμένο"}
-                      {subscription?.status === "past_due" && "Εκκρεμής Πληρωμή"}
-                    </Badge>
+            {subscription ? (
+              <>
+                <div className="flex items-start justify-between mb-6">
+                  <div className="flex items-center gap-3">
+                    <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
+                      <Crown className="h-6 w-6 text-primary" />
+                    </div>
+                    <div>
+                      <h2 className="text-xl font-semibold capitalize">
+                        Πλάνο {subscription.plan_type}
+                      </h2>
+                      <div className="flex gap-2 mt-1">
+                        <Badge variant={getPlanBadgeVariant(subscription.plan_type)}>
+                          {subscription.plan_type}
+                        </Badge>
+                        <Badge variant={getStatusBadgeVariant(subscription.status)}>
+                          {subscription.status === "active" && "Ενεργό"}
+                          {subscription.status === "trialing" && "Δοκιμαστική Περίοδος"}
+                          {subscription.status === "canceled" && "Ακυρωμένο"}
+                          {subscription.status === "past_due" && "Εκκρεμής Πληρωμή"}
+                        </Badge>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
 
-            {subscription?.expires_at && (
-              <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
-                <Calendar className="h-4 w-4" />
-                <span>
-                  Ανανέωση στις{" "}
-                  {format(new Date(subscription.expires_at), "d MMMM yyyy", { locale: el })}
-                </span>
-              </div>
+                {subscription.expires_at && (
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
+                    <Calendar className="h-4 w-4" />
+                    <span>
+                      Ανανέωση στις{" "}
+                      {format(new Date(subscription.expires_at), "d MMMM yyyy", { locale: el })}
+                    </span>
+                  </div>
+                )}
+
+                <div className="grid gap-3">
+                  {subscription.plan_type === "basic" && (
+                    <Button onClick={() => navigate("/pricing")} className="w-full">
+                      <Crown className="h-4 w-4 mr-2" />
+                      Αναβάθμιση Πλάνου
+                    </Button>
+                  )}
+
+                  {subscription.plan_type !== "basic" && subscription.stripe_customer_id && (
+                    <Button
+                      onClick={handleManageSubscription}
+                      disabled={portalLoading}
+                      className="w-full"
+                      variant="outline"
+                    >
+                      <CreditCard className="h-4 w-4 mr-2" />
+                      {portalLoading ? "Φόρτωση..." : "Διαχείριση Πληρωμών"}
+                    </Button>
+                  )}
+
+                  <Button variant="outline" onClick={() => navigate("/dashboard")} className="w-full">
+                    Επιστροφή στο Dashboard
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="flex items-start justify-between mb-6">
+                  <div className="flex items-center gap-3">
+                    <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center">
+                      <Crown className="h-6 w-6 text-muted-foreground" />
+                    </div>
+                    <div>
+                      <h2 className="text-xl font-semibold">
+                        Δεν έχετε ενεργό πλάνο
+                      </h2>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        Επιλέξτε ένα πλάνο για να ξεκινήσετε
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid gap-3">
+                  <Button onClick={() => navigate("/pricing")} className="w-full">
+                    <Crown className="h-4 w-4 mr-2" />
+                    Προβολή Πλάνων
+                  </Button>
+
+                  <Button variant="outline" onClick={() => navigate("/dashboard")} className="w-full">
+                    Επιστροφή στο Dashboard
+                  </Button>
+                </div>
+              </>
             )}
-
-            <div className="grid gap-3">
-              {subscription?.plan_type === "basic" && (
-                <Button onClick={() => navigate("/pricing")} className="w-full">
-                  <Crown className="h-4 w-4 mr-2" />
-                  Αναβάθμιση Πλάνου
-                </Button>
-              )}
-
-              {subscription?.plan_type !== "basic" && subscription?.stripe_customer_id && (
-                <Button
-                  onClick={handleManageSubscription}
-                  disabled={portalLoading}
-                  className="w-full"
-                  variant="outline"
-                >
-                  <CreditCard className="h-4 w-4 mr-2" />
-                  {portalLoading ? "Φόρτωση..." : "Διαχείριση Πληρωμών"}
-                </Button>
-              )}
-
-              <Button variant="outline" onClick={() => navigate("/dashboard")} className="w-full">
-                Επιστροφή στο Dashboard
-              </Button>
-            </div>
           </Card>
 
-          <Card className="p-6">
-            <h3 className="text-lg font-semibold mb-4">Το Πλάνο σας περιλαμβάνει:</h3>
-            <ul className="space-y-2 text-sm">
-              {subscription?.plan_type === "basic" && (
-                <>
-                  <li>✓ 1 ενεργό προσκλητήριο</li>
-                  <li>✓ Βασικά templates</li>
-                  <li>✓ 50 καλεσμένοι max</li>
-                  <li>✓ Email υποστήριξη</li>
-                </>
-              )}
-              {subscription?.plan_type === "plus" && (
-                <>
-                  <li>✓ 5 ενεργά προσκλητήρια</li>
-                  <li>✓ Όλα τα premium templates</li>
-                  <li>✓ Απεριόριστοι καλεσμένοι</li>
-                  <li>✓ SMS ειδοποιήσεις</li>
-                  <li>✓ Προτεραιότητα υποστήριξης</li>
-                </>
-              )}
-              {subscription?.plan_type === "premium" && (
-                <>
-                  <li>✓ Απεριόριστα προσκλητήρια</li>
-                  <li>✓ Όλα τα premium templates</li>
-                  <li>✓ Απεριόριστοι καλεσμένοι</li>
-                  <li>✓ SMS & Email ειδοποιήσεις</li>
-                  <li>✓ White-label branding</li>
-                  <li>✓ Custom domain</li>
-                  <li>✓ 24/7 υποστήριξη</li>
-                </>
-              )}
-            </ul>
-          </Card>
+          {subscription && (
+            <Card className="p-6">
+              <h3 className="text-lg font-semibold mb-4">Το Πλάνο σας περιλαμβάνει:</h3>
+              <ul className="space-y-2 text-sm">
+                {subscription.plan_type === "basic" && (
+                  <>
+                    <li>✓ 5 επαγγελματικά θέματα</li>
+                    <li>✓ Φόρμα RSVP</li>
+                    <li>✓ Email επιβεβαίωσεις</li>
+                    <li>✓ Γκαλερί φωτογραφιών</li>
+                  </>
+                )}
+                {subscription.plan_type === "plus" && (
+                  <>
+                    <li>✓ Όλα από Basic +</li>
+                    <li>✓ 10+ premium θέματα</li>
+                    <li>✓ Απεριόριστοι καλεσμένοι</li>
+                    <li>✓ SMS ειδοποιήσεις</li>
+                    <li>✓ Προτεραιότητα υποστήριξης</li>
+                  </>
+                )}
+                {subscription.plan_type === "premium" && (
+                  <>
+                    <li>✓ Απεριόριστα προσκλητήρια</li>
+                    <li>✓ Όλα τα premium templates</li>
+                    <li>✓ Απεριόριστοι καλεσμένοι</li>
+                    <li>✓ SMS & Email ειδοποιήσεις</li>
+                    <li>✓ White-label branding</li>
+                    <li>✓ Custom domain</li>
+                    <li>✓ 24/7 υποστήριξη</li>
+                  </>
+                )}
+              </ul>
+            </Card>
+          )}
         </div>
       </div>
     </div>

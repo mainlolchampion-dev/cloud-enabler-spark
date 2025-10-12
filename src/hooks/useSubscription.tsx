@@ -36,26 +36,29 @@ export const useSubscription = () => {
 
   const fetchSubscription = useCallback(async () => {
     if (!user) return;
-    
+ 
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) return;
-
+ 
       // Call check-subscription edge function
       const { data, error } = await supabase.functions.invoke("check-subscription", {
         headers: {
           Authorization: `Bearer ${session.access_token}`,
         },
       });
-
+ 
       if (error) throw error;
-      
-      if (data) {
+ 
+      if (data && data.subscribed) {
         setSubscription({
           plan_type: data.plan_type,
           status: data.status,
           expires_at: data.subscription_end,
         });
+      } else {
+        // No active subscription
+        setSubscription(null);
       }
     } catch (error) {
       console.error("Error fetching subscription:", error);
@@ -65,13 +68,17 @@ export const useSubscription = () => {
           .from("user_subscriptions")
           .select("plan_type, status, expires_at")
           .eq("user_id", user?.id)
-          .single();
-
+          .eq("status", "active")
+          .maybeSingle();
+ 
         if (!dbError && data) {
           setSubscription(data);
+        } else {
+          setSubscription(null);
         }
       } catch (dbError) {
         console.error("Error fetching from database:", dbError);
+        setSubscription(null);
       }
     } finally {
       setLoading(false);

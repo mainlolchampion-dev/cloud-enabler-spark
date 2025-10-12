@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import Stripe from "https://esm.sh/stripe@14.21.0";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import Stripe from "https://esm.sh/stripe@18.5.0";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -43,89 +43,33 @@ serve(async (req) => {
     if (!user?.email) throw new Error("User not authenticated or email not available");
     logStep("User authenticated", { userId: user.id, email: user.email });
 
-    const stripe = new Stripe(stripeKey, { apiVersion: "2023-10-16", httpClient: Stripe.createFetchHttpClient() });
-    const customers = await stripe.customers.list({ email: user.email, limit: 1 });
-    
-    if (customers.data.length === 0) {
-      logStep("No customer found, returning basic subscription");
-      
-      // Update database to basic if not already
-      await supabaseClient
-        .from("user_subscriptions")
-        .upsert({
-          user_id: user.id,
-          plan_type: "basic",
-          status: "active",
-        }, {
-          onConflict: "user_id"
-        });
+    // Check database first for active subscription
+    const { data: dbSub } = await supabaseClient
+      .from("user_subscriptions")
+      .select("*")
+      .eq("user_id", user.id)
+      .eq("status", "active")
+      .maybeSingle();
 
-      return new Response(JSON.stringify({ 
-        subscribed: false,
-        plan_type: "basic",
-        status: "active"
+    if (dbSub) {
+      logStep("Found active subscription in database", { planType: dbSub.plan_type });
+      return new Response(JSON.stringify({
+        subscribed: true,
+        plan_type: dbSub.plan_type,
+        status: dbSub.status,
+        subscription_end: dbSub.expires_at
       }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 200,
       });
     }
 
-    const customerId = customers.data[0].id;
-    logStep("Found Stripe customer", { customerId });
-
-    const subscriptions = await stripe.subscriptions.list({
-      customer: customerId,
-      status: "active",
-      limit: 1,
-    });
+    logStep("No active subscription found");
     
-    const hasActiveSub = subscriptions.data.length > 0;
-    let planType: "basic" | "plus" | "premium" = "basic";
-    let subscriptionEnd = null;
-    let stripeSubscriptionId = null;
-
-    if (hasActiveSub) {
-      const subscription = subscriptions.data[0];
-      stripeSubscriptionId = subscription.id;
-      subscriptionEnd = new Date(subscription.current_period_end * 1000).toISOString();
-      logStep("Active subscription found", { subscriptionId: subscription.id, endDate: subscriptionEnd });
-      
-      const priceId = subscription.items.data[0].price.id;
-      logStep("Price ID", { priceId });
-      
-      // Map price IDs to plan types
-      if (priceId === "price_1SHNxRKs4zHW11Kqk2Rr4ka1") {
-        planType = "plus";
-      } else if (priceId === "price_1SHO06Ks4zHW11KqGlbgMuqc") {
-        planType = "premium";
-      }
-      
-      logStep("Determined plan type", { planType });
-    } else {
-      logStep("No active subscription found");
-    }
-
-    // Update database
-    await supabaseClient
-      .from("user_subscriptions")
-      .upsert({
-        user_id: user.id,
-        plan_type: planType,
-        status: hasActiveSub ? "active" : "canceled",
-        stripe_customer_id: customerId,
-        stripe_subscription_id: stripeSubscriptionId,
-        expires_at: subscriptionEnd,
-      }, {
-        onConflict: "user_id"
-      });
-
-    logStep("Database updated successfully");
-
-    return new Response(JSON.stringify({
-      subscribed: hasActiveSub,
-      plan_type: planType,
-      status: hasActiveSub ? "active" : "canceled",
-      subscription_end: subscriptionEnd
+    return new Response(JSON.stringify({ 
+      subscribed: false,
+      plan_type: null,
+      status: "inactive"
     }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
