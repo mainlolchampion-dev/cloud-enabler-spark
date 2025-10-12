@@ -13,6 +13,18 @@ export const SubscriptionProtectedRoute = ({ children }: SubscriptionProtectedRo
   const { subscription, loading: subLoading } = useSubscription();
   const { toast } = useToast();
 
+  // Show loading spinner while EITHER auth OR subscription is loading
+  const isLoading = authLoading || subLoading;
+  
+  console.log("SubscriptionProtectedRoute check:", { 
+    authLoading, 
+    subLoading, 
+    isLoading,
+    hasUser: !!user,
+    hasSubscription: !!subscription,
+    subscriptionPlan: subscription?.plan_type
+  });
+
   useEffect(() => {
     if (!authLoading && !subLoading && user && !subscription) {
       toast({
@@ -23,9 +35,9 @@ export const SubscriptionProtectedRoute = ({ children }: SubscriptionProtectedRo
     }
   }, [authLoading, subLoading, user, subscription, toast]);
 
-  // CRITICAL: Wait for BOTH auth AND subscription to load
-  if (authLoading || subLoading) {
-    console.log("SubscriptionProtectedRoute: Loading...", { authLoading, subLoading });
+  // CRITICAL: Wait for BOTH auth AND subscription to finish loading
+  if (isLoading) {
+    console.log("SubscriptionProtectedRoute: Still loading, showing spinner");
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
@@ -36,11 +48,13 @@ export const SubscriptionProtectedRoute = ({ children }: SubscriptionProtectedRo
     );
   }
 
+  // Now that loading is complete, check authentication
   if (!user) {
     console.log("SubscriptionProtectedRoute: No user, redirecting to login");
     return <Navigate to="/login" replace />;
   }
 
+  // Check subscription
   if (!subscription) {
     console.log("SubscriptionProtectedRoute: No subscription, redirecting to pricing");
     return <Navigate to="/pricing" replace />;
