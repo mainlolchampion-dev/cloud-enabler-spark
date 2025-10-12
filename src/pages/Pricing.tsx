@@ -13,17 +13,12 @@ const plans = [
     price: "0€",
     priceId: "",
     planType: "basic",
-    features: [
-      "1 ενεργό προσκλητήριο",
-      "Βασικά templates",
-      "50 καλεσμένοι max",
-      "Email υποστήριξη",
-    ],
+    features: ["1 ενεργό προσκλητήριο", "Βασικά templates", "50 καλεσμένοι max", "Email υποστήριξη"],
   },
   {
     name: "Pro",
     price: "9.99€/μήνα",
-    priceId: "price_REPLACE_WITH_STRIPE_PRICE_ID",
+    priceId: "price_1SHNxRKs4zHW11Kqk2Rr4ka1",
     planType: "plus",
     features: [
       "5 ενεργά προσκλητήρια",
@@ -38,7 +33,7 @@ const plans = [
   {
     name: "Premium",
     price: "19.99€/μήνα",
-    priceId: "price_REPLACE_WITH_STRIPE_PRICE_ID",
+    priceId: "price_1SHO06Ks4zHW11KqGlbgMuqc",
     planType: "premium",
     features: [
       "Απεριόριστα προσκλητήρια",
@@ -103,18 +98,14 @@ export default function Pricing() {
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4">Επιλέξτε το Πλάνο σας</h1>
-          <p className="text-muted-foreground text-lg">
-            Ξεκινήστε δωρεάν ή αναβαθμίστε για περισσότερες δυνατότητες
-          </p>
+          <p className="text-muted-foreground text-lg">Ξεκινήστε δωρεάν ή αναβαθμίστε για περισσότερες δυνατότητες</p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
           {plans.map((plan) => (
             <Card
               key={plan.planType}
-              className={`p-8 relative ${
-                plan.popular ? "border-primary shadow-xl scale-105" : ""
-              }`}
+              className={`p-8 relative ${plan.popular ? "border-primary shadow-xl scale-105" : ""}`}
             >
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-4 py-1 rounded-full text-sm font-semibold">
@@ -145,17 +136,15 @@ export default function Pricing() {
                 {loading === plan.planType
                   ? "Φόρτωση..."
                   : plan.planType === "basic"
-                  ? "Ξεκινήστε Δωρεάν"
-                  : "Επιλογή Πλάνου"}
+                    ? "Ξεκινήστε Δωρεάν"
+                    : "Επιλογή Πλάνου"}
               </Button>
             </Card>
           ))}
         </div>
 
         <div className="text-center mt-12 text-sm text-muted-foreground">
-          <p>
-            Όλα τα πλάνα περιλαμβάνουν δωρεάν δοκιμή 14 ημερών. Μπορείτε να ακυρώσετε οποιαδήποτε στιγμή.
-          </p>
+          <p>Όλα τα πλάνα περιλαμβάνουν δωρεάν δοκιμή 14 ημερών. Μπορείτε να ακυρώσετε οποιαδήποτε στιγμή.</p>
         </div>
       </div>
     </div>
