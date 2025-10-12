@@ -108,14 +108,59 @@ export default function Dashboard() {
         confirmedGuests,
       });
     } catch (error) {
-      console.error('Error loading stats:', error);
+      console.error('[DASHBOARD] Error loading stats:', error);
     } finally {
       setLoading(false);
     }
   };
 
+  const handleRefreshSubscription = async () => {
+    try {
+      toast({
+        title: "Ανανέωση...",
+        description: "Έλεγχος κατάστασης συνδρομής από το Stripe...",
+      });
+
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        toast({
+          title: "Σφάλμα",
+          description: "Δεν βρέθηκε ενεργή σύνδεση. Παρακαλώ συνδεθείτε ξανά.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const { error } = await supabase.functions.invoke("check-subscription", {
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
+      });
+
+      if (error) {
+        toast({
+          title: "Σφάλμα",
+          description: "Δεν ήταν δυνατός ο έλεγχος της συνδρομής.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Wait a bit and reload
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      window.location.reload();
+    } catch (error) {
+      console.error('[DASHBOARD] Error refreshing subscription:', error);
+      toast({
+        title: "Σφάλμα",
+        description: "Κάτι πήγε στραβά. Παρακαλώ δοκιμάστε ξανά.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleCreateInvitation = async (type: string) => {
-    console.log("handleCreateInvitation called:", { 
+    console.log("[DASHBOARD] Create invitation clicked:", { 
       type, 
       subLoading, 
       subscription,
@@ -123,9 +168,9 @@ export default function Dashboard() {
       planType: subscription?.plan_type
     });
 
-    // Don't check subscription while still loading
+    // Don't proceed while still loading
     if (subLoading) {
-      console.log("Subscription still loading, please wait...");
+      console.log("[DASHBOARD] Subscription still loading");
       toast({
         title: "Παρακαλώ περιμένετε",
         description: "Φόρτωση πληροφοριών συνδρομής...",
@@ -133,45 +178,22 @@ export default function Dashboard() {
       return;
     }
 
-    // If no subscription found after loading, force a refresh
+    // If no subscription, go to pricing
     if (!subscription) {
-      console.log("No subscription found, forcing refresh...");
+      console.log("[DASHBOARD] No subscription, redirecting to pricing");
       toast({
-        title: "Ανανέωση...",
-        description: "Έλεγχος κατάστασης συνδρομής...",
+        title: "Χρειάζεστε Πλάνο",
+        description: "Για να δημιουργήσετε προσκλήσεις χρειάζεστε να αγοράσετε ένα πλάνο.",
+        variant: "destructive",
       });
-      
-      // Force a subscription check
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session) {
-          await supabase.functions.invoke("check-subscription", {
-            headers: {
-              Authorization: `Bearer ${session.access_token}`,
-            },
-          });
-          
-          // Wait a bit for the database to update
-          await new Promise(resolve => setTimeout(resolve, 1000));
-          
-          // Reload stats to trigger subscription refresh
-          await loadStats();
-          
-          toast({
-            title: "Ολοκληρώθηκε",
-            description: "Παρακαλώ δοκιμάστε ξανά.",
-          });
-        }
-      } catch (error) {
-        console.error("Error refreshing subscription:", error);
-        navigate("/pricing");
-      }
+      navigate("/pricing");
       return;
     }
 
-    console.log("Checking if user can create invitation...", { subscription });
+    // Check if user can create more invitations
+    console.log("[DASHBOARD] Checking if user can create invitation");
     const can = await canCreateInvitation();
-    console.log("Can create invitation:", can);
+    console.log("[DASHBOARD] Can create:", can);
     
     if (!can) {
       toast({
@@ -182,6 +204,9 @@ export default function Dashboard() {
       navigate("/pricing");
       return;
     }
+    
+    // All good, navigate to create page
+    console.log("[DASHBOARD] Navigating to:", `/${type}/add`);
     navigate(`/${type}/add`);
   };
 
@@ -215,13 +240,23 @@ export default function Dashboard() {
                   <div className="text-2xl font-serif font-bold capitalize mb-2">
                     {subscription.plan_type}
                   </div>
-                  <Button 
-                    variant="link" 
-                    className="p-0 h-auto text-xs text-primary"
-                    onClick={() => navigate("/subscription")}
-                  >
-                    Διαχείριση <ArrowUpRight className="h-3 w-3 ml-1" />
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button 
+                      variant="link" 
+                      className="p-0 h-auto text-xs text-primary"
+                      onClick={() => navigate("/subscription")}
+                    >
+                      Διαχείριση <ArrowUpRight className="h-3 w-3 ml-1" />
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      className="h-auto py-1 px-2 text-xs"
+                      onClick={handleRefreshSubscription}
+                    >
+                      🔄 Ανανέωση
+                    </Button>
+                  </div>
                 </>
               ) : (
                 <>

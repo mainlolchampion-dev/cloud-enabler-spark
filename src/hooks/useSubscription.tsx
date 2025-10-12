@@ -111,30 +111,11 @@ export const useSubscription = () => {
       return;
     }
  
+    console.log("[SUBSCRIPTION] Starting fetch...");
     setState(prev => ({ ...prev, loading: true, initialized: false }));
     
     try {
-      // Call check-subscription to sync with Stripe FIRST
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        console.log("Calling check-subscription edge function...");
-        const { data: checkData, error: checkError } = await supabase.functions.invoke("check-subscription", {
-          headers: {
-            Authorization: `Bearer ${session.access_token}`,
-          },
-        });
-
-        if (checkError) {
-          console.error("Error checking subscription with Stripe:", checkError);
-        } else {
-          console.log("Stripe subscription check result:", checkData);
-        }
-        
-        // Wait a bit for database to be updated
-        await new Promise(resolve => setTimeout(resolve, 500));
-      }
-
-      // Now fetch from database
+      // First check database directly - faster
       const { data: dbData, error: dbError } = await supabase
         .from("user_subscriptions")
         .select("plan_type, status, expires_at")
@@ -142,10 +123,10 @@ export const useSubscription = () => {
         .eq("status", "active")
         .maybeSingle();
 
-      console.log("Database subscription check:", { data: dbData, error: dbError });
+      console.log("[SUBSCRIPTION] Database check:", { data: dbData, error: dbError });
 
       if (!dbError && dbData) {
-        console.log("Found active subscription in database:", dbData);
+        console.log("[SUBSCRIPTION] Found in database:", dbData);
         setState({ 
           subscription: {
             plan_type: dbData.plan_type,
@@ -158,10 +139,51 @@ export const useSubscription = () => {
         return;
       }
 
-      console.log("No subscription found in database");
+      // If not in database, check Stripe
+      console.log("[SUBSCRIPTION] Not in database, checking Stripe...");
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        const { data: checkData, error: checkError } = await supabase.functions.invoke("check-subscription", {
+          headers: {
+            Authorization: `Bearer ${session.access_token}`,
+          },
+        });
+
+        if (checkError) {
+          console.error("[SUBSCRIPTION] Stripe check error:", checkError);
+        } else {
+          console.log("[SUBSCRIPTION] Stripe result:", checkData);
+        }
+        
+        // Wait and check database again
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        const { data: dbData2, error: dbError2 } = await supabase
+          .from("user_subscriptions")
+          .select("plan_type, status, expires_at")
+          .eq("user_id", user.id)
+          .eq("status", "active")
+          .maybeSingle();
+
+        if (!dbError2 && dbData2) {
+          console.log("[SUBSCRIPTION] Found after Stripe check:", dbData2);
+          setState({ 
+            subscription: {
+              plan_type: dbData2.plan_type,
+              status: dbData2.status,
+              expires_at: dbData2.expires_at
+            }, 
+            loading: false,
+            initialized: true
+          });
+          return;
+        }
+      }
+
+      console.log("[SUBSCRIPTION] No subscription found");
       setState({ subscription: null, loading: false, initialized: true });
     } catch (error) {
-      console.error("Error fetching subscription:", error);
+      console.error("[SUBSCRIPTION] Error:", error);
       setState({ subscription: null, loading: false, initialized: true });
     }
   }, [user]);
@@ -172,10 +194,12 @@ export const useSubscription = () => {
       return;
     }
 
-    fetchSubscription();
+    // Don't refetch if already initialized and subscription exists
+    if (state.initialized && state.subscription) {
+      return;
+    }
 
-    // Auto-refresh every minute
-    const interval = setInterval(fetchSubscription, 60000);
+    fetchSubscription();
 
     const channel = supabase
       .channel("subscription-changes")
@@ -194,10 +218,9 @@ export const useSubscription = () => {
       .subscribe();
 
     return () => {
-      clearInterval(interval);
       supabase.removeChannel(channel);
     };
-  }, [user, fetchSubscription]);
+  }, [user, fetchSubscription, state.initialized, state.subscription]);
 
   const canCreateInvitation = async () => {
     console.log("canCreateInvitation called:", { hasUser: !!user, hasSubscription: !!state.subscription, planType: state.subscription?.plan_type });
