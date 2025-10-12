@@ -13,7 +13,9 @@ export default function InvitationRouter() {
   useEffect(() => {
     const fetchInvitation = async () => {
       if (id) {
+        console.log('🔍 Fetching invitation with ID:', id);
         const data = await getInvitation(id);
+        console.log('📦 Invitation data received:', data);
         setInvitation(data);
       }
     };
@@ -49,6 +51,8 @@ export default function InvitationRouter() {
   }
 
   // Render appropriate invitation type
+  console.log('🎨 Rendering invitation of type:', invitation.type);
+  
   if (invitation.type === 'wedding') {
     return <WeddingInvitation invitation={invitation} />;
   }
