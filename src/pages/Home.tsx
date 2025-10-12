@@ -513,17 +513,17 @@ const Home = () => {
             <div>
               <h4 className="font-semibold mb-4">Υποστήριξη</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-foreground transition-colors">Οδηγός Χρήσης</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">FAQ</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">Επικοινωνία</a></li>
+                <li><Link to="/user-guide" className="hover:text-foreground transition-colors">Οδηγός Χρήσης</Link></li>
+                <li><Link to="/faq" className="hover:text-foreground transition-colors">FAQ</Link></li>
+                <li><a href="mailto:support@wedilink.com" className="hover:text-foreground transition-colors">Επικοινωνία</a></li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold mb-4">Legal</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-foreground transition-colors">Όροι Χρήσης</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">GDPR</a></li>
+                <li><Link to="/terms-of-service" className="hover:text-foreground transition-colors">Όροι Χρήσης</Link></li>
+                <li><Link to="/privacy-policy" className="hover:text-foreground transition-colors">Privacy Policy</Link></li>
+                <li><Link to="/gdpr" className="hover:text-foreground transition-colors">GDPR</Link></li>
               </ul>
             </div>
           </div>
