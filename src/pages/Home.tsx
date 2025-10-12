@@ -13,6 +13,9 @@ import { Heart, CheckCircle, Image, Calendar, Share2, Users, Sparkles, Globe, Ma
 import { Link } from "react-router-dom";
 import { FAQSection } from "@/components/FAQSection";
 import { useState } from "react";
+import weddingHero from "@/assets/wedding-hero-sample.jpg";
+import baptismHero from "@/assets/baptism-hero-sample.jpg";
+import partyHero from "@/assets/party-hero-sample.jpg";
 
 const Home = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -285,11 +288,14 @@ const Home = () => {
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {/* Wedding Template */}
             <Card className="group overflow-hidden bg-card hover:shadow-2xl transition-all duration-300 hover:-translate-y-3">
-              <div className="aspect-[3/4] relative overflow-hidden bg-gradient-to-br from-rose-100 to-pink-50">
-                <div className="w-full h-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
-                  <Heart className="w-32 h-32 text-primary/40" />
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+              <div className="aspect-[3/4] relative overflow-hidden">
+                <img 
+                  src={weddingHero} 
+                  alt="Πρόσκληση Γάμου" 
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-br from-rose-500/30 to-pink-500/20" />
                 <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                   <h3 className="font-serif text-3xl font-bold mb-2">Γάμος</h3>
                   <p className="text-sm text-white/90">Κομψά σχέδια για την πιο σημαντική μέρα</p>
@@ -324,11 +330,14 @@ const Home = () => {
 
             {/* Baptism Template */}
             <Card className="group overflow-hidden bg-card hover:shadow-2xl transition-all duration-300 hover:-translate-y-3">
-              <div className="aspect-[3/4] relative overflow-hidden bg-gradient-to-br from-blue-100 to-sky-50">
-                <div className="w-full h-full bg-gradient-to-br from-accent/20 to-primary/20 flex items-center justify-center">
-                  <Sparkles className="w-32 h-32 text-accent/40" />
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+              <div className="aspect-[3/4] relative overflow-hidden">
+                <img 
+                  src={baptismHero} 
+                  alt="Πρόσκληση Βάπτισης" 
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/30 to-sky-500/20" />
                 <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                   <h3 className="font-serif text-3xl font-bold mb-2">Βάπτιση</h3>
                   <p className="text-sm text-white/90">Τρυφερά σχέδια για τη χριστιανική βάπτιση</p>
@@ -363,11 +372,14 @@ const Home = () => {
 
             {/* Party Template */}
             <Card className="group overflow-hidden bg-card hover:shadow-2xl transition-all duration-300 hover:-translate-y-3">
-              <div className="aspect-[3/4] relative overflow-hidden bg-gradient-to-br from-purple-100 to-violet-50">
-                <div className="w-full h-full bg-gradient-to-br from-secondary/20 to-accent/20 flex items-center justify-center">
-                  <Sparkles className="w-32 h-32 text-secondary/40" />
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+              <div className="aspect-[3/4] relative overflow-hidden">
+                <img 
+                  src={partyHero} 
+                  alt="Πρόσκληση Party" 
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/30 to-violet-500/20" />
                 <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                   <h3 className="font-serif text-3xl font-bold mb-2">Πάρτυ</h3>
                   <p className="text-sm text-white/90">Ζωηρά σχέδια για κάθε γιορτή</p>
