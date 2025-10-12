@@ -116,44 +116,37 @@ export default function Dashboard() {
 
   const handleRefreshSubscription = async () => {
     try {
+      console.log("[DASHBOARD] Manual refresh triggered");
       toast({
         title: "Ανανέωση...",
-        description: "Έλεγχος κατάστασης συνδρομής από το Stripe...",
+        description: "Έλεγχος κατάστασης συνδρομής...",
       });
 
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
         toast({
           title: "Σφάλμα",
-          description: "Δεν βρέθηκε ενεργή σύνδεση. Παρακαλώ συνδεθείτε ξανά.",
+          description: "Δεν βρέθηκε ενεργή σύνδεση.",
           variant: "destructive",
         });
         return;
       }
 
-      const { error } = await supabase.functions.invoke("check-subscription", {
+      await supabase.functions.invoke("check-subscription", {
         headers: {
           Authorization: `Bearer ${session.access_token}`,
         },
       });
 
-      if (error) {
-        toast({
-          title: "Σφάλμα",
-          description: "Δεν ήταν δυνατός ο έλεγχος της συνδρομής.",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      // Wait a bit and reload
+      // Wait and reload page
       await new Promise(resolve => setTimeout(resolve, 1500));
+      console.log("[DASHBOARD] Reloading page");
       window.location.reload();
     } catch (error) {
-      console.error('[DASHBOARD] Error refreshing subscription:', error);
+      console.error('[DASHBOARD] Refresh error:', error);
       toast({
         title: "Σφάλμα",
-        description: "Κάτι πήγε στραβά. Παρακαλώ δοκιμάστε ξανά.",
+        description: "Δοκιμάστε ξανά.",
         variant: "destructive",
       });
     }

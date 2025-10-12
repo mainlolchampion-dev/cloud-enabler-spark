@@ -13,10 +13,9 @@ export const SubscriptionProtectedRoute = ({ children }: SubscriptionProtectedRo
   const { subscription, loading: subLoading } = useSubscription();
   const { toast } = useToast();
 
-  // Wait for BOTH auth AND subscription to finish loading
   const isLoading = authLoading || subLoading;
   
-  console.log("[PROTECTED-ROUTE] Check:", { 
+  console.log("[SUBSCRIPTION-ROUTE] State:", { 
     authLoading, 
     subLoading, 
     isLoading,
@@ -26,20 +25,18 @@ export const SubscriptionProtectedRoute = ({ children }: SubscriptionProtectedRo
   });
 
   useEffect(() => {
-    // Only show toast if we're done loading and have a user but no subscription
-    if (!authLoading && !subLoading && user && !subscription) {
-      console.log("[PROTECTED-ROUTE] Showing no subscription toast");
+    if (!isLoading && user && !subscription) {
+      console.log("[SUBSCRIPTION-ROUTE] No subscription - showing warning");
       toast({
         title: "Χρειάζεστε Πλάνο",
         description: "Για να δημιουργήσετε προσκλήσεις χρειάζεστε να αγοράσετε ένα πλάνο.",
         variant: "destructive",
       });
     }
-  }, [authLoading, subLoading, user, subscription, toast]);
+  }, [isLoading, user, subscription, toast]);
 
-  // CRITICAL: Wait for BOTH auth AND subscription to finish loading
   if (isLoading) {
-    console.log("[PROTECTED-ROUTE] Loading...");
+    console.log("[SUBSCRIPTION-ROUTE] Still loading...");
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
@@ -50,18 +47,16 @@ export const SubscriptionProtectedRoute = ({ children }: SubscriptionProtectedRo
     );
   }
 
-  // Now that loading is complete, check authentication
   if (!user) {
-    console.log("[PROTECTED-ROUTE] No user, redirecting to login");
+    console.log("[SUBSCRIPTION-ROUTE] No user - redirect to login");
     return <Navigate to="/login" replace />;
   }
 
-  // Check subscription
   if (!subscription) {
-    console.log("[PROTECTED-ROUTE] No subscription, redirecting to pricing");
+    console.log("[SUBSCRIPTION-ROUTE] No subscription - redirect to pricing");
     return <Navigate to="/pricing" replace />;
   }
 
-  console.log("[PROTECTED-ROUTE] Access granted", { subscription });
+  console.log("[SUBSCRIPTION-ROUTE] Access granted!");
   return <>{children}</>;
 };

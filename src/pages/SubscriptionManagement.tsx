@@ -12,26 +12,18 @@ import { useSubscription } from "@/hooks/useSubscription";
 import { format } from "date-fns";
 import { el } from "date-fns/locale";
 
-interface Subscription {
-  plan_type: string;
-  status: string;
-  expires_at: string | null;
-  stripe_customer_id: string | null;
-}
-
 export default function SubscriptionManagement() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
-  const { limits } = useSubscription();
-  const [subscription, setSubscription] = useState<Subscription | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { subscription, loading: subLoading, limits } = useSubscription();
   const [portalLoading, setPortalLoading] = useState(false);
   const [stats, setStats] = useState({
     invitationsUsed: 0,
     guestsUsed: 0,
     rsvpsReceived: 0,
   });
+  const [statsLoading, setStatsLoading] = useState(true);
 
   useEffect(() => {
     if (!user) {
@@ -39,70 +31,51 @@ export default function SubscriptionManagement() {
       return;
     }
 
-    fetchSubscription();
+    fetchStats();
   }, [user]);
 
-  const fetchSubscription = async () => {
+  const fetchStats = async () => {
+    if (!user?.id) return;
+    
     try {
-      const { data, error } = await supabase
-        .from("user_subscriptions")
-        .select("*")
-        .eq("user_id", user?.id)
-        .eq("status", "active")
-        .maybeSingle();
-
-      if (error && error.code !== 'PGRST116') {
-        console.error("Subscription fetch error:", error);
-      }
+      setStatsLoading(true);
       
-      setSubscription(data);
+      // Get all user's invitations
+      const { data: userInvitations } = await supabase
+        .from("invitations")
+        .select("id")
+        .eq("user_id", user.id);
 
-      // Fetch usage stats
-      if (user?.id) {
-        // Get all user's invitations first
-        const { data: userInvitations } = await supabase
+      const invitationIds = userInvitations?.map(inv => inv.id) || [];
+
+      const [invitations, guests, rsvps] = await Promise.all([
+        supabase
           .from("invitations")
-          .select("id")
-          .eq("user_id", user.id)
-          .eq("status", "published");
+          .select("id", { count: "exact", head: true })
+          .eq("user_id", user.id),
+        invitationIds.length > 0
+          ? supabase
+              .from("guests")
+              .select("id", { count: "exact", head: true })
+              .in("invitation_id", invitationIds)
+          : { count: 0 },
+        invitationIds.length > 0
+          ? supabase
+              .from("rsvps")
+              .select("id", { count: "exact", head: true })
+              .in("invitation_id", invitationIds)
+          : { count: 0 },
+      ]);
 
-        const invitationIds = userInvitations?.map(inv => inv.id) || [];
-
-        const [invitations, guests, rsvps] = await Promise.all([
-          supabase
-            .from("invitations")
-            .select("id", { count: "exact", head: true })
-            .eq("user_id", user.id)
-            .eq("status", "published"),
-          invitationIds.length > 0
-            ? supabase
-                .from("guests")
-                .select("id", { count: "exact", head: true })
-                .in("invitation_id", invitationIds)
-            : { count: 0 },
-          invitationIds.length > 0
-            ? supabase
-                .from("rsvps")
-                .select("id", { count: "exact", head: true })
-                .in("invitation_id", invitationIds)
-            : { count: 0 },
-        ]);
-
-        setStats({
-          invitationsUsed: invitations.count || 0,
-          guestsUsed: guests.count || 0,
-          rsvpsReceived: rsvps.count || 0,
-        });
-      }
-    } catch (error) {
-      console.error("Error fetching subscription:", error);
-      toast({
-        title: "Σφάλμα",
-        description: "Δεν ήταν δυνατή η φόρτωση της συνδρομής σας",
-        variant: "destructive",
+      setStats({
+        invitationsUsed: invitations.count || 0,
+        guestsUsed: guests.count || 0,
+        rsvpsReceived: rsvps.count || 0,
       });
+    } catch (error) {
+      console.error("Error fetching stats:", error);
     } finally {
-      setLoading(false);
+      setStatsLoading(false);
     }
   };
 
@@ -165,10 +138,13 @@ export default function SubscriptionManagement() {
     }
   };
 
-  if (loading) {
+  if (subLoading || statsLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">Φόρτωση...</div>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4" />
+          <p className="text-muted-foreground">Φόρτωση...</p>
+        </div>
       </div>
     );
   }
@@ -229,7 +205,7 @@ export default function SubscriptionManagement() {
                     </Button>
                   )}
 
-                  {subscription.plan_type !== "basic" && subscription.stripe_customer_id && (
+                  {subscription.plan_type !== "basic" && (
                     <Button
                       onClick={handleManageSubscription}
                       disabled={portalLoading}

@@ -95,27 +95,22 @@ const PLAN_LIMITS = {
 
 export const useSubscription = () => {
   const { user } = useAuth();
-  const [state, setState] = useState<{
-    subscription: Subscription | null;
-    loading: boolean;
-    initialized: boolean;
-  }>({
-    subscription: null,
-    loading: true,
-    initialized: false,
-  });
+  const [subscription, setSubscription] = useState<Subscription | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const fetchSubscription = useCallback(async () => {
     if (!user) {
-      setState({ subscription: null, loading: false, initialized: true });
+      console.log("[SUBSCRIPTION] No user, clearing subscription");
+      setSubscription(null);
+      setLoading(false);
       return;
     }
  
-    console.log("[SUBSCRIPTION] Starting fetch...");
-    setState(prev => ({ ...prev, loading: true, initialized: false }));
+    console.log("[SUBSCRIPTION] Fetching for user:", user.id);
+    setLoading(true);
     
     try {
-      // First check database directly - faster
+      // First check database directly
       const { data: dbData, error: dbError } = await supabase
         .from("user_subscriptions")
         .select("plan_type, status, expires_at")
@@ -123,24 +118,21 @@ export const useSubscription = () => {
         .eq("status", "active")
         .maybeSingle();
 
-      console.log("[SUBSCRIPTION] Database check:", { data: dbData, error: dbError });
+      console.log("[SUBSCRIPTION] Database result:", { data: dbData, error: dbError });
 
       if (!dbError && dbData) {
-        console.log("[SUBSCRIPTION] Found in database:", dbData);
-        setState({ 
-          subscription: {
-            plan_type: dbData.plan_type,
-            status: dbData.status,
-            expires_at: dbData.expires_at
-          }, 
-          loading: false,
-          initialized: true
+        console.log("[SUBSCRIPTION] Active subscription found in DB");
+        setSubscription({
+          plan_type: dbData.plan_type,
+          status: dbData.status,
+          expires_at: dbData.expires_at
         });
+        setLoading(false);
         return;
       }
 
-      // If not in database, check Stripe
-      console.log("[SUBSCRIPTION] Not in database, checking Stripe...");
+      // If not found, sync with Stripe
+      console.log("[SUBSCRIPTION] No active subscription in DB, checking Stripe...");
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
         const { data: checkData, error: checkError } = await supabase.functions.invoke("check-subscription", {
@@ -149,15 +141,12 @@ export const useSubscription = () => {
           },
         });
 
-        if (checkError) {
-          console.error("[SUBSCRIPTION] Stripe check error:", checkError);
-        } else {
-          console.log("[SUBSCRIPTION] Stripe result:", checkData);
-        }
+        console.log("[SUBSCRIPTION] Stripe check complete:", { data: checkData, error: checkError });
         
-        // Wait and check database again
+        // Wait for DB to update
         await new Promise(resolve => setTimeout(resolve, 1000));
         
+        // Check DB again
         const { data: dbData2, error: dbError2 } = await supabase
           .from("user_subscriptions")
           .select("plan_type, status, expires_at")
@@ -166,41 +155,35 @@ export const useSubscription = () => {
           .maybeSingle();
 
         if (!dbError2 && dbData2) {
-          console.log("[SUBSCRIPTION] Found after Stripe check:", dbData2);
-          setState({ 
-            subscription: {
-              plan_type: dbData2.plan_type,
-              status: dbData2.status,
-              expires_at: dbData2.expires_at
-            }, 
-            loading: false,
-            initialized: true
+          console.log("[SUBSCRIPTION] Found after Stripe sync");
+          setSubscription({
+            plan_type: dbData2.plan_type,
+            status: dbData2.status,
+            expires_at: dbData2.expires_at
           });
+          setLoading(false);
           return;
         }
       }
 
-      console.log("[SUBSCRIPTION] No subscription found");
-      setState({ subscription: null, loading: false, initialized: true });
+      console.log("[SUBSCRIPTION] No subscription found anywhere");
+      setSubscription(null);
+      setLoading(false);
     } catch (error) {
-      console.error("[SUBSCRIPTION] Error:", error);
-      setState({ subscription: null, loading: false, initialized: true });
+      console.error("[SUBSCRIPTION] Error fetching:", error);
+      setSubscription(null);
+      setLoading(false);
     }
   }, [user]);
 
   useEffect(() => {
-    if (!user) {
-      setState({ subscription: null, loading: false, initialized: true });
-      return;
-    }
-
-    // Don't refetch if already initialized and subscription exists
-    if (state.initialized && state.subscription) {
-      return;
-    }
-
+    console.log("[SUBSCRIPTION] Effect triggered, user:", !!user);
+    
     fetchSubscription();
 
+    if (!user) return;
+
+    // Listen for changes
     const channel = supabase
       .channel("subscription-changes")
       .on(
@@ -211,30 +194,39 @@ export const useSubscription = () => {
           table: "user_subscriptions",
           filter: `user_id=eq.${user.id}`,
         },
-        () => {
+        (payload) => {
+          console.log("[SUBSCRIPTION] Real-time update received:", payload);
           fetchSubscription();
         }
       )
       .subscribe();
 
     return () => {
+      console.log("[SUBSCRIPTION] Cleaning up subscription listener");
       supabase.removeChannel(channel);
     };
-  }, [user, fetchSubscription, state.initialized, state.subscription]);
+  }, [user, fetchSubscription]);
 
   const canCreateInvitation = async () => {
-    console.log("canCreateInvitation called:", { hasUser: !!user, hasSubscription: !!state.subscription, planType: state.subscription?.plan_type });
+    console.log("[SUBSCRIPTION] canCreateInvitation called:", { 
+      hasUser: !!user, 
+      hasSubscription: !!subscription, 
+      planType: subscription?.plan_type 
+    });
     
-    if (!user || !state.subscription) {
-      console.log("canCreateInvitation: No user or subscription");
+    if (!user || !subscription) {
+      console.log("[SUBSCRIPTION] canCreateInvitation: No user or subscription");
       return false;
     }
 
-    const limits = PLAN_LIMITS[state.subscription.plan_type];
-    console.log("canCreateInvitation: Plan limits:", { planType: state.subscription.plan_type, maxInvitations: limits.maxInvitations });
+    const limits = PLAN_LIMITS[subscription.plan_type];
+    console.log("[SUBSCRIPTION] canCreateInvitation: Plan limits:", { 
+      planType: subscription.plan_type, 
+      maxInvitations: limits.maxInvitations 
+    });
     
     if (limits.maxInvitations === Infinity) {
-      console.log("canCreateInvitation: Unlimited invitations (Infinity)");
+      console.log("[SUBSCRIPTION] canCreateInvitation: Unlimited invitations");
       return true;
     }
 
@@ -243,14 +235,19 @@ export const useSubscription = () => {
       .select("*", { count: "exact", head: true })
       .eq("user_id", user.id);
 
-    console.log("canCreateInvitation: Current count:", count, "Limit:", limits.maxInvitations);
-    return (count || 0) < limits.maxInvitations;
+    const canCreate = (count || 0) < limits.maxInvitations;
+    console.log("[SUBSCRIPTION] canCreateInvitation result:", { 
+      count, 
+      limit: limits.maxInvitations, 
+      canCreate 
+    });
+    return canCreate;
   };
 
   const canAddGuests = async (invitationId: string) => {
-    if (!state.subscription) return false;
+    if (!subscription) return false;
 
-    const limits = PLAN_LIMITS[state.subscription.plan_type];
+    const limits = PLAN_LIMITS[subscription.plan_type];
     if (limits.maxGuests === Infinity) return true;
 
     const { count } = await supabase
@@ -262,22 +259,23 @@ export const useSubscription = () => {
   };
 
   const hasFeature = (feature: keyof typeof PLAN_LIMITS.basic) => {
-    if (!state.subscription) return false;
-    const featureValue = PLAN_LIMITS[state.subscription.plan_type][feature];
+    if (!subscription) return false;
+    const featureValue = PLAN_LIMITS[subscription.plan_type][feature];
     return featureValue === true || (typeof featureValue === 'number' && featureValue > 0);
   };
 
   const getPlanType = () => {
-    return state.subscription?.plan_type || 'basic';
+    return subscription?.plan_type || 'basic';
   };
 
   return {
-    subscription: state.subscription,
-    loading: state.loading || !state.initialized,
+    subscription,
+    loading,
     canCreateInvitation,
     canAddGuests,
     hasFeature,
     getPlanType,
-    limits: state.subscription ? PLAN_LIMITS[state.subscription.plan_type] : PLAN_LIMITS.basic,
+    limits: subscription ? PLAN_LIMITS[subscription.plan_type] : PLAN_LIMITS.basic,
+    refreshSubscription: fetchSubscription,
   };
 };
