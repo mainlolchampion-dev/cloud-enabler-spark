@@ -133,8 +133,8 @@ export default function WeddingInvitation({ invitation }: WeddingInvitationProps
           title={data.title}
           description={data.invitationText}
           location={data.churchLocation}
-          startTime={data.weddingDate + 'T' + data.weddingTime}
-          endTime={data.weddingDate + 'T' + data.weddingTime}
+          startDate={new Date(`${data.weddingDate}T${data.weddingTime}`)}
+          endDate={new Date(`${data.weddingDate}T${data.weddingTime}`)}
         />
       </section>
 
@@ -153,11 +153,9 @@ export default function WeddingInvitation({ invitation }: WeddingInvitationProps
         </div>
         {data.churchPosition && (
           <MapDisplay
-            latitude={data.churchPosition[0]}
-            longitude={data.churchPosition[1]}
-            markerText="Εκκλησία"
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
+            position={data.churchPosition}
+            locationName={data.churchLocation}
+            mapType={activeTab === 'map' ? 'map' : 'satellite'}
           />
         )}
       </section>
@@ -175,11 +173,9 @@ export default function WeddingInvitation({ invitation }: WeddingInvitationProps
             </Button>
           </div>
           <MapDisplay
-            latitude={data.receptionPosition[0]}
-            longitude={data.receptionPosition[1]}
-            markerText="Δεξίωση"
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
+            position={data.receptionPosition}
+            locationName={data.receptionLocation}
+            mapType={activeTab === 'map' ? 'map' : 'satellite'}
           />
         </section>
       )}
@@ -210,7 +206,7 @@ export default function WeddingInvitation({ invitation }: WeddingInvitationProps
       {/* RSVP Form */}
       <section>
         <h2 className="text-2xl font-semibold mb-4">RSVP</h2>
-        <RSVPForm invitationId={invitation.id} />
+        <RSVPForm invitationId={invitation.id} invitationType="wedding" invitationTitle={invitation.title} />
       </section>
 
       {/* Bank Accounts Section */}
@@ -292,10 +288,7 @@ export default function WeddingInvitation({ invitation }: WeddingInvitationProps
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-secondary-light to-background">
       {invitation.password ? (
-        <PasswordProtection
-          invitationId={invitation.id}
-          correctPassword={invitation.password}
-        >
+        <PasswordProtection correctPassword={invitation.password}>
           {invitationContent}
         </PasswordProtection>
       ) : (

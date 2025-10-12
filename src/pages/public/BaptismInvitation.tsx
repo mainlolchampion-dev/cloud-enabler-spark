@@ -4,7 +4,7 @@ import { getEvents } from "@/lib/eventsStorage";
 import { getGiftItems } from "@/lib/giftRegistryStorage";
 import { MapDisplay } from "@/components/wedding/MapDisplay";
 import { Button } from "@/components/ui/button";
-import { Calendar, MapPin, Sparkles, Clock, ExternalLink, Gift } from "lucide-react";
+import { Calendar, MapPin, Sparkles, Clock, ExternalLink, Gift, PartyPopper } from "lucide-react";
 import { format } from "date-fns";
 import { el } from "date-fns/locale";
 import { RSVPForm } from "@/components/wedding/RSVPForm";
@@ -108,7 +108,8 @@ export default function BaptismInvitation({ invitation }: BaptismInvitationProps
             {data.baptismDate && data.baptismTime && (
               <AddToCalendar
                 title="Baptism Ceremony"
-                startTime={new Date(`${data.baptismDate}T${data.baptismTime}`)}
+                startDate={new Date(`${data.baptismDate}T${data.baptismTime}`)}
+                endDate={new Date(`${data.baptismDate}T${data.baptismTime}`)}
                 location={data.churchLocation}
                 description={data.title}
               />
@@ -151,10 +152,33 @@ export default function BaptismInvitation({ invitation }: BaptismInvitationProps
               : "Τοποθεσία"}
           </h2>
           <div className="relative w-full aspect-video rounded-lg overflow-hidden shadow-lg border border-muted/20">
+        {data.churchPosition && (
+          <MapDisplay
+            position={data.churchPosition}
+            locationName={data.churchLocation}
+            mapType="map"
+          />
+        )}
+        {data.receptionPosition && (
+          <div className="mt-8">
+            <h2 className="text-2xl font-bold font-serif text-center mb-4">
+              <PartyPopper className="inline-block mr-2" size={30} />
+              Τοποθεσία Δεξίωσης
+            </h2>
+            <p className="text-center mb-4">{data.receptionLocation}</p>
             <MapDisplay
-              churchPosition={data.churchPosition}
-              receptionPosition={data.receptionPosition}
+              position={data.receptionPosition}
+              locationName={data.receptionLocation}
+              mapType="map"
             />
+            <div className="flex justify-center mt-4">
+              <Button onClick={() => openDirections(data.receptionPosition!)} variant="outline">
+                <ExternalLink className="mr-2" size={20} />
+                Οδηγίες
+              </Button>
+            </div>
+          </div>
+        )}
           </div>
           <div className="mt-4 flex justify-center gap-4">
             {data.churchPosition && (
@@ -225,7 +249,7 @@ export default function BaptismInvitation({ invitation }: BaptismInvitationProps
         <h2 className="text-2xl font-semibold font-serif text-center mb-6">
           Επιβεβαίωση Παρουσίας
         </h2>
-        <RSVPForm invitationId={invitation.id} />
+        <RSVPForm invitationId={invitation.id} invitationType="baptism" invitationTitle={invitation.title} />
       </section>
 
       {/* Parents Section */}
@@ -296,10 +320,7 @@ export default function BaptismInvitation({ invitation }: BaptismInvitationProps
   return (
     <div className="min-h-screen bg-background">
       {invitation.password ? (
-        <PasswordProtection
-          invitationId={invitation.id}
-          correctPassword={invitation.password}
-        >
+        <PasswordProtection correctPassword={invitation.password}>
           {invitationContent}
         </PasswordProtection>
       ) : (

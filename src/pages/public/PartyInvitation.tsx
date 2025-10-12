@@ -21,6 +21,7 @@ interface PartyInvitationProps {
 export default function PartyInvitation({ invitation }: PartyInvitationProps) {
   const [events, setEvents] = useState<any[]>([]);
   const [giftItems, setGiftItems] = useState<any[]>([]);
+  const [activeTab, setActiveTab] = useState<'map' | 'satellite'>('map');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -92,8 +93,8 @@ export default function PartyInvitation({ invitation }: PartyInvitationProps) {
               title={data.title}
               description={data.invitationText}
               location={data.partyLocation}
-              startTime={new Date(`${data.partyDate}T${data.partyTime}`)}
-              endTime={new Date(`${data.partyDate}T${data.partyTime}`)}
+              startDate={new Date(`${data.partyDate}T${data.partyTime}`)}
+              endDate={new Date(`${data.partyDate}T${data.partyTime}`)}
             />
           </div>
         </section>
@@ -105,7 +106,7 @@ export default function PartyInvitation({ invitation }: PartyInvitationProps) {
           <h2 className="text-2xl font-bold font-serif text-center mb-4">
             Αντίστροφη Μέτρηση
           </h2>
-          <CountdownTimer targetDate={new Date(data.partyDate)} />
+          <CountdownTimer targetDate={data.partyDate} />
         </section>
       )}
 
@@ -118,10 +119,9 @@ export default function PartyInvitation({ invitation }: PartyInvitationProps) {
           </h2>
           <p className="text-center">{data.partyLocation}</p>
           <MapDisplay
-            locationName={data.partyLocation}
             position={data.partyPosition}
-            activeTab={activeTab}
-            onChangeTab={(tab) => setActiveTab(tab)}
+            locationName={data.partyLocation}
+            mapType={activeTab === 'map' ? 'map' : 'satellite'}
           />
           <div className="flex justify-center mt-4">
             <Button onClick={() => openDirections(data.partyPosition!)} variant="outline">
@@ -193,7 +193,7 @@ export default function PartyInvitation({ invitation }: PartyInvitationProps) {
         <h2 className="text-2xl font-bold font-serif text-center mb-4">
           Επιβεβαίωση Παρουσίας
         </h2>
-        <RSVPForm invitationId={invitation.id} />
+        <RSVPForm invitationId={invitation.id} invitationType="party" invitationTitle={invitation.title} />
       </section>
 
       {/* Contact Info */}
@@ -238,10 +238,7 @@ export default function PartyInvitation({ invitation }: PartyInvitationProps) {
   return (
     <div className="min-h-screen bg-background">
       {invitation.password ? (
-        <PasswordProtection
-          invitationId={invitation.id}
-          correctPassword={invitation.password}
-        >
+        <PasswordProtection correctPassword={invitation.password}>
           {invitationContent}
         </PasswordProtection>
       ) : (
