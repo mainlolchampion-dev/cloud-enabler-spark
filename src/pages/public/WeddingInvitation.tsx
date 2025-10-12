@@ -14,6 +14,10 @@ import { LivePhotoWall } from "@/components/wedding/LivePhotoWall";
 import { PasswordProtection } from "@/components/wedding/PasswordProtection";
 import { SeatingDisplay } from "@/components/wedding/SeatingDisplay";
 import { ThemeProvider } from "@/components/wedding/ThemeProvider";
+import { MusicPlayer } from "@/components/wedding/MusicPlayer";
+import { FallingParticles } from "@/components/wedding/animations/FallingParticles";
+import { AnimatedSection } from "@/components/wedding/animations/AnimatedSection";
+import { getThemeById } from "@/config/invitationThemes";
 import weddingHeroSample from "@/assets/wedding-hero-sample.jpg";
 
 interface WeddingInvitationProps {
@@ -24,6 +28,8 @@ export default function WeddingInvitation({ invitation }: WeddingInvitationProps
   const [events, setEvents] = useState<any[]>([]);
   const [giftItems, setGiftItems] = useState<any[]>([]);
   const [activeTab, setActiveTab] = useState<'map' | 'satellite'>('map');
+  
+  const theme = getThemeById(invitation.theme || 'romantic');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -51,52 +57,78 @@ export default function WeddingInvitation({ invitation }: WeddingInvitationProps
   };
 
   const invitationContent = (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
-      {/* Hero Section */}
-      <section className="relative">
-        <img
-          src={data.mainImage || weddingHeroSample}
-          alt="Wedding Invitation"
-          className="w-full rounded-lg shadow-xl object-cover aspect-video"
+    <>
+      {/* Falling Particles Animation */}
+      {theme?.animations?.enabled && (
+        <FallingParticles
+          type={theme.animations.particleType}
+          density={theme.animations.particleDensity}
+          color={theme.animations.particleColor}
+          enabled={theme.animations.enabled}
         />
-        <div className="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black/80 to-transparent text-white rounded-b-lg">
-          <h1 className="text-3xl font-bold font-serif drop-shadow-md">{data.title}</h1>
-        </div>
-      </section>
+      )}
+      
+      {/* Music Player */}
+      {data.backgroundMusicUrl && (
+        <MusicPlayer
+          audioUrl={data.backgroundMusicUrl}
+          autoPlay={false}
+          theme={invitation.theme}
+        />
+      )}
+      
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
+      {/* Hero Section */}
+      <AnimatedSection animation="fadeInUp">
+        <section className="relative hover-zoom">
+          <img
+            src={data.mainImage || weddingHeroSample}
+            alt="Wedding Invitation"
+            className="w-full rounded-lg shadow-xl object-cover aspect-video"
+          />
+          <div className="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black/80 to-transparent text-white rounded-b-lg">
+            <h1 className="text-3xl font-bold font-serif drop-shadow-md">{data.title}</h1>
+          </div>
+        </section>
+      </AnimatedSection>
 
       {/* Invitation Text */}
       {data.invitationText && (
-        <section className="text-center">
-          <div className="text-gray-700 text-lg font-serif" dangerouslySetInnerHTML={{ __html: data.invitationText }} />
-        </section>
+        <AnimatedSection animation="fadeInScale" delay={100}>
+          <section className="text-center">
+            <div className="text-gray-700 text-lg font-serif" dangerouslySetInnerHTML={{ __html: data.invitationText }} />
+          </section>
+        </AnimatedSection>
       )}
 
       {/* Couple Section */}
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-        {/* Groom */}
-        <div className="text-center">
-          {data.groomPhoto && (
-            <img
-              src={data.groomPhoto}
-              alt="Groom"
-              className="rounded-full w-48 h-48 object-cover mx-auto mb-4 shadow-md"
-            />
-          )}
-          <h2 className="text-2xl font-semibold">{data.groomName}</h2>
-        </div>
+      <AnimatedSection animation="fadeInUp" delay={200}>
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          {/* Groom */}
+          <div className="text-center hover-lift">
+            {data.groomPhoto && (
+              <img
+                src={data.groomPhoto}
+                alt="Groom"
+                className="rounded-full w-48 h-48 object-cover mx-auto mb-4 shadow-md"
+              />
+            )}
+            <h2 className="text-2xl font-semibold">{data.groomName}</h2>
+          </div>
 
-        {/* Bride */}
-        <div className="text-center">
-          {data.bridePhoto && (
-            <img
-              src={data.bridePhoto}
-              alt="Bride"
-              className="rounded-full w-48 h-48 object-cover mx-auto mb-4 shadow-md"
-            />
-          )}
-          <h2 className="text-2xl font-semibold">{data.brideName}</h2>
-        </div>
-      </section>
+          {/* Bride */}
+          <div className="text-center hover-lift">
+            {data.bridePhoto && (
+              <img
+                src={data.bridePhoto}
+                alt="Bride"
+                className="rounded-full w-48 h-48 object-cover mx-auto mb-4 shadow-md"
+              />
+            )}
+            <h2 className="text-2xl font-semibold">{data.brideName}</h2>
+          </div>
+        </section>
+      </AnimatedSection>
 
       {/* Koumbaroi Section */}
       {data.koumbaroi && data.koumbaroi.length > 0 && (
@@ -292,6 +324,7 @@ export default function WeddingInvitation({ invitation }: WeddingInvitationProps
         <LivePhotoWall invitationId={invitation.id} isPublic />
       </section>
     </div>
+    </>
   );
 
   return (

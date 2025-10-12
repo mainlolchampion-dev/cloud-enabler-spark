@@ -40,6 +40,7 @@ interface WeddingData {
   groomFamily: string[];
   brideFamily: string[];
   gallery: Array<{ id: string; url: string }>;
+  backgroundMusicUrl?: string;
 }
 
 const STORAGE_KEY = "wedding_draft";
@@ -436,6 +437,27 @@ export default function AddWedding() {
                     className="h-12"
                   />
                 </div>
+              </CardContent>
+            </Card>
+
+            {/* Background Music */}
+            <Card className="border-2">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-xl">
+                  🎵 Μουσική Φόντου
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ImagePicker
+                  label="Ανέβασμα Μουσικής (MP3, WAV)"
+                  value={data.backgroundMusicUrl}
+                  onChange={(url) => updateData("backgroundMusicUrl", url)}
+                  bucket="invitations"
+                  folder="music"
+                />
+                <p className="text-sm text-muted-foreground mt-2">
+                  Προσθέστε το αγαπημένο σας τραγούδι που θα παίζει όταν οι καλεσμένοι ανοίγουν το προσκλητήριο.
+                </p>
               </CardContent>
             </Card>
 

@@ -16,13 +16,14 @@ export async function uploadImage(
   folder?: string
 ): Promise<string> {
   // Validate file type
-  const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+  const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'audio/mpeg', 'audio/mp3', 'audio/wav'];
   if (!validTypes.includes(file.type)) {
-    throw new Error('Invalid file type. Only JPEG, PNG, and WebP are allowed.');
+    throw new Error('Invalid file type. Only JPEG, PNG, WebP, MP3, and WAV are allowed.');
   }
 
-  // Validate file size (5MB for invitations/gallery, 2MB for profiles)
-  const maxSize = bucket === 'profiles' ? 2 * 1024 * 1024 : 5 * 1024 * 1024;
+  // Validate file size (10MB for audio, 5MB for invitations/gallery, 2MB for profiles)
+  const isAudio = file.type.startsWith('audio/');
+  const maxSize = isAudio ? 10 * 1024 * 1024 : bucket === 'profiles' ? 2 * 1024 * 1024 : 5 * 1024 * 1024;
   if (file.size > maxSize) {
     const maxSizeMB = maxSize / (1024 * 1024);
     throw new Error(`File size must be less than ${maxSizeMB}MB`);

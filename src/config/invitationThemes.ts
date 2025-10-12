@@ -50,6 +50,14 @@ export interface InvitationTheme {
     cardRadius: string;         // Tailwind rounded class
     cardPadding: string;        // Tailwind padding class
   };
+  
+  // Animations
+  animations?: {
+    enabled: boolean;
+    particleType: 'flowers' | 'stars' | 'hearts' | 'leaves' | 'butterflies' | 'sparkles';
+    particleDensity: 'subtle' | 'medium' | 'dramatic';
+    particleColor: string;
+  };
 }
 
 export const invitationThemes: InvitationTheme[] = [
@@ -94,6 +102,12 @@ export const invitationThemes: InvitationTheme[] = [
       cardRadius: 'rounded-xl',
       cardPadding: 'p-8',
     },
+    animations: {
+      enabled: true,
+      particleType: 'flowers',
+      particleDensity: 'medium',
+      particleColor: '#f4a7b9',
+    },
   },
 
   // CLASSIC ELEGANCE - Navy & Gold
@@ -136,6 +150,12 @@ export const invitationThemes: InvitationTheme[] = [
       sectionSpacing: 'space-y-20',
       cardRadius: 'rounded-lg',
       cardPadding: 'p-10',
+    },
+    animations: {
+      enabled: true,
+      particleType: 'stars',
+      particleDensity: 'subtle',
+      particleColor: '#d4af37',
     },
   },
 
@@ -180,6 +200,12 @@ export const invitationThemes: InvitationTheme[] = [
       cardRadius: 'rounded-none',
       cardPadding: 'p-12',
     },
+    animations: {
+      enabled: true,
+      particleType: 'sparkles',
+      particleDensity: 'subtle',
+      particleColor: '#333333',
+    },
   },
 
   // GARDEN ROMANCE - Green & Ivory
@@ -222,6 +248,12 @@ export const invitationThemes: InvitationTheme[] = [
       sectionSpacing: 'space-y-16',
       cardRadius: 'rounded-2xl',
       cardPadding: 'p-8',
+    },
+    animations: {
+      enabled: true,
+      particleType: 'leaves',
+      particleDensity: 'medium',
+      particleColor: '#8fbc8f',
     },
   },
 
@@ -266,6 +298,12 @@ export const invitationThemes: InvitationTheme[] = [
       cardRadius: 'rounded-xl',
       cardPadding: 'p-8',
     },
+    animations: {
+      enabled: true,
+      particleType: 'butterflies',
+      particleDensity: 'subtle',
+      particleColor: '#dda0dd',
+    },
   },
 
   // LUXE GOLD - Black & Gold
@@ -308,6 +346,12 @@ export const invitationThemes: InvitationTheme[] = [
       sectionSpacing: 'space-y-20',
       cardRadius: 'rounded-lg',
       cardPadding: 'p-10',
+    },
+    animations: {
+      enabled: true,
+      particleType: 'stars',
+      particleDensity: 'medium',
+      particleColor: '#ffd700',
     },
   },
 ];
