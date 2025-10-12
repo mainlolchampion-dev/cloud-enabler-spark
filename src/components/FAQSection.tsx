@@ -14,7 +14,7 @@ export function FAQSection() {
   const faqsEl = [
     {
       question: 'Πόσο κοστίζει η δημιουργία μιας ψηφιακής πρόσκλησης;',
-      answer: 'Το WediLink είναι δωρεάν για βασικές λειτουργίες! Για premium χαρακτηριστικά όπως προστασία με κωδικό, απεριόριστες φωτογραφίες και custom domain, προσφέρουμε πακέτα από €39.',
+      answer: 'Προσφέρουμε τρία πακέτα με μηνιαία συνδρομή: Basic (€9/μήνα), Plus (€19/μήνα) και Premium (€39/μήνα). Κάθε πακέτο περιλαμβάνει διαφορετικές δυνατότητες για να καλύψει τις ανάγκες σας. Μπορείτε να ακυρώσετε ανά πάσα στιγμή.',
     },
     {
       question: 'Πως γίνεται η δημιουργία του προσκλητηρίου;',
@@ -77,7 +77,7 @@ export function FAQSection() {
   const faqsEn = [
     {
       question: 'How much does creating a digital invitation cost?',
-      answer: 'We offer three packages: Basic (€39), Plus (€69), and Premium (€119). Each package includes different features to meet your needs.',
+      answer: 'We offer three monthly subscription packages: Basic (€9/month), Plus (€19/month), and Premium (€39/month). Each package includes different features to meet your needs. You can cancel anytime.',
     },
     {
       question: 'How is the invitation created?',

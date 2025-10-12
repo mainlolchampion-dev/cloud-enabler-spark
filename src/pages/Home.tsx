@@ -517,7 +517,7 @@ const Home = () => {
           <div className="text-center mb-20">
             <h2 className="font-serif text-4xl md:text-5xl font-bold mb-4">Επιλέξτε το πλάνο σας</h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Εφάπαξ πληρωμή, χωρίς συνδρομές ή κρυφές χρεώσεις
+              Μηνιαία συνδρομή, ακυρώστε ανά πάσα στιγμή
             </p>
           </div>
 
@@ -530,20 +530,22 @@ const Home = () => {
                   <p className="text-sm text-muted-foreground">Ιδανικό για απλές εκδηλώσεις</p>
                 </div>
                 <div className="flex items-baseline gap-2">
-                  <span className="font-serif text-5xl font-bold text-card-foreground">€39</span>
-                  <span className="text-muted-foreground">εφάπαξ</span>
+                  <span className="font-serif text-5xl font-bold text-card-foreground">€9</span>
+                  <span className="text-muted-foreground">/μήνα</span>
                 </div>
-                <Link to="/login">
+                <Link to="/pricing">
                   <Button className="w-full" size="lg">Ξεκινήστε</Button>
                 </Link>
                 <ul className="space-y-3 pt-6">
                   {[
-                    "5 επαγγελματικά θέματα",
+                    "1 πρόσκληση",
+                    "Μέχρι 50 καλεσμένοι",
+                    "Βασικά templates",
                     "Φόρμα RSVP",
-                    "Email επιβεβαιώσεις",
-                    "Γκαλερί φωτογραφιών",
-                    "Add-to-Calendar (.ics)",
-                    "Εξαγωγή CSV/Excel",
+                    "Χάρτης τοποθεσίας",
+                    "Βασική gallery",
+                    "Timeline εκδηλώσεων",
+                    "Email support",
                   ].map((feature, i) => (
                     <li key={i} className="flex items-start gap-3">
                       <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
@@ -565,10 +567,10 @@ const Home = () => {
                   <p className="text-sm text-muted-foreground">Για ζευγάρια που θέλουν περισσότερα</p>
                 </div>
                 <div className="flex items-baseline gap-2">
-                  <span className="font-serif text-5xl font-bold text-primary">€69</span>
-                  <span className="text-muted-foreground">εφάπαξ</span>
+                  <span className="font-serif text-5xl font-bold text-primary">€19</span>
+                  <span className="text-muted-foreground">/μήνα</span>
                 </div>
-                <Link to="/login">
+                <Link to="/pricing">
                   <Button className="w-full bg-gradient-to-r from-primary to-secondary" size="lg">Ξεκινήστε</Button>
                 </Link>
                 <ul className="space-y-3 pt-6">
@@ -577,13 +579,17 @@ const Home = () => {
                     <span className="text-sm font-semibold text-card-foreground">Όλα από Basic +</span>
                   </li>
                   {[
-                    "10+ premium θέματα",
-                    "Προστασία με κωδικό",
-                    "Gift Registry με QR codes",
-                    "Live Photo Wall",
-                    "Guest list management",
-                    "Dietary tracking",
-                    "Zapier/Make webhooks",
+                    "5 προσκλήσεις",
+                    "Μέχρι 200 καλεσμένοι",
+                    "Όλα τα templates",
+                    "Προχωρημένη gallery",
+                    "Λίστα δώρων",
+                    "Διαχείριση καθισμάτων",
+                    "Εξαγωγή CSV/Excel",
+                    "Password Protection",
+                    "Add to Calendar",
+                    "Email reminders",
+                    "Priority support",
                   ].map((feature, i) => (
                     <li key={i} className="flex items-start gap-3">
                       <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
@@ -602,10 +608,10 @@ const Home = () => {
                   <p className="text-sm text-muted-foreground">Πλήρης έλεγχος & δυνατότητες</p>
                 </div>
                 <div className="flex items-baseline gap-2">
-                  <span className="font-serif text-5xl font-bold text-card-foreground">€119</span>
-                  <span className="text-muted-foreground">εφάπαξ</span>
+                  <span className="font-serif text-5xl font-bold text-card-foreground">€39</span>
+                  <span className="text-muted-foreground">/μήνα</span>
                 </div>
-                <Link to="/login">
+                <Link to="/pricing">
                   <Button className="w-full" size="lg" variant="outline">Ξεκινήστε</Button>
                 </Link>
                 <ul className="space-y-3 pt-6">
@@ -614,14 +620,14 @@ const Home = () => {
                     <span className="text-sm font-semibold text-card-foreground">Όλα από Plus +</span>
                   </li>
                   {[
-                    "Custom subdomain",
-                    "Email υπενθυμίσεις",
-                    "Seating chart planner",
-                    "Custom fonts upload",
-                    "A/B testing",
+                    "Απεριόριστες προσκλήσεις",
+                    "Απεριόριστοι καλεσμένοι",
+                    "Live photo wall",
+                    "Webhook integrations (Zapier/Make)",
                     "SMS/WhatsApp reminders",
+                    "Custom branding",
                     "Advanced analytics",
-                    "Priority support 24/7",
+                    "Dedicated support",
                   ].map((feature, i) => (
                     <li key={i} className="flex items-start gap-3">
                       <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
@@ -636,7 +642,7 @@ const Home = () => {
           {/* Money-back guarantee */}
           <div className="text-center mt-16">
             <p className="text-sm text-muted-foreground">
-              💝 30-ημέρες εγγύηση επιστροφής χρημάτων • 🔒 Ασφαλείς πληρωμές • ⚡ Instant setup
+              💝 Ακύρωση ανά πάσα στιγμή • 🔒 Ασφαλείς πληρωμές • ⚡ Instant setup
             </p>
           </div>
         </div>
