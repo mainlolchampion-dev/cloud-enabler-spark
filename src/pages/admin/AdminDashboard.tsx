@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { UsersManagement } from "@/components/admin/UsersManagement";
 import { SubscriptionsManagement } from "@/components/admin/SubscriptionsManagement";
 import { SystemAnalytics } from "@/components/admin/SystemAnalytics";
+import { AdminSubscriptionManager } from "@/components/admin/AdminSubscriptionManager";
 
 interface DashboardStats {
   totalUsers: number;
@@ -135,10 +136,11 @@ export default function AdminDashboard() {
 
         {/* Tabs */}
         <Tabs defaultValue="users" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="users">Χρήστες</TabsTrigger>
             <TabsTrigger value="subscriptions">Συνδρομές</TabsTrigger>
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
+            <TabsTrigger value="my-subscription">Η Συνδρομή μου</TabsTrigger>
           </TabsList>
 
           <TabsContent value="users" className="mt-6">
@@ -151,6 +153,10 @@ export default function AdminDashboard() {
 
           <TabsContent value="analytics" className="mt-6">
             <SystemAnalytics />
+          </TabsContent>
+
+          <TabsContent value="my-subscription" className="mt-6">
+            <AdminSubscriptionManager />
           </TabsContent>
         </Tabs>
       </div>
