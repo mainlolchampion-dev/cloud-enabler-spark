@@ -1,33 +1,203 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Heart, CheckCircle, Image, Calendar, Share2, Users, Sparkles, Globe, Mail } from "lucide-react";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Heart, CheckCircle, Image, Calendar, Share2, Users, Sparkles, Globe, Mail, Menu, FileText, HelpCircle, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
 import { FAQSection } from "@/components/FAQSection";
+import { useState } from "react";
 
 const Home = () => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-background">
       {/* Premium Header */}
-      <header className="border-b bg-white/80 backdrop-blur-md sticky top-0 z-50">
-        <div className="container mx-auto px-6 py-5 flex justify-between items-center">
-          <div className="flex items-center gap-3">
-            <Heart className="h-7 w-7 text-primary" fill="currentColor" />
-            <span className="font-serif text-2xl font-semibold text-foreground tracking-tight">WediLink</span>
-          </div>
-          <nav className="hidden md:flex items-center gap-8">
-            <a href="#features" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Χαρακτηριστικά</a>
-            <a href="#pricing" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Τιμές</a>
-            <a href="#testimonials" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Κριτικές</a>
-          </nav>
-          <div className="flex gap-3">
-            <Link to="/login">
-              <Button variant="ghost" className="font-medium">Σύνδεση</Button>
+      <header className="border-b bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+        <div className="container mx-auto px-6 py-4">
+          <div className="flex justify-between items-center">
+            {/* Logo */}
+            <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+              <Heart className="h-7 w-7 text-primary animate-pulse" fill="currentColor" />
+              <span className="font-serif text-2xl font-semibold text-foreground tracking-tight">
+                WediLink
+              </span>
             </Link>
-            <Link to="/login">
-              <Button className="bg-gradient-to-r from-primary to-secondary hover:shadow-lg transition-all">
-                Ξεκινήστε Δωρεάν
-              </Button>
-            </Link>
+
+            {/* Desktop Navigation */}
+            <nav className="hidden lg:flex items-center gap-8">
+              <a href="#features" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
+                Χαρακτηριστικά
+              </a>
+              <a href="#pricing" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
+                Τιμές
+              </a>
+              <a href="#testimonials" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
+                Κριτικές
+              </a>
+              
+              <NavigationMenu>
+                <NavigationMenuList>
+                  <NavigationMenuItem>
+                    <NavigationMenuTrigger className="text-sm font-medium">
+                      Υποστήριξη
+                    </NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                      <ul className="grid w-[400px] gap-3 p-4">
+                        <li>
+                          <NavigationMenuLink asChild>
+                            <Link
+                              to="/user-guide"
+                              className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                            >
+                              <div className="flex items-center gap-2">
+                                <FileText className="h-4 w-4 text-primary" />
+                                <div className="text-sm font-medium leading-none">Οδηγός Χρήσης</div>
+                              </div>
+                              <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                                Μάθετε πώς να χρησιμοποιείτε το WediLink
+                              </p>
+                            </Link>
+                          </NavigationMenuLink>
+                        </li>
+                        <li>
+                          <NavigationMenuLink asChild>
+                            <Link
+                              to="/faq"
+                              className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                            >
+                              <div className="flex items-center gap-2">
+                                <HelpCircle className="h-4 w-4 text-primary" />
+                                <div className="text-sm font-medium leading-none">FAQ</div>
+                              </div>
+                              <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                                Συχνές ερωτήσεις και απαντήσεις
+                              </p>
+                            </Link>
+                          </NavigationMenuLink>
+                        </li>
+                        <li>
+                          <NavigationMenuLink asChild>
+                            <Link
+                              to="/contact"
+                              className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                            >
+                              <div className="flex items-center gap-2">
+                                <Phone className="h-4 w-4 text-primary" />
+                                <div className="text-sm font-medium leading-none">Επικοινωνία</div>
+                              </div>
+                              <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                                Στείλτε μας μήνυμα
+                              </p>
+                            </Link>
+                          </NavigationMenuLink>
+                        </li>
+                      </ul>
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+                </NavigationMenuList>
+              </NavigationMenu>
+            </nav>
+
+            {/* Desktop CTA Buttons */}
+            <div className="hidden lg:flex items-center gap-3">
+              <Link to="/login">
+                <Button variant="ghost" className="font-medium">
+                  Σύνδεση
+                </Button>
+              </Link>
+              <Link to="/login">
+                <Button className="bg-gradient-to-r from-primary to-secondary hover:shadow-lg transition-all">
+                  Ξεκινήστε Δωρεάν
+                </Button>
+              </Link>
+            </div>
+
+            {/* Mobile Menu */}
+            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+              <SheetTrigger asChild className="lg:hidden">
+                <Button variant="ghost" size="icon">
+                  <Menu className="h-6 w-6" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+                <nav className="flex flex-col gap-6 mt-8">
+                  <div className="flex flex-col gap-4">
+                    <a
+                      href="#features"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="text-lg font-medium hover:text-primary transition-colors"
+                    >
+                      Χαρακτηριστικά
+                    </a>
+                    <a
+                      href="#pricing"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="text-lg font-medium hover:text-primary transition-colors"
+                    >
+                      Τιμές
+                    </a>
+                    <a
+                      href="#testimonials"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="text-lg font-medium hover:text-primary transition-colors"
+                    >
+                      Κριτικές
+                    </a>
+                  </div>
+
+                  <div className="border-t pt-4">
+                    <p className="text-sm font-semibold text-muted-foreground mb-3">Υποστήριξη</p>
+                    <div className="flex flex-col gap-3">
+                      <Link
+                        to="/user-guide"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="flex items-center gap-2 text-base hover:text-primary transition-colors"
+                      >
+                        <FileText className="h-4 w-4" />
+                        Οδηγός Χρήσης
+                      </Link>
+                      <Link
+                        to="/faq"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="flex items-center gap-2 text-base hover:text-primary transition-colors"
+                      >
+                        <HelpCircle className="h-4 w-4" />
+                        FAQ
+                      </Link>
+                      <Link
+                        to="/contact"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="flex items-center gap-2 text-base hover:text-primary transition-colors"
+                      >
+                        <Phone className="h-4 w-4" />
+                        Επικοινωνία
+                      </Link>
+                    </div>
+                  </div>
+
+                  <div className="border-t pt-4 flex flex-col gap-3">
+                    <Link to="/login" onClick={() => setMobileMenuOpen(false)}>
+                      <Button variant="outline" className="w-full">
+                        Σύνδεση
+                      </Button>
+                    </Link>
+                    <Link to="/login" onClick={() => setMobileMenuOpen(false)}>
+                      <Button className="w-full bg-gradient-to-r from-primary to-secondary">
+                        Ξεκινήστε Δωρεάν
+                      </Button>
+                    </Link>
+                  </div>
+                </nav>
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
       </header>
