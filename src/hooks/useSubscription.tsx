@@ -112,15 +112,23 @@ export const useSubscription = () => {
         },
       });
  
+      console.log("check-subscription response:", { data, error });
+ 
       if (error) throw error;
  
       if (data && data.subscribed) {
+        console.log("Setting subscription:", {
+          plan_type: data.plan_type,
+          status: data.status,
+          expires_at: data.subscription_end,
+        });
         setSubscription({
           plan_type: data.plan_type,
           status: data.status,
           expires_at: data.subscription_end,
         });
       } else {
+        console.log("No active subscription found");
         // No active subscription
         setSubscription(null);
       }
