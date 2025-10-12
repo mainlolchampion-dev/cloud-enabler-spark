@@ -5,14 +5,12 @@ import { useToast } from "@/hooks/use-toast";
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -223,12 +221,6 @@ export function AppSidebar() {
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
-
-      <SidebarFooter className="border-t border-sidebar-border">
-        <SidebarTrigger className="w-full justify-center py-3 hover:bg-white/10">
-          {state === "expanded" && <span className="text-sm">Σύμπτυξη μενού</span>}
-        </SidebarTrigger>
-      </SidebarFooter>
     </Sidebar>
   );
 }
