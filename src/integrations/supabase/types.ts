@@ -230,6 +230,7 @@ export type Database = {
       invitations: {
         Row: {
           created_at: string
+          custom_subdomain: string | null
           data: Json
           id: string
           password: string | null
@@ -243,6 +244,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          custom_subdomain?: string | null
           data?: Json
           id?: string
           password?: string | null
@@ -256,6 +258,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          custom_subdomain?: string | null
           data?: Json
           id?: string
           password?: string | null

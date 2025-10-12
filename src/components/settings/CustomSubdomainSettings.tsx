@@ -49,17 +49,14 @@ export function CustomSubdomainSettings({
 
     setChecking(true);
     try {
-      // Check if subdomain is already taken
-      const { data, error } = await supabase
+      // Check if subdomain is already taken using RPC or direct query
+      const response = await (supabase as any)
         .from("invitations")
         .select("id")
         .eq("custom_subdomain", subdomain)
-        .neq("id", invitationId)
-        .maybeSingle();
+        .neq("id", invitationId);
 
-      if (error) throw error;
-
-      const isAvailable = !data;
+      const isAvailable = !response.data || response.data.length === 0;
       setAvailable(isAvailable);
 
       if (isAvailable) {
@@ -86,7 +83,7 @@ export function CustomSubdomainSettings({
     try {
       const { error } = await supabase
         .from("invitations")
-        .update({ custom_subdomain: subdomain })
+        .update({ custom_subdomain: subdomain } as any)
         .eq("id", invitationId);
 
       if (error) throw error;
