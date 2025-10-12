@@ -8,6 +8,7 @@ import { AppSidebar } from "@/components/layout/AppSidebar";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { SubscriptionProtectedRoute } from "@/components/SubscriptionProtectedRoute";
 import { FeatureProtectedRoute } from "@/components/FeatureProtectedRoute";
+import { AdminProtectedRoute } from "@/components/AdminProtectedRoute";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
@@ -34,6 +35,7 @@ import EventsTimelineManagement from "./pages/EventsTimelineManagement";
 import Pricing from "./pages/Pricing";
 import SubscriptionManagement from "./pages/SubscriptionManagement";
 import AdvancedAnalytics from "./pages/AdvancedAnalytics";
+import AdminDashboard from "./pages/admin/AdminDashboard";
 import ScrollToTop from "./components/ScrollToTop";
 
 const queryClient = new QueryClient();
@@ -118,6 +120,14 @@ const App = () => (
                         } 
                       />
                       <Route path="profile" element={<Profile />} />
+                      <Route 
+                        path="admin" 
+                        element={
+                          <AdminProtectedRoute>
+                            <AdminDashboard />
+                          </AdminProtectedRoute>
+                        } 
+                      />
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                   </main>

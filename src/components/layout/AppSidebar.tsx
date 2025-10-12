@@ -1,4 +1,4 @@
-import { ChevronDown, Heart, LayoutDashboard, LogOut, User, PartyPopper, Baby, CreditCard } from "lucide-react";
+import { ChevronDown, Heart, LayoutDashboard, LogOut, User, PartyPopper, Baby, CreditCard, Shield } from "lucide-react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
@@ -16,17 +16,36 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 export function AppSidebar() {
   const { state } = useSidebar();
   const location = useLocation();
   const navigate = useNavigate();
-  const { signOut } = useAuth();
+  const { signOut, user } = useAuth();
   const { toast } = useToast();
   const [gamosOpen, setGamosOpen] = useState(true);
   const [baptismOpen, setBaptismOpen] = useState(false);
   const [partyOpen, setPartyOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      if (!user) return;
+
+      const { data } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', user.id)
+        .eq('role', 'admin')
+        .single();
+
+      setIsAdmin(!!data);
+    };
+
+    checkAdminStatus();
+  }, [user]);
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -193,6 +212,17 @@ export function AppSidebar() {
                 </NavLink>
               </SidebarMenuButton>
             </SidebarMenuItem>
+
+            {isAdmin && (
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={isActive("/admin")}>
+                  <NavLink to="/admin" className="flex items-center gap-2">
+                    <Shield className="w-5 h-5" />
+                    {state === "expanded" && <span>Admin</span>}
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            )}
 
             <SidebarMenuItem>
               <SidebarMenuButton asChild>
