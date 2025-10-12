@@ -22,13 +22,14 @@ export function AdminProtectedRoute({ children }: { children: React.ReactNode })
           .select('role')
           .eq('user_id', user.id)
           .eq('role', 'admin')
-          .single();
+          .maybeSingle();
 
-        if (error && error.code !== 'PGRST116') {
+        if (error) {
           console.error('Error checking admin status:', error);
+          setIsAdmin(false);
+        } else {
+          setIsAdmin(!!data);
         }
-
-        setIsAdmin(!!data);
       } catch (error) {
         console.error('Error checking admin status:', error);
         setIsAdmin(false);
