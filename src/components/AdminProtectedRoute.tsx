@@ -5,14 +5,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 export function AdminProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const checkAdminStatus = async () => {
       if (!user) {
-        setLoading(false);
+        setIsAdmin(false);
         return;
       }
 
@@ -33,15 +32,14 @@ export function AdminProtectedRoute({ children }: { children: React.ReactNode })
       } catch (error) {
         console.error('Error checking admin status:', error);
         setIsAdmin(false);
-      } finally {
-        setLoading(false);
       }
     };
 
     checkAdminStatus();
   }, [user]);
 
-  if (loading) {
+  // Show loading only if auth is loading or we haven't checked admin status yet
+  if (authLoading || (user && isAdmin === null)) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-lg text-muted-foreground">Έλεγχος δικαιωμάτων...</div>
