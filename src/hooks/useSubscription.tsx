@@ -94,11 +94,17 @@ const PLAN_LIMITS = {
 };
 
 export const useSubscription = () => {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [subscription, setSubscription] = useState<Subscription | null>(null);
   const [loading, setLoading] = useState(true);
 
   const fetchSubscription = useCallback(async () => {
+    // Wait for auth to finish loading first
+    if (authLoading) {
+      console.log("[SUBSCRIPTION] Waiting for auth to finish loading");
+      return;
+    }
+
     if (!user) {
       console.log("[SUBSCRIPTION] No user, clearing subscription");
       setSubscription(null);
@@ -174,11 +180,18 @@ export const useSubscription = () => {
       setSubscription(null);
       setLoading(false);
     }
-  }, [user]);
+  }, [user, authLoading]);
 
   useEffect(() => {
-    console.log("[SUBSCRIPTION] Effect triggered, user:", !!user);
+    console.log("[SUBSCRIPTION] Effect triggered, user:", !!user, "authLoading:", authLoading);
     
+    // If auth is still loading, wait
+    if (authLoading) {
+      console.log("[SUBSCRIPTION] Auth still loading, waiting...");
+      setLoading(true);
+      return;
+    }
+
     fetchSubscription();
 
     if (!user) return;
@@ -205,7 +218,7 @@ export const useSubscription = () => {
       console.log("[SUBSCRIPTION] Cleaning up subscription listener");
       supabase.removeChannel(channel);
     };
-  }, [user, fetchSubscription]);
+  }, [user, authLoading, fetchSubscription]);
 
   const canCreateInvitation = async () => {
     console.log("[SUBSCRIPTION] canCreateInvitation called:", { 
@@ -270,7 +283,7 @@ export const useSubscription = () => {
 
   return {
     subscription,
-    loading,
+    loading: authLoading || loading, // Keep loading true while auth is loading too
     canCreateInvitation,
     canAddGuests,
     hasFeature,
