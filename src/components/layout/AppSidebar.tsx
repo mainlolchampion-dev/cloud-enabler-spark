@@ -36,12 +36,12 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar className="border-r bg-card" collapsible="none">
-      <div className="flex items-center gap-2 p-4 border-b">
+    <Sidebar className="border-r bg-sidebar" collapsible="none">
+      <div className="flex items-center gap-2 p-4 border-b border-sidebar-border">
         <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
           <Heart className="w-6 h-6 text-primary" fill="currentColor" />
         </div>
-        <span className="font-serif text-xl font-semibold text-foreground">WediLink</span>
+        <span className="font-serif text-xl font-semibold text-sidebar-foreground">WediLink</span>
       </div>
 
       <SidebarContent>
