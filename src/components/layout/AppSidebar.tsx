@@ -32,7 +32,10 @@ export function AppSidebar() {
 
   useEffect(() => {
     const checkAdminStatus = async () => {
-      if (!user) return;
+      if (!user) {
+        setIsAdmin(false);
+        return;
+      }
 
       const { data, error } = await supabase
         .from('user_roles')
@@ -47,7 +50,9 @@ export function AppSidebar() {
         return;
       }
 
-      setIsAdmin(!!data);
+      const isAdminUser = !!data;
+      console.log('Admin check:', { userId: user.id, isAdmin: isAdminUser, data });
+      setIsAdmin(isAdminUser);
     };
 
     checkAdminStatus();
