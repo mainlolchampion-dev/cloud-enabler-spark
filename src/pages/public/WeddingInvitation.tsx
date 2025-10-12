@@ -149,6 +149,106 @@ export default function WeddingInvitation({ invitation }: WeddingInvitationProps
         </section>
       )}
 
+      {/* Koumbaroi Section */}
+      {data.koumbaroi && data.koumbaroi.length > 0 && data.koumbaroi.some((k: any) => k.col1) && (
+        <section className="max-w-5xl mx-auto px-6 py-32">
+          <h2 className="font-serif text-5xl text-center mb-20 text-foreground">Κουμπάροι</h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
+            {data.koumbaroi.filter((k: any) => k.col1).map((koumbaros: any) => (
+              <div key={koumbaros.id} className="text-center space-y-6 group">
+                {koumbaros.col2 && (
+                  <div className="relative w-48 h-48 mx-auto overflow-hidden rounded-full shadow-xl">
+                    <img 
+                      src={koumbaros.col2} 
+                      alt={koumbaros.col1} 
+                      className="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-500"
+                    />
+                  </div>
+                )}
+                <h3 className="font-serif text-3xl text-foreground">{koumbaros.col1}</h3>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Families Section */}
+      {((data.groomFamily && data.groomFamily.length > 0) || (data.brideFamily && data.brideFamily.length > 0)) && (
+        <section className="max-w-5xl mx-auto px-6 py-32 bg-muted/20">
+          <h2 className="font-serif text-5xl text-center mb-20 text-foreground">Οικογένειες</h2>
+          <div className="grid md:grid-cols-2 gap-16">
+            {data.groomFamily && data.groomFamily.length > 0 && (
+              <div className="space-y-8">
+                <h3 className="font-serif text-3xl text-center text-foreground">Οικογένεια Γαμπρού</h3>
+                <div className="bg-card border border-border/50 rounded-xl shadow-lg p-8">
+                  <ul className="space-y-4">
+                    {data.groomFamily.map((member: string, idx: number) => (
+                      <li key={idx} className="text-xl text-foreground/80 text-center font-light">
+                        {member}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            )}
+            {data.brideFamily && data.brideFamily.length > 0 && (
+              <div className="space-y-8">
+                <h3 className="font-serif text-3xl text-center text-foreground">Οικογένεια Νύφης</h3>
+                <div className="bg-card border border-border/50 rounded-xl shadow-lg p-8">
+                  <ul className="space-y-4">
+                    {data.brideFamily.map((member: string, idx: number) => (
+                      <li key={idx} className="text-xl text-foreground/80 text-center font-light">
+                        {member}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
+      {/* Bank Accounts Section */}
+      {data.bankAccounts && data.bankAccounts.length > 0 && data.bankAccounts.some((b: any) => b.col1 || b.col2) && (
+        <section className="max-w-4xl mx-auto px-6 py-32">
+          <h2 className="font-serif text-5xl text-center mb-20 text-foreground">Αριθμοί Κατάθεσης</h2>
+          <div className="space-y-6">
+            {data.bankAccounts.filter((b: any) => b.col1 || b.col2).map((account: any) => (
+              <div key={account.id} className="bg-card border border-border/50 rounded-xl shadow-lg p-8 hover:shadow-xl transition-shadow">
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+                  {account.col1 && (
+                    <div className="space-y-2">
+                      <p className="text-sm text-muted-foreground uppercase tracking-wider">Τράπεζα</p>
+                      <p className="text-2xl font-serif text-foreground">{account.col1}</p>
+                    </div>
+                  )}
+                  {account.col2 && (
+                    <div className="space-y-2 md:text-right">
+                      <p className="text-sm text-muted-foreground uppercase tracking-wider">IBAN</p>
+                      <p className="text-xl font-mono text-foreground/80">{account.col2}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Contact Information Section */}
+      {data.contactInfo && (
+        <section className="max-w-3xl mx-auto px-6 py-32 bg-muted/20">
+          <h2 className="font-serif text-5xl text-center mb-16 text-foreground">Στοιχεία Επικοινωνίας</h2>
+          <div className="bg-card border border-border/50 rounded-xl shadow-lg p-12">
+            <div 
+              className="prose prose-lg max-w-none text-center [&>p]:text-foreground/70 [&>p]:leading-loose [&>p]:text-lg [&>p]:mb-4 [&>h1]:font-serif [&>h2]:font-serif [&>h3]:font-serif"
+              dangerouslySetInnerHTML={{ __html: data.contactInfo }}
+            />
+          </div>
+        </section>
+      )}
+
       {/* Wedding Details - Premium Card */}
       <section className="max-w-5xl mx-auto px-6 py-32">
         <div className="bg-card border border-border/50 rounded-2xl shadow-xl p-16 text-center space-y-10">
