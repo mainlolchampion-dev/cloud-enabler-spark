@@ -6,7 +6,9 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import { CreditCard, Crown, Calendar } from "lucide-react";
+import { CreditCard, Crown, Calendar, Users, FileText, CheckCircle } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
+import { useSubscription } from "@/hooks/useSubscription";
 import { format } from "date-fns";
 import { el } from "date-fns/locale";
 
@@ -21,9 +23,15 @@ export default function SubscriptionManagement() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
+  const { limits } = useSubscription();
   const [subscription, setSubscription] = useState<Subscription | null>(null);
   const [loading, setLoading] = useState(true);
   const [portalLoading, setPortalLoading] = useState(false);
+  const [stats, setStats] = useState({
+    invitationsUsed: 0,
+    guestsUsed: 0,
+    rsvpsReceived: 0,
+  });
 
   useEffect(() => {
     if (!user) {
@@ -48,6 +56,44 @@ export default function SubscriptionManagement() {
       }
       
       setSubscription(data);
+
+      // Fetch usage stats
+      if (user?.id) {
+        // Get all user's invitations first
+        const { data: userInvitations } = await supabase
+          .from("invitations")
+          .select("id")
+          .eq("user_id", user.id)
+          .eq("status", "published");
+
+        const invitationIds = userInvitations?.map(inv => inv.id) || [];
+
+        const [invitations, guests, rsvps] = await Promise.all([
+          supabase
+            .from("invitations")
+            .select("id", { count: "exact", head: true })
+            .eq("user_id", user.id)
+            .eq("status", "published"),
+          invitationIds.length > 0
+            ? supabase
+                .from("guests")
+                .select("id", { count: "exact", head: true })
+                .in("invitation_id", invitationIds)
+            : { count: 0 },
+          invitationIds.length > 0
+            ? supabase
+                .from("rsvps")
+                .select("id", { count: "exact", head: true })
+                .in("invitation_id", invitationIds)
+            : { count: 0 },
+        ]);
+
+        setStats({
+          invitationsUsed: invitations.count || 0,
+          guestsUsed: guests.count || 0,
+          rsvpsReceived: rsvps.count || 0,
+        });
+      }
     } catch (error) {
       console.error("Error fetching subscription:", error);
       toast({
@@ -230,6 +276,54 @@ export default function SubscriptionManagement() {
                 </div>
               </>
             )}
+          </Card>
+
+          {/* Usage Statistics */}
+          <Card className="p-6">
+            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+              <FileText className="w-5 h-5" />
+              Χρήση Πόρων
+            </h3>
+            <div className="space-y-6">
+              {/* Invitations */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground">Προσκλήσεις</span>
+                  <span className="font-medium">
+                    {stats.invitationsUsed} / {limits.maxInvitations === Infinity ? "∞" : limits.maxInvitations}
+                  </span>
+                </div>
+                <Progress 
+                  value={limits.maxInvitations === Infinity ? 0 : (stats.invitationsUsed / limits.maxInvitations) * 100} 
+                  className="h-2"
+                />
+              </div>
+
+              {/* Guests */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground">Καλεσμένοι</span>
+                  <span className="font-medium">
+                    {stats.guestsUsed} / {limits.maxGuests === Infinity ? "∞" : limits.maxGuests}
+                  </span>
+                </div>
+                <Progress 
+                  value={limits.maxGuests === Infinity ? 0 : (stats.guestsUsed / limits.maxGuests) * 100} 
+                  className="h-2"
+                />
+              </div>
+
+              {/* RSVPs - Info only */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4" />
+                    Απαντήσεις RSVP
+                  </span>
+                  <span className="font-medium">{stats.rsvpsReceived}</span>
+                </div>
+              </div>
+            </div>
           </Card>
 
           {subscription && (

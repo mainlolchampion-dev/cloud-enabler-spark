@@ -22,6 +22,7 @@ import {
 } from "@/lib/rsvpStorage";
 import { getInvitation, BaseInvitation } from "@/lib/invitationStorage";
 import { Download, Trash2, Users, CheckCircle, XCircle, HelpCircle, Mail, Phone } from "lucide-react";
+import { ReminderScheduler } from "@/components/subscription/ReminderScheduler";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -216,6 +217,13 @@ export default function RSVPManagement() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Reminder Scheduler */}
+        <ReminderScheduler 
+          invitationId={id!} 
+          rsvps={rsvps}
+          eventDate={invitation.data?.weddingDate || invitation.data?.baptismDate || invitation.data?.partyDate}
+        />
 
         {/* RSVPs Table */}
         <Card>
