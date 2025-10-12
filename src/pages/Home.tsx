@@ -98,6 +98,147 @@ const Home = () => {
         </div>
       </section>
 
+      {/* Templates Gallery Section */}
+      <section className="py-24 bg-background">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-20">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-6">
+              <Sparkles className="h-4 w-4" />
+              <span className="text-sm font-medium">Premium Templates</span>
+            </div>
+            <h2 className="font-serif text-4xl md:text-5xl font-bold mb-4">Επιλέξτε το ιδανικό σχέδιο</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Επαγγελματικά templates για κάθε είδος εκδήλωσης
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {/* Wedding Template */}
+            <Card className="group overflow-hidden bg-card hover:shadow-2xl transition-all duration-300 hover:-translate-y-3">
+              <div className="aspect-[3/4] relative overflow-hidden bg-gradient-to-br from-rose-100 to-pink-50">
+                <img 
+                  src="/src/assets/wedding-hero-sample.jpg" 
+                  alt="Wedding Template"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                  <h3 className="font-serif text-3xl font-bold mb-2">Γάμος</h3>
+                  <p className="text-sm text-white/90">Κομψά σχέδια για την πιο σημαντική μέρα</p>
+                </div>
+              </div>
+              <div className="p-6 space-y-4">
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4 text-primary" />
+                    Countdown Timer
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4 text-primary" />
+                    Photo Gallery
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4 text-primary" />
+                    Interactive Maps
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4 text-primary" />
+                    RSVP Form
+                  </li>
+                </ul>
+                <Link to="/login" className="block">
+                  <Button className="w-full" size="lg">
+                    Δημιουργία Πρόσκλησης
+                  </Button>
+                </Link>
+              </div>
+            </Card>
+
+            {/* Baptism Template */}
+            <Card className="group overflow-hidden bg-card hover:shadow-2xl transition-all duration-300 hover:-translate-y-3">
+              <div className="aspect-[3/4] relative overflow-hidden bg-gradient-to-br from-blue-100 to-sky-50">
+                <img 
+                  src="/src/assets/baptism-hero-sample.jpg" 
+                  alt="Baptism Template"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                  <h3 className="font-serif text-3xl font-bold mb-2">Βάπτιση</h3>
+                  <p className="text-sm text-white/90">Τρυφερά σχέδια για τη χριστιανική βάπτιση</p>
+                </div>
+              </div>
+              <div className="p-6 space-y-4">
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4 text-primary" />
+                    Godparents Section
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4 text-primary" />
+                    Church Details
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4 text-primary" />
+                    Gift Registry
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4 text-primary" />
+                    Event Timeline
+                  </li>
+                </ul>
+                <Link to="/login" className="block">
+                  <Button className="w-full" size="lg">
+                    Δημιουργία Πρόσκλησης
+                  </Button>
+                </Link>
+              </div>
+            </Card>
+
+            {/* Party Template */}
+            <Card className="group overflow-hidden bg-card hover:shadow-2xl transition-all duration-300 hover:-translate-y-3">
+              <div className="aspect-[3/4] relative overflow-hidden bg-gradient-to-br from-purple-100 to-violet-50">
+                <img 
+                  src="/src/assets/party-hero-sample.jpg" 
+                  alt="Party Template"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                  <h3 className="font-serif text-3xl font-bold mb-2">Πάρτυ</h3>
+                  <p className="text-sm text-white/90">Ζωηρά σχέδια για κάθε γιορτή</p>
+                </div>
+              </div>
+              <div className="p-6 space-y-4">
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4 text-primary" />
+                    Custom Theme
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4 text-primary" />
+                    Venue Details
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4 text-primary" />
+                    Dress Code
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4 text-primary" />
+                    Music Playlist
+                  </li>
+                </ul>
+                <Link to="/login" className="block">
+                  <Button className="w-full" size="lg">
+                    Δημιουργία Πρόσκλησης
+                  </Button>
+                </Link>
+              </div>
+            </Card>
+          </div>
+        </div>
+      </section>
+
       {/* Features Section - Professional */}
       <section id="features" className="py-24 bg-muted/30">
         <div className="container mx-auto px-6">
