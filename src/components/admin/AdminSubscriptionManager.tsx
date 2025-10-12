@@ -61,35 +61,22 @@ export function AdminSubscriptionManager() {
     try {
       setUpdating(true);
 
-      if (subscription) {
-        // Update existing subscription
-        const { error } = await supabase
-          .from('user_subscriptions')
-          .update({
-            plan_type: selectedPlan,
-            status: 'active',
-            expires_at: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(), // 1 year from now
-            updated_at: new Date().toISOString(),
-          })
-          .eq('id', subscription.id);
+      // Use the admin edge function to update subscription
+      const { data, error } = await supabase.functions.invoke('admin-update-subscription', {
+        body: {
+          userId: user.id,
+          planType: selectedPlan,
+          expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(), // 1 year from now
+        }
+      });
 
-        if (error) throw error;
-      } else {
-        // Create new subscription
-        const { error } = await supabase
-          .from('user_subscriptions')
-          .insert({
-            user_id: user.id,
-            plan_type: selectedPlan,
-            status: 'active',
-            expires_at: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
-          });
-
-        if (error) throw error;
-      }
+      if (error) throw error;
 
       toast.success('Η συνδρομή ενημερώθηκε επιτυχώς!');
       await loadSubscription();
+      
+      // Reload page to refresh subscription context
+      window.location.reload();
     } catch (error) {
       console.error('Error updating subscription:', error);
       toast.error('Σφάλμα κατά την ενημέρωση της συνδρομής');
@@ -140,9 +127,9 @@ export function AdminSubscriptionManager() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Διαχείριση Συνδρομής Admin</CardTitle>
+        <CardTitle>Δοκιμή Πλάνων</CardTitle>
         <p className="text-sm text-muted-foreground">
-          Αλλάξτε το πλάνο σας χωρίς Stripe (μόνο για admin)
+          Αλλάξτε το πλάνο σας για να δοκιμάσετε τα features κάθε επιπέδου
         </p>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -209,9 +196,17 @@ export function AdminSubscriptionManager() {
           )}
         </div>
 
-        <p className="text-xs text-muted-foreground">
-          * Αυτή η λειτουργία είναι διαθέσιμη μόνο για admin accounts και δεν επηρεάζει το Stripe
-        </p>
+        <div className="space-y-2 p-4 bg-blue-50 dark:bg-blue-950 rounded-lg">
+          <p className="text-sm font-medium text-blue-900 dark:text-blue-100">
+            💡 Πώς να δοκιμάσεις τα πλάνα:
+          </p>
+          <ul className="text-xs text-blue-800 dark:text-blue-200 space-y-1 ml-4 list-disc">
+            <li>Επέλεξε το πλάνο που θέλεις να δοκιμάσεις (Basic/Plus/Premium)</li>
+            <li>Πάτα "Ενημέρωση Πλάνου" - η σελίδα θα ανανεωθεί αυτόματα</li>
+            <li>Δοκίμασε τα features του πλάνου (π.χ. δημιούργησε προσκλήσεις, guest lists, κλπ)</li>
+            <li>Αλλάζοντας πλάνο εδώ ΔΕΝ χρεώνεσαι - είναι για δοκιμή μόνο</li>
+          </ul>
+        </div>
       </CardContent>
     </Card>
   );
