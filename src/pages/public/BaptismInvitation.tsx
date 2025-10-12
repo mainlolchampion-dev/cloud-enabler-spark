@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { BaseInvitation } from "@/lib/invitationStorage";
 import { getEvents } from "@/lib/eventsStorage";
 import { getGiftItems } from "@/lib/giftRegistryStorage";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapDisplay } from "@/components/wedding/MapDisplay";
 import { Button } from "@/components/ui/button";
 import { Calendar, MapPin, Sparkles, Clock, ExternalLink, Gift } from "lucide-react";
 import { format } from "date-fns";
@@ -10,7 +10,6 @@ import { el } from "date-fns/locale";
 import { RSVPForm } from "@/components/wedding/RSVPForm";
 import { CountdownTimer } from "@/components/CountdownTimer";
 import baptismHeroSample from "@/assets/baptism-hero-sample.jpg";
-import "leaflet/dist/leaflet.css";
 
 interface BaptismInvitationProps {
   invitation: BaseInvitation;
@@ -200,22 +199,11 @@ export default function BaptismInvitation({ invitation }: BaptismInvitationProps
             </div>
             
             <div className="h-[500px] rounded-2xl overflow-hidden shadow-2xl border border-border/50">
-              <MapContainer
-                key={`church-${activeTab}`}
-                center={data.churchPosition}
-                zoom={15}
-                style={{ height: '100%', width: '100%' }}
-              >
-                <TileLayer
-                  url={activeTab === 'map' 
-                    ? "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    : "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-                  }
-                />
-                <Marker position={data.churchPosition}>
-                  <Popup>{data.churchLocation}</Popup>
-                </Marker>
-              </MapContainer>
+              <MapDisplay 
+                position={data.churchPosition}
+                locationName={data.churchLocation}
+                mapType={activeTab}
+              />
             </div>
             
             <div className="text-center">
@@ -237,17 +225,10 @@ export default function BaptismInvitation({ invitation }: BaptismInvitationProps
           </div>
           
           <div className="h-[500px] rounded-2xl overflow-hidden shadow-2xl border border-border/50">
-            <MapContainer
-              key="reception-map"
-              center={data.receptionPosition}
-              zoom={15}
-              style={{ height: '100%', width: '100%' }}
-            >
-              <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-              <Marker position={data.receptionPosition}>
-                <Popup>{data.receptionLocation}</Popup>
-              </Marker>
-            </MapContainer>
+            <MapDisplay 
+              position={data.receptionPosition}
+              locationName={data.receptionLocation}
+            />
           </div>
           
           <div className="text-center mt-8">

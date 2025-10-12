@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { BaseInvitation } from "@/lib/invitationStorage";
 import { getEvents } from "@/lib/eventsStorage";
 import { getGiftItems } from "@/lib/giftRegistryStorage";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapDisplay } from "@/components/wedding/MapDisplay";
 import { Button } from "@/components/ui/button";
 import { Calendar, MapPin, PartyPopper, Clock, ExternalLink, Gift } from "lucide-react";
 import { format } from "date-fns";
@@ -10,7 +10,6 @@ import { el } from "date-fns/locale";
 import { RSVPForm } from "@/components/wedding/RSVPForm";
 import { CountdownTimer } from "@/components/CountdownTimer";
 import partyHeroSample from "@/assets/party-hero-sample.jpg";
-import "leaflet/dist/leaflet.css";
 
 interface PartyInvitationProps {
   invitation: BaseInvitation;
@@ -164,17 +163,10 @@ export default function PartyInvitation({ invitation }: PartyInvitationProps) {
           </div>
           
           <div className="h-[500px] rounded-2xl overflow-hidden shadow-2xl border border-border/50">
-            <MapContainer
-              key="venue-map"
-              center={data.venuePosition}
-              zoom={15}
-              style={{ height: '100%', width: '100%' }}
-            >
-              <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-              <Marker position={data.venuePosition}>
-                <Popup>{data.venueLocation}</Popup>
-              </Marker>
-            </MapContainer>
+            <MapDisplay 
+              position={data.venuePosition}
+              locationName={data.venueLocation}
+            />
           </div>
           
           <div className="text-center mt-8">
