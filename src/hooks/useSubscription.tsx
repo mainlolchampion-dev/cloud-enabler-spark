@@ -12,20 +12,84 @@ const PLAN_LIMITS = {
   basic: {
     maxInvitations: 1,
     maxGuests: 50,
-    smsNotifications: false,
-    advancedFeatures: false,
+    // Basic Features
+    themes: 5,
+    rsvpForm: true,
+    emailConfirmations: true,
+    photoGallery: true,
+    addToCalendar: true,
+    csvExport: true,
+    // Plus Features - DISABLED
+    premiumThemes: false,
+    passwordProtection: false,
+    giftRegistry: false,
+    livePhotoWall: false,
+    guestListManagement: false,
+    dietaryTracking: false,
+    webhooks: false,
+    // Premium Features - DISABLED
+    customSubdomain: false,
+    emailReminders: false,
+    seatingChart: false,
+    customFonts: false,
+    abTesting: false,
+    smsReminders: false,
+    advancedAnalytics: false,
+    prioritySupport: false,
   },
   plus: {
     maxInvitations: 5,
     maxGuests: Infinity,
-    smsNotifications: true,
-    advancedFeatures: true,
+    // Basic Features - ALL ENABLED
+    themes: 5,
+    rsvpForm: true,
+    emailConfirmations: true,
+    photoGallery: true,
+    addToCalendar: true,
+    csvExport: true,
+    // Plus Features - ENABLED
+    premiumThemes: true,
+    passwordProtection: true,
+    giftRegistry: true,
+    livePhotoWall: true,
+    guestListManagement: true,
+    dietaryTracking: true,
+    webhooks: true,
+    // Premium Features - DISABLED
+    customSubdomain: false,
+    emailReminders: false,
+    seatingChart: false,
+    customFonts: false,
+    abTesting: false,
+    smsReminders: false,
+    advancedAnalytics: false,
+    prioritySupport: false,
   },
   premium: {
     maxInvitations: Infinity,
     maxGuests: Infinity,
-    smsNotifications: true,
-    advancedFeatures: true,
+    // All Features - ENABLED
+    themes: Infinity,
+    rsvpForm: true,
+    emailConfirmations: true,
+    photoGallery: true,
+    addToCalendar: true,
+    csvExport: true,
+    premiumThemes: true,
+    passwordProtection: true,
+    giftRegistry: true,
+    livePhotoWall: true,
+    guestListManagement: true,
+    dietaryTracking: true,
+    webhooks: true,
+    customSubdomain: true,
+    emailReminders: true,
+    seatingChart: true,
+    customFonts: true,
+    abTesting: true,
+    smsReminders: true,
+    advancedAnalytics: true,
+    prioritySupport: true,
   },
 };
 
@@ -149,7 +213,12 @@ export const useSubscription = () => {
 
   const hasFeature = (feature: keyof typeof PLAN_LIMITS.basic) => {
     if (!subscription) return false;
-    return PLAN_LIMITS[subscription.plan_type][feature];
+    const featureValue = PLAN_LIMITS[subscription.plan_type][feature];
+    return featureValue === true || (typeof featureValue === 'number' && featureValue > 0);
+  };
+
+  const getPlanType = () => {
+    return subscription?.plan_type || 'basic';
   };
 
   return {
@@ -158,6 +227,7 @@ export const useSubscription = () => {
     canCreateInvitation,
     canAddGuests,
     hasFeature,
+    getPlanType,
     limits: subscription ? PLAN_LIMITS[subscription.plan_type] : PLAN_LIMITS.basic,
   };
 };

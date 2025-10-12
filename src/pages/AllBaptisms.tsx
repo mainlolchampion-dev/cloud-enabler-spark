@@ -4,13 +4,16 @@ import { Card } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { getInvitationsIndex, deleteInvitation, BaseInvitation } from "@/lib/invitationStorage";
-import { Sparkles, Calendar, Eye, Trash2, Edit, Users, Gift, MapPin, List, Plus } from "lucide-react";
+import { Sparkles, Calendar, Eye, Trash2, Edit, Users, Gift, MapPin, List, Plus, Lock } from "lucide-react";
 import { format } from "date-fns";
 import { el } from "date-fns/locale";
 import { Badge } from "@/components/ui/badge";
+import { useSubscription } from "@/hooks/useSubscription";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export default function AllBaptisms() {
   const navigate = useNavigate();
+  const { hasFeature } = useSubscription();
   const [invitations, setInvitations] = useState<BaseInvitation[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -175,24 +178,68 @@ export default function AllBaptisms() {
                       <Users className="w-3 h-3 mr-1" />
                       Καλεσμένοι
                     </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-xs justify-start"
-                      onClick={() => navigate(`/seating/${invitation.id}`)}
-                    >
-                      <MapPin className="w-3 h-3 mr-1" />
-                      Τραπέζια
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-xs justify-start"
-                      onClick={() => navigate(`/gifts/${invitation.id}`)}
-                    >
-                      <Gift className="w-3 h-3 mr-1" />
-                      Δώρα
-                    </Button>
+                    
+                    {hasFeature('seatingChart') ? (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-xs justify-start"
+                        onClick={() => navigate(`/seating/${invitation.id}`)}
+                      >
+                        <MapPin className="w-3 h-3 mr-1" />
+                        Τραπέζια
+                      </Button>
+                    ) : (
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="text-xs justify-start opacity-50 cursor-not-allowed"
+                              disabled
+                            >
+                              <Lock className="w-3 h-3 mr-1" />
+                              Τραπέζια
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Διαθέσιμο μόνο σε Premium</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    )}
+                    
+                    {hasFeature('giftRegistry') ? (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-xs justify-start"
+                        onClick={() => navigate(`/gifts/${invitation.id}`)}
+                      >
+                        <Gift className="w-3 h-3 mr-1" />
+                        Δώρα
+                      </Button>
+                    ) : (
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="text-xs justify-start opacity-50 cursor-not-allowed"
+                              disabled
+                            >
+                              <Lock className="w-3 h-3 mr-1" />
+                              Δώρα
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Διαθέσιμο σε Plus & Premium</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    )}
                   </div>
                 </div>
               </Card>

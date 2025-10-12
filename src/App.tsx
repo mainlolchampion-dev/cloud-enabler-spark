@@ -7,6 +7,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/layout/AppSidebar";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { SubscriptionProtectedRoute } from "@/components/SubscriptionProtectedRoute";
+import { FeatureProtectedRoute } from "@/components/FeatureProtectedRoute";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
@@ -78,8 +79,30 @@ const App = () => (
               <Route path="party/all" element={<AllParties />} />
                       <Route path="rsvp/:id" element={<RSVPManagement />} />
                       <Route path="guests/:id" element={<GuestManagement />} />
-                      <Route path="seating/:id" element={<SeatingManagement />} />
-                      <Route path="gifts/:id" element={<GiftRegistryManagement />} />
+                      <Route 
+                        path="seating/:id" 
+                        element={
+                          <FeatureProtectedRoute 
+                            feature="seatingChart" 
+                            featureName="Seating Chart Planner"
+                            requiredPlan="premium"
+                          >
+                            <SeatingManagement />
+                          </FeatureProtectedRoute>
+                        } 
+                      />
+                      <Route 
+                        path="gifts/:id" 
+                        element={
+                          <FeatureProtectedRoute 
+                            feature="giftRegistry" 
+                            featureName="Gift Registry"
+                            requiredPlan="plus"
+                          >
+                            <GiftRegistryManagement />
+                          </FeatureProtectedRoute>
+                        } 
+                      />
                       <Route path="events/:id" element={<EventsTimelineManagement />} />
                       <Route path="profile" element={<Profile />} />
                       <Route path="*" element={<NotFound />} />
