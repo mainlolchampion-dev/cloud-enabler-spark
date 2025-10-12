@@ -160,7 +160,14 @@ export default function Dashboard() {
   };
 
   const handleCreateInvitation = async (type: string) => {
+    // Don't check subscription while still loading
+    if (subLoading) {
+      console.log("Subscription still loading, please wait...");
+      return;
+    }
+
     if (!subscription) {
+      console.log("No subscription found, redirecting to pricing");
       toast({
         title: "Χρειάζεστε Πλάνο",
         description: "Για να δημιουργήσετε προσκλήσεις χρειάζεστε να αγοράσετε ένα πλάνο.",
@@ -170,7 +177,10 @@ export default function Dashboard() {
       return;
     }
 
+    console.log("Checking if user can create invitation...", { subscription });
     const can = await canCreateInvitation();
+    console.log("Can create invitation:", can);
+    
     if (!can) {
       toast({
         title: "Όριο προσκλήσεων",

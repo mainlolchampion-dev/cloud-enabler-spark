@@ -23,7 +23,9 @@ export const SubscriptionProtectedRoute = ({ children }: SubscriptionProtectedRo
     }
   }, [authLoading, subLoading, user, subscription, toast]);
 
+  // CRITICAL: Wait for BOTH auth AND subscription to load
   if (authLoading || subLoading) {
+    console.log("SubscriptionProtectedRoute: Loading...", { authLoading, subLoading });
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
@@ -35,12 +37,15 @@ export const SubscriptionProtectedRoute = ({ children }: SubscriptionProtectedRo
   }
 
   if (!user) {
+    console.log("SubscriptionProtectedRoute: No user, redirecting to login");
     return <Navigate to="/login" replace />;
   }
 
   if (!subscription) {
+    console.log("SubscriptionProtectedRoute: No subscription, redirecting to pricing");
     return <Navigate to="/pricing" replace />;
   }
 
+  console.log("SubscriptionProtectedRoute: Access granted", { subscription });
   return <>{children}</>;
 };
