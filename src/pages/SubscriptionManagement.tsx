@@ -42,8 +42,27 @@ export default function SubscriptionManagement() {
         .eq("user_id", user?.id)
         .single();
 
-      if (error) throw error;
-      setSubscription(data);
+      if (error) {
+        console.error("Subscription fetch error:", error);
+        // Create default subscription if not exists
+        if (error.code === 'PGRST116') {
+          const { data: newSub, error: createError } = await supabase
+            .from("user_subscriptions")
+            .insert({
+              user_id: user?.id,
+              plan_type: "basic",
+              status: "active",
+            })
+            .select()
+            .single();
+          
+          if (!createError && newSub) {
+            setSubscription(newSub);
+          }
+        }
+      } else {
+        setSubscription(data);
+      }
     } catch (error) {
       console.error("Error fetching subscription:", error);
       toast({
