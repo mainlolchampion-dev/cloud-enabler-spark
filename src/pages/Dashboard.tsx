@@ -26,6 +26,18 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Check for successful payment
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("payment") === "success") {
+      const plan = params.get("plan");
+      toast({
+        title: "Επιτυχής Πληρωμή!",
+        description: `Η αγορά του ${plan} plan ολοκληρώθηκε επιτυχώς! Η συνδρομή σας ενημερώθηκε.`,
+      });
+      // Clear the URL parameters
+      window.history.replaceState({}, "", "/dashboard");
+    }
+    
     loadStats();
   }, []);
 

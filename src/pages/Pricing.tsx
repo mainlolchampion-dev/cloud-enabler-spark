@@ -11,7 +11,7 @@ const plans = [
   {
     name: "Basic",
     price: "€39",
-    priceId: "price_1SHNxRKs4zHW11Kqk2Rr4ka1",
+    priceId: "price_1SHOW4Ks4zHW11KqsonASzmG",
     planType: "basic",
     subtitle: "Ιδανικό για απλές εκδηλώσεις",
     features: [
@@ -26,7 +26,7 @@ const plans = [
   {
     name: "Plus",
     price: "€69",
-    priceId: "price_1SHO06Ks4zHW11KqGlbgMuqc",
+    priceId: "price_1SHOWQKs4zHW11KqQchSaA1i",
     planType: "plus",
     subtitle: "Για ζευγάρια που θέλουν περισσότερα",
     features: [
@@ -44,7 +44,7 @@ const plans = [
   {
     name: "Premium",
     price: "€119",
-    priceId: "",
+    priceId: "price_1SHOWiKs4zHW11Kqy5Ecvlbu",
     planType: "premium",
     subtitle: "Πλήρης έλεγχος & δυνατότητες",
     features: [
@@ -73,11 +73,6 @@ export default function Pricing() {
       return;
     }
 
-    if (planType === "basic") {
-      navigate("/dashboard");
-      return;
-    }
-
     setLoading(planType);
 
     try {
@@ -88,7 +83,7 @@ export default function Pricing() {
       }
 
       const { data, error } = await supabase.functions.invoke("create-checkout-session", {
-        body: { priceId },
+        body: { priceId, planType },
         headers: {
           Authorization: `Bearer ${session.access_token}`,
         },
@@ -97,7 +92,7 @@ export default function Pricing() {
       if (error) throw error;
 
       if (data?.url) {
-        window.location.href = data.url;
+        window.open(data.url, '_blank');
       }
     } catch (error) {
       console.error("Error creating checkout session:", error);

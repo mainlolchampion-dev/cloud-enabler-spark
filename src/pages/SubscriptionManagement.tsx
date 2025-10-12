@@ -189,20 +189,22 @@ export default function SubscriptionManagement() {
             )}
 
             <div className="grid gap-3">
-              {subscription?.stripe_customer_id && subscription?.plan_type !== "basic" && (
+              {subscription?.plan_type === "basic" && (
+                <Button onClick={() => navigate("/pricing")} className="w-full">
+                  <Crown className="h-4 w-4 mr-2" />
+                  Αναβάθμιση Πλάνου
+                </Button>
+              )}
+
+              {subscription?.plan_type !== "basic" && subscription?.stripe_customer_id && (
                 <Button
                   onClick={handleManageSubscription}
                   disabled={portalLoading}
                   className="w-full"
+                  variant="outline"
                 >
                   <CreditCard className="h-4 w-4 mr-2" />
-                  {portalLoading ? "Φόρτωση..." : "Διαχείριση Πληρωμών & Συνδρομής"}
-                </Button>
-              )}
-
-              {subscription?.plan_type === "basic" && (
-                <Button onClick={() => navigate("/pricing")} className="w-full">
-                  Αναβάθμιση Πλάνου
+                  {portalLoading ? "Φόρτωση..." : "Διαχείριση Πληρωμών"}
                 </Button>
               )}
 

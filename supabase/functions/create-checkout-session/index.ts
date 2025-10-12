@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import Stripe from "https://esm.sh/stripe@14.21.0";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import Stripe from "https://esm.sh/stripe@18.5.0";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -19,8 +19,7 @@ serve(async (req) => {
 
   const supabaseClient = createClient(
     Deno.env.get("SUPABASE_URL") ?? "",
-    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
-    { auth: { persistSession: false } }
+    Deno.env.get("SUPABASE_ANON_KEY") ?? ""
   );
 
   try {
@@ -41,11 +40,12 @@ serve(async (req) => {
     if (!user?.email) throw new Error("User not authenticated or email not available");
     logStep("User authenticated", { userId: user.id, email: user.email });
 
-    const { priceId } = await req.json();
+    const { priceId, planType } = await req.json();
     if (!priceId) throw new Error("Missing priceId");
-    logStep("Price ID received", { priceId });
+    if (!planType) throw new Error("Missing planType");
+    logStep("Payment details received", { priceId, planType });
 
-    const stripe = new Stripe(stripeKey, { apiVersion: "2023-10-16", httpClient: Stripe.createFetchHttpClient() });
+    const stripe = new Stripe(stripeKey, { apiVersion: "2025-08-27.basil" });
     const customers = await stripe.customers.list({ email: user.email, limit: 1 });
     
     let customerId;
@@ -55,7 +55,9 @@ serve(async (req) => {
     } else {
       const customer = await stripe.customers.create({
         email: user.email,
-        metadata: { user_id: user.id },
+        metadata: { 
+          user_id: user.id,
+        },
       });
       customerId = customer.id;
       logStep("New customer created", { customerId });
@@ -64,11 +66,15 @@ serve(async (req) => {
     const origin = req.headers.get("origin") || "http://localhost:3000";
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
-      mode: "subscription",
+      mode: "payment",
       payment_method_types: ["card"],
       line_items: [{ price: priceId, quantity: 1 }],
-      success_url: `${origin}/dashboard?checkout=success`,
+      success_url: `${origin}/dashboard?payment=success&plan=${planType}`,
       cancel_url: `${origin}/pricing`,
+      metadata: {
+        plan_type: planType,
+        user_id: user.id,
+      },
     });
 
     logStep("Checkout session created", { sessionId: session.id, url: session.url });
