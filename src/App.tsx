@@ -19,6 +19,11 @@ import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 import InvitationRouter from "./pages/public/InvitationRouter";
 import RSVPManagement from "./pages/RSVPManagement";
+import UserGuide from "./pages/UserGuide";
+import FAQ from "./pages/FAQ";
+import TermsOfService from "./pages/TermsOfService";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import GDPR from "./pages/GDPR";
 import GuestManagement from "./pages/GuestManagement";
 import SeatingManagement from "./pages/SeatingManagement";
 import GiftRegistryManagement from "./pages/GiftRegistryManagement";
@@ -38,6 +43,11 @@ const App = () => (
           <Route path="/login" element={<Login />} />
           <Route path="/prosklisi/:id" element={<InvitationRouter />} />
           <Route path="/proskisi/:id" element={<InvitationRouter />} /> {/* Alternative spelling for backwards compatibility */}
+          <Route path="/user-guide" element={<UserGuide />} />
+          <Route path="/faq" element={<FAQ />} />
+          <Route path="/terms-of-service" element={<TermsOfService />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/gdpr" element={<GDPR />} />
           
           {/* Protected routes with sidebar */}
           <Route path="/*" element={
