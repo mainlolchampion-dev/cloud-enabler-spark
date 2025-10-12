@@ -160,9 +160,21 @@ export default function Dashboard() {
   };
 
   const handleCreateInvitation = async (type: string) => {
+    console.log("handleCreateInvitation called:", { 
+      type, 
+      subLoading, 
+      subscription,
+      hasSubscription: !!subscription,
+      planType: subscription?.plan_type
+    });
+
     // Don't check subscription while still loading
     if (subLoading) {
       console.log("Subscription still loading, please wait...");
+      toast({
+        title: "Παρακαλώ περιμένετε",
+        description: "Φόρτωση πληροφοριών συνδρομής...",
+      });
       return;
     }
 

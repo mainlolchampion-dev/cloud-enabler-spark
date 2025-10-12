@@ -11,11 +11,20 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Search, Mail, Calendar, Shield, Ban } from "lucide-react";
+import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Search, Mail, Calendar, Shield, MoreVertical, CreditCard, Key, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { el } from "date-fns/locale";
+import { UserActionsDialog } from "./UserActionsDialog";
 
 interface UserData {
   id: string;
@@ -31,6 +40,9 @@ export function UsersManagement() {
   const [users, setUsers] = useState<UserData[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<UserData | null>(null);
+  const [dialogAction, setDialogAction] = useState<"plan" | "password" | "delete" | null>(null);
 
   useEffect(() => {
     loadUsers();
@@ -92,6 +104,16 @@ export function UsersManagement() {
       default:
         return 'bg-gray-100 text-gray-800';
     }
+  };
+
+  const handleActionClick = (user: UserData, action: "plan" | "password" | "delete") => {
+    setSelectedUser(user);
+    setDialogAction(action);
+    setDialogOpen(true);
+  };
+
+  const handleDialogSuccess = () => {
+    loadUsers();
   };
 
   return (
@@ -169,9 +191,33 @@ export function UsersManagement() {
                     </div>
                   </TableCell>
                   <TableCell>
-                    <Button variant="ghost" size="sm">
-                      <Ban className="w-4 h-4" />
-                    </Button>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="sm">
+                          <MoreVertical className="w-4 h-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Ενέργειες</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={() => handleActionClick(user, "plan")}>
+                          <CreditCard className="w-4 h-4 mr-2" />
+                          Αλλαγή Πλάνου
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleActionClick(user, "password")}>
+                          <Key className="w-4 h-4 mr-2" />
+                          Αλλαγή Κωδικού
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem 
+                          onClick={() => handleActionClick(user, "delete")}
+                          className="text-destructive focus:text-destructive"
+                        >
+                          <Trash2 className="w-4 h-4 mr-2" />
+                          Διαγραφή Χρήστη
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </TableCell>
                 </TableRow>
               ))}
@@ -179,6 +225,18 @@ export function UsersManagement() {
           </Table>
         )}
       </CardContent>
+
+      {selectedUser && (
+        <UserActionsDialog
+          userId={selectedUser.id}
+          userEmail={selectedUser.email}
+          currentPlan={selectedUser.subscription_plan}
+          open={dialogOpen}
+          onOpenChange={setDialogOpen}
+          action={dialogAction}
+          onSuccess={handleDialogSuccess}
+        />
+      )}
     </Card>
   );
 }
