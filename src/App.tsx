@@ -24,6 +24,7 @@ import FAQ from "./pages/FAQ";
 import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import GDPR from "./pages/GDPR";
+import Contact from "./pages/Contact";
 import GuestManagement from "./pages/GuestManagement";
 import SeatingManagement from "./pages/SeatingManagement";
 import GiftRegistryManagement from "./pages/GiftRegistryManagement";
@@ -48,6 +49,7 @@ const App = () => (
           <Route path="/terms-of-service" element={<TermsOfService />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/gdpr" element={<GDPR />} />
+          <Route path="/contact" element={<Contact />} />
           
           {/* Protected routes with sidebar */}
           <Route path="/*" element={

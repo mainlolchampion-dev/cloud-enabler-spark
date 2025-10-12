@@ -515,7 +515,7 @@ const Home = () => {
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li><Link to="/user-guide" className="hover:text-foreground transition-colors">Οδηγός Χρήσης</Link></li>
                 <li><Link to="/faq" className="hover:text-foreground transition-colors">FAQ</Link></li>
-                <li><a href="mailto:support@wedilink.com" className="hover:text-foreground transition-colors">Επικοινωνία</a></li>
+                <li><Link to="/contact" className="hover:text-foreground transition-colors">Επικοινωνία</Link></li>
               </ul>
             </div>
             <div>
