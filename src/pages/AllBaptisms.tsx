@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { getInvitationsIndex, deleteInvitation, BaseInvitation } from "@/lib/invitationStorage";
-import { Sparkles, Calendar, Eye, Trash2, Edit, Users, Gift, MapPin, List, Plus, Lock } from "lucide-react";
+import { Sparkles, Calendar, Eye, Trash2, Edit, Users, Gift, MapPin, List, Plus, Lock, BarChart3 } from "lucide-react";
 import { format } from "date-fns";
 import { el } from "date-fns/locale";
 import { Badge } from "@/components/ui/badge";
@@ -178,6 +178,37 @@ export default function AllBaptisms() {
                       <Users className="w-3 h-3 mr-1" />
                       Καλεσμένοι
                     </Button>
+                    
+                    {hasFeature('advancedAnalytics') ? (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-xs justify-start"
+                        onClick={() => navigate(`/analytics/${invitation.id}`)}
+                      >
+                        <BarChart3 className="w-3 h-3 mr-1" />
+                        Analytics
+                      </Button>
+                    ) : (
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="text-xs justify-start opacity-50 cursor-not-allowed"
+                              disabled
+                            >
+                              <Lock className="w-3 h-3 mr-1" />
+                              Analytics
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Διαθέσιμο μόνο σε Premium</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    )}
                     
                     {hasFeature('seatingChart') ? (
                       <Button

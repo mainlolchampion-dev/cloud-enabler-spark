@@ -15,6 +15,7 @@ import { generateUUID, publishInvitation } from "@/lib/invitationStorage";
 import { ShareModal } from "@/components/wedding/ShareModal";
 import { PreviewModal } from "@/components/wedding/PreviewModal";
 import { WebhookIntegration } from "@/components/wedding/WebhookIntegration";
+import { InvitationSettings } from "@/components/settings/InvitationSettings";
 import { supabase } from "@/integrations/supabase/client";
 import { Label } from "@/components/ui/label";
 
@@ -620,6 +621,21 @@ export default function AddWedding() {
                   </Button>
                 </CardContent>
               </Card>
+            )}
+
+            {/* Premium Settings - Only in edit mode */}
+            {isEditMode && (
+              <InvitationSettings
+                invitationId={id!}
+                currentSubdomain={(data as any).custom_subdomain}
+                onSubdomainUpdate={(subdomain) => {
+                  setData((prev) => ({ ...prev, custom_subdomain: subdomain } as any));
+                }}
+                onFontSelect={(fontUrl, fontName) => {
+                  console.log("Font selected:", fontName, fontUrl);
+                  toast.success(`Η γραμματοσειρά ${fontName} επιλέχθηκε επιτυχώς`);
+                }}
+              />
             )}
           </div>
 

@@ -33,6 +33,7 @@ import GiftRegistryManagement from "./pages/GiftRegistryManagement";
 import EventsTimelineManagement from "./pages/EventsTimelineManagement";
 import Pricing from "./pages/Pricing";
 import SubscriptionManagement from "./pages/SubscriptionManagement";
+import AdvancedAnalytics from "./pages/AdvancedAnalytics";
 import ScrollToTop from "./components/ScrollToTop";
 
 const queryClient = new QueryClient();
@@ -104,6 +105,18 @@ const App = () => (
                         } 
                       />
                       <Route path="events/:id" element={<EventsTimelineManagement />} />
+                      <Route 
+                        path="analytics/:id" 
+                        element={
+                          <FeatureProtectedRoute 
+                            feature="advancedAnalytics" 
+                            featureName="Advanced Analytics"
+                            requiredPlan="premium"
+                          >
+                            <AdvancedAnalytics />
+                          </FeatureProtectedRoute>
+                        } 
+                      />
                       <Route path="profile" element={<Profile />} />
                       <Route path="*" element={<NotFound />} />
                     </Routes>
