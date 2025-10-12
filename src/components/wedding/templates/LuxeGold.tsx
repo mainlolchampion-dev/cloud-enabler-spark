@@ -165,6 +165,46 @@ export function LuxeGold({ invitation, events, giftItems, onOpenDirections }: Te
         </section>
       </AnimatedSection>
 
+      {/* Gold Divider */}
+      <div className="flex items-center justify-center gap-4 my-16">
+        <div className="w-32 h-px bg-accent" />
+        <Crown className="w-8 h-8 text-accent" />
+        <div className="w-32 h-px bg-accent" />
+      </div>
+
+      {/* Koumbaroi Section - Opulent */}
+      {data.koumbaroi && data.koumbaroi.length > 0 && (
+        <AnimatedSection animation="fadeInUp" delay={250}>
+          <section className="space-y-12">
+            <div className="text-center">
+              <h2 className="text-5xl font-accent text-accent tracking-wider">Κουμπάροι</h2>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+              {data.koumbaroi.map((koumbaros) => (
+                <div key={koumbaros.id} className="group hover-lift">
+                  <div className="relative bg-primary/95 p-6 border-2 border-accent/40 shadow-[var(--shadow-elegant)]">
+                    {koumbaros.col2 && (
+                      <div className="relative aspect-square overflow-hidden mb-4 border-2 border-accent/30">
+                        <img
+                          src={koumbaros.col2}
+                          alt={koumbaros.col1}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                        />
+                      </div>
+                    )}
+                    <div className="relative text-center">
+                      <div className="w-12 h-px bg-accent mx-auto mb-3" />
+                      <h3 className="text-xl font-heading text-accent">{koumbaros.col1}</h3>
+                      <div className="w-12 h-px bg-accent mx-auto mt-3" />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        </AnimatedSection>
+      )}
+
       {/* Countdown Timer - Luxury */}
       {data.weddingDate && (
         <AnimatedSection animation="fadeInScale" delay={300}>
@@ -289,6 +329,27 @@ export function LuxeGold({ invitation, events, giftItems, onOpenDirections }: Te
         </AnimatedSection>
       )}
 
+      {/* Bank Accounts - Luxury */}
+      {data.bankAccounts && data.bankAccounts.length > 0 && (
+        <AnimatedSection animation="fadeInUp" delay={550}>
+          <section className="space-y-12">
+            <div className="text-center">
+              <h2 className="text-5xl font-accent text-accent tracking-wider">Αριθμοί Κατάθεσης</h2>
+            </div>
+            <div className="max-w-3xl mx-auto space-y-4">
+              {data.bankAccounts.map((account) => (
+                <div key={account.id} className="bg-primary/95 p-8 border-2 border-accent/30 shadow-[var(--shadow-card)] hover-lift">
+                  <div className="flex items-center justify-between gap-4 flex-wrap">
+                    <span className="font-heading text-xl text-accent">{account.col1}</span>
+                    <span className="font-mono text-primary-foreground/80 text-lg">{account.col2}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        </AnimatedSection>
+      )}
+
       {/* RSVP Section - Opulent */}
       <AnimatedSection animation="fadeInUp" delay={600}>
         <section className="max-w-3xl mx-auto">
@@ -304,6 +365,23 @@ export function LuxeGold({ invitation, events, giftItems, onOpenDirections }: Te
           </div>
         </section>
       </AnimatedSection>
+
+      {/* Contact Info - Luxury */}
+      {data.contactInfo && (
+        <AnimatedSection animation="fadeInUp" delay={650}>
+          <section className="max-w-3xl mx-auto">
+            <div className="bg-primary/95 p-12 shadow-[var(--shadow-elegant)] border-2 border-accent/40">
+              <div className="text-center mb-8">
+                <h2 className="text-5xl font-accent text-accent tracking-wider">Στοιχεία Επικοινωνίας</h2>
+              </div>
+              <div 
+                className="text-center text-primary-foreground/90 font-heading prose prose-sm max-w-none"
+                dangerouslySetInnerHTML={{ __html: data.contactInfo }}
+              />
+            </div>
+          </section>
+        </AnimatedSection>
+      )}
 
       {/* Gallery - Luxury Grid */}
       {data.gallery && data.gallery.length > 0 && (

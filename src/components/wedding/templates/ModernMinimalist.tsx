@@ -117,6 +117,33 @@ export function ModernMinimalist({ invitation, events, giftItems, onOpenDirectio
         </section>
       </AnimatedSection>
 
+      {/* Koumbaroi Section - Minimalist */}
+      {data.koumbaroi && data.koumbaroi.length > 0 && (
+        <AnimatedSection animation="fadeInUp" delay={250}>
+          <section className="max-w-6xl mx-auto space-y-16">
+            <h2 className="text-4xl font-light tracking-wide text-center">Κουμπάροι</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {data.koumbaroi.map((koumbaros) => (
+                <div key={koumbaros.id} className="space-y-6 hover-lift">
+                  {koumbaros.col2 && (
+                    <div className="aspect-[3/4] overflow-hidden">
+                      <img
+                        src={koumbaros.col2}
+                        alt={koumbaros.col1}
+                        className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
+                      />
+                    </div>
+                  )}
+                  <div className="text-center">
+                    <h3 className="text-xl font-light tracking-wide">{koumbaros.col1}</h3>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        </AnimatedSection>
+      )}
+
       {/* Countdown Timer - Minimal Box */}
       {data.weddingDate && (
         <AnimatedSection animation="fadeInScale" delay={300}>
@@ -232,6 +259,28 @@ export function ModernMinimalist({ invitation, events, giftItems, onOpenDirectio
         </AnimatedSection>
       )}
 
+      {/* Bank Accounts - Minimal */}
+      {data.bankAccounts && data.bankAccounts.length > 0 && (
+        <AnimatedSection animation="fadeInUp" delay={550}>
+          <section className="max-w-4xl mx-auto space-y-8">
+            <h2 className="text-4xl font-light tracking-wide text-center mb-16">Αριθμοί Κατάθεσης</h2>
+            <div className="space-y-1">
+              {data.bankAccounts.map((account) => (
+                <div 
+                  key={account.id} 
+                  className="border-b border-foreground/10 py-6 hover:bg-foreground/5 transition-colors px-6"
+                >
+                  <div className="flex items-center justify-between gap-4 flex-wrap font-light">
+                    <span className="text-lg">{account.col1}</span>
+                    <span className="font-mono text-muted-foreground">{account.col2}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        </AnimatedSection>
+      )}
+
       {/* RSVP Section - Minimal Form */}
       <AnimatedSection animation="fadeInUp" delay={600}>
         <section className="max-w-2xl mx-auto">
@@ -241,6 +290,21 @@ export function ModernMinimalist({ invitation, events, giftItems, onOpenDirectio
           </div>
         </section>
       </AnimatedSection>
+
+      {/* Contact Info - Minimal */}
+      {data.contactInfo && (
+        <AnimatedSection animation="fadeInUp" delay={650}>
+          <section className="max-w-2xl mx-auto">
+            <div className="border border-foreground/10 p-12">
+              <h2 className="text-4xl font-light tracking-wide text-center mb-12">Στοιχεία Επικοινωνίας</h2>
+              <div 
+                className="text-center text-muted-foreground font-light prose prose-sm max-w-none"
+                dangerouslySetInnerHTML={{ __html: data.contactInfo }}
+              />
+            </div>
+          </section>
+        </AnimatedSection>
+      )}
 
       {/* Gallery - Grid Layout */}
       {data.gallery && data.gallery.length > 0 && (

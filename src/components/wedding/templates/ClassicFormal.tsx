@@ -131,6 +131,34 @@ export function ClassicFormal({ invitation, events, giftItems, onOpenDirections 
         </section>
       </AnimatedSection>
 
+      {/* Koumbaroi Section */}
+      {data.koumbaroi && data.koumbaroi.length > 0 && (
+        <AnimatedSection animation="fadeInUp" delay={250}>
+          <section>
+            <h2 className="text-4xl font-elegant text-primary text-center mb-12 tracking-wide">Κουμπάροι</h2>
+            <GeometricDivider style="classic" color="#d4af37" className="mb-12" />
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+              {data.koumbaroi.map((koumbaros) => (
+                <div key={koumbaros.id} className="text-center hover-lift">
+                  {koumbaros.col2 && (
+                    <div className="relative inline-block mb-6">
+                      <div className="absolute -inset-3 border-2 border-accent rounded-lg" />
+                      <img
+                        src={koumbaros.col2}
+                        alt={koumbaros.col1}
+                        className="relative w-48 h-56 object-cover mx-auto shadow-2xl rounded-lg"
+                      />
+                    </div>
+                  )}
+                  <h3 className="text-xl font-elegant text-primary tracking-wide">{koumbaros.col1}</h3>
+                </div>
+              ))}
+            </div>
+          </section>
+        </AnimatedSection>
+      )}
+
       {/* Countdown */}
       {data.weddingDate && (
         <AnimatedSection animation="fadeInScale" delay={300}>
@@ -232,6 +260,27 @@ export function ClassicFormal({ invitation, events, giftItems, onOpenDirections 
         </AnimatedSection>
       )}
 
+      {/* Bank Accounts */}
+      {data.bankAccounts && data.bankAccounts.length > 0 && (
+        <AnimatedSection animation="fadeInUp" delay={550}>
+          <section>
+            <h2 className="text-4xl font-elegant text-primary text-center mb-12 tracking-wide">Αριθμοί Κατάθεσης</h2>
+            <GeometricDivider style="classic" color="#d4af37" className="mb-12" />
+            
+            <div className="max-w-2xl mx-auto space-y-4">
+              {data.bankAccounts.map((account) => (
+                <div key={account.id} className="border-2 border-primary/20 rounded-lg p-6 shadow-lg bg-background hover-lift">
+                  <div className="flex items-center justify-between gap-4 flex-wrap font-classic">
+                    <span className="font-semibold text-lg text-primary">{account.col1}</span>
+                    <span className="font-mono text-muted-foreground">{account.col2}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        </AnimatedSection>
+      )}
+
       {/* RSVP */}
       <AnimatedSection animation="fadeInUp" delay={600}>
         <section className="max-w-2xl mx-auto">
@@ -242,6 +291,22 @@ export function ClassicFormal({ invitation, events, giftItems, onOpenDirections 
           </div>
         </section>
       </AnimatedSection>
+
+      {/* Contact Info */}
+      {data.contactInfo && (
+        <AnimatedSection animation="fadeInUp" delay={650}>
+          <section className="max-w-2xl mx-auto">
+            <div className="border-2 border-primary/20 rounded-lg p-8 shadow-xl bg-background">
+              <h2 className="text-4xl font-elegant text-primary text-center mb-8 tracking-wide">Στοιχεία Επικοινωνίας</h2>
+              <GeometricDivider style="classic" color="#d4af37" className="mb-8" />
+              <div 
+                className="text-center text-muted-foreground font-classic prose prose-sm max-w-none"
+                dangerouslySetInnerHTML={{ __html: data.contactInfo }}
+              />
+            </div>
+          </section>
+        </AnimatedSection>
+      )}
 
       {/* Gallery */}
       {data.gallery && data.gallery.length > 0 && (

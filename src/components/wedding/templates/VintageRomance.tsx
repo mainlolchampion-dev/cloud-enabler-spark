@@ -166,6 +166,33 @@ export function VintageRomance({ invitation, events, giftItems, onOpenDirections
         </section>
       </AnimatedSection>
 
+      {/* Koumbaroi Section */}
+      {data.koumbaroi && data.koumbaroi.length > 0 && (
+        <AnimatedSection animation="fadeInUp" delay={250}>
+          <section className="space-y-12">
+            <h2 className="text-4xl font-serif italic text-primary text-center">Κουμπάροι</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-4xl mx-auto">
+              {data.koumbaroi.map((koumbaros) => (
+                <div key={koumbaros.id} className="text-center space-y-4 hover-lift">
+                  {koumbaros.col2 && (
+                    <div className="relative inline-block">
+                      <div className="absolute -inset-3 border-3 border-primary/20 rounded-full" />
+                      <img
+                        src={koumbaros.col2}
+                        alt={koumbaros.col1}
+                        className="relative rounded-full w-48 h-48 object-cover mx-auto shadow-xl border-6 border-background"
+                        style={{ filter: 'sepia(0.2) brightness(1.1)' }}
+                      />
+                    </div>
+                  )}
+                  <h3 className="text-2xl font-serif italic text-primary">{koumbaros.col1}</h3>
+                </div>
+              ))}
+            </div>
+          </section>
+        </AnimatedSection>
+      )}
+
       {/* Countdown Timer - Vintage Clock */}
       {data.weddingDate && (
         <AnimatedSection animation="fadeInScale" delay={300}>
@@ -285,6 +312,25 @@ export function VintageRomance({ invitation, events, giftItems, onOpenDirections
         </AnimatedSection>
       )}
 
+      {/* Bank Accounts */}
+      {data.bankAccounts && data.bankAccounts.length > 0 && (
+        <AnimatedSection animation="fadeInUp" delay={550}>
+          <section className="space-y-12">
+            <h2 className="text-4xl font-serif italic text-primary text-center">Αριθμοί Κατάθεσης</h2>
+            <div className="max-w-2xl mx-auto space-y-4">
+              {data.bankAccounts.map((account) => (
+                <div key={account.id} className="bg-background/90 rounded-lg p-8 shadow-lg border-2 border-primary/20 hover-lift">
+                  <div className="flex items-center justify-between gap-4 flex-wrap font-serif">
+                    <span className="font-semibold text-xl text-primary">{account.col1}</span>
+                    <span className="font-mono text-muted-foreground text-lg">{account.col2}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        </AnimatedSection>
+      )}
+
       {/* RSVP Section - Vintage Form */}
       <AnimatedSection animation="fadeInUp" delay={600}>
         <section className="max-w-2xl mx-auto">
@@ -297,6 +343,21 @@ export function VintageRomance({ invitation, events, giftItems, onOpenDirections
           </div>
         </section>
       </AnimatedSection>
+
+      {/* Contact Info */}
+      {data.contactInfo && (
+        <AnimatedSection animation="fadeInUp" delay={650}>
+          <section className="max-w-2xl mx-auto">
+            <div className="bg-background/90 rounded-lg p-10 shadow-xl border-4 border-primary/20">
+              <h2 className="text-4xl font-serif italic text-primary text-center mb-8">Στοιχεία Επικοινωνίας</h2>
+              <div 
+                className="text-center text-muted-foreground font-serif prose prose-sm max-w-none"
+                dangerouslySetInnerHTML={{ __html: data.contactInfo }}
+              />
+            </div>
+          </section>
+        </AnimatedSection>
+      )}
 
       {/* Gallery - Vintage Photo Album */}
       {data.gallery && data.gallery.length > 0 && (

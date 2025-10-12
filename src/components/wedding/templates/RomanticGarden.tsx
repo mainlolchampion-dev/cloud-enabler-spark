@@ -140,6 +140,34 @@ export function RomanticGarden({ invitation, events, giftItems, onOpenDirections
 
       <GeometricDivider style="elegant" color="#f4a7b9" className="my-16" />
 
+      {/* Koumbaroi Section */}
+      {data.koumbaroi && data.koumbaroi.length > 0 && (
+        <AnimatedSection animation="fadeInUp" delay={250}>
+          <section>
+            <h2 className="text-3xl font-script text-primary text-center mb-12">Κουμπάροι</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-4xl mx-auto">
+              {data.koumbaroi.map((koumbaros) => (
+                <div key={koumbaros.id} className="text-center hover-lift">
+                  {koumbaros.col2 && (
+                    <div className="relative inline-block mb-4">
+                      <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full blur-xl" />
+                      <img
+                        src={koumbaros.col2}
+                        alt={koumbaros.col1}
+                        className="relative rounded-full w-40 h-40 object-cover mx-auto shadow-xl border-4 border-background"
+                      />
+                    </div>
+                  )}
+                  <h3 className="text-xl font-semibold text-foreground">{koumbaros.col1}</h3>
+                </div>
+              ))}
+            </div>
+          </section>
+        </AnimatedSection>
+      )}
+
+      <GeometricDivider style="elegant" color="#f4a7b9" className="my-16" />
+
       {/* Countdown Timer */}
       {data.weddingDate && (
         <AnimatedSection animation="fadeInScale" delay={300}>
@@ -257,6 +285,25 @@ export function RomanticGarden({ invitation, events, giftItems, onOpenDirections
         </AnimatedSection>
       )}
 
+      {/* Bank Accounts */}
+      {data.bankAccounts && data.bankAccounts.length > 0 && (
+        <AnimatedSection animation="fadeInUp" delay={550}>
+          <section>
+            <h2 className="text-3xl font-script text-primary text-center mb-12">Αριθμοί Κατάθεσης</h2>
+            <div className="max-w-2xl mx-auto space-y-4">
+              {data.bankAccounts.map((account) => (
+                <div key={account.id} className="bg-background rounded-xl p-6 shadow-lg border border-primary/10 hover-lift">
+                  <div className="flex items-center justify-between gap-4 flex-wrap">
+                    <span className="font-semibold text-lg">{account.col1}</span>
+                    <span className="font-mono text-muted-foreground">{account.col2}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        </AnimatedSection>
+      )}
+
       {/* RSVP Section */}
       <AnimatedSection animation="fadeInUp" delay={600}>
         <section className="max-w-2xl mx-auto">
@@ -269,6 +316,21 @@ export function RomanticGarden({ invitation, events, giftItems, onOpenDirections
           </div>
         </section>
       </AnimatedSection>
+
+      {/* Contact Info */}
+      {data.contactInfo && (
+        <AnimatedSection animation="fadeInUp" delay={650}>
+          <section className="max-w-2xl mx-auto">
+            <div className="bg-background rounded-xl p-8 shadow-lg border border-primary/10">
+              <h2 className="text-3xl font-script text-primary text-center mb-6">Στοιχεία Επικοινωνίας</h2>
+              <div 
+                className="text-center text-muted-foreground prose prose-sm max-w-none"
+                dangerouslySetInnerHTML={{ __html: data.contactInfo }}
+              />
+            </div>
+          </section>
+        </AnimatedSection>
+      )}
 
       {/* Gallery */}
       {data.gallery && data.gallery.length > 0 && (

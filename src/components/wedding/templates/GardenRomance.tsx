@@ -172,6 +172,43 @@ export function GardenRomance({ invitation, events, giftItems, onOpenDirections 
         </section>
       </AnimatedSection>
 
+      {/* Botanical Divider */}
+      <div className="flex items-center justify-center gap-4 my-16">
+        <div className="w-24 h-px bg-primary/30" />
+        <Leaf className="w-8 h-8 text-primary" />
+        <div className="w-24 h-px bg-primary/30" />
+      </div>
+
+      {/* Koumbaroi Section */}
+      {data.koumbaroi && data.koumbaroi.length > 0 && (
+        <AnimatedSection animation="fadeInUp" delay={250}>
+          <section className="space-y-12">
+            <h2 className="text-4xl font-accent text-primary text-center">Κουμπάροι</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-4xl mx-auto">
+              {data.koumbaroi.map((koumbaros) => (
+                <div key={koumbaros.id} className="hover-lift">
+                  <div className="relative bg-background/80 backdrop-blur-sm rounded-2xl overflow-hidden shadow-[var(--shadow-card)] border border-primary/20">
+                    {koumbaros.col2 && (
+                      <div className="relative aspect-square overflow-hidden">
+                        <img
+                          src={koumbaros.col2}
+                          alt={koumbaros.col1}
+                          className="w-full h-full object-cover"
+                        />
+                        <Leaf className="absolute bottom-4 right-4 w-8 h-8 text-white/50" />
+                      </div>
+                    )}
+                    <div className="relative p-6 text-center">
+                      <h3 className="text-xl font-heading text-primary">{koumbaros.col1}</h3>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        </AnimatedSection>
+      )}
+
       {/* Countdown Timer */}
       {data.weddingDate && (
         <AnimatedSection animation="fadeInScale" delay={300}>
@@ -291,6 +328,25 @@ export function GardenRomance({ invitation, events, giftItems, onOpenDirections 
         </AnimatedSection>
       )}
 
+      {/* Bank Accounts */}
+      {data.bankAccounts && data.bankAccounts.length > 0 && (
+        <AnimatedSection animation="fadeInUp" delay={550}>
+          <section className="space-y-12">
+            <h2 className="text-4xl font-accent text-primary text-center">Αριθμοί Κατάθεσης</h2>
+            <div className="max-w-2xl mx-auto space-y-4">
+              {data.bankAccounts.map((account) => (
+                <div key={account.id} className="bg-background rounded-2xl p-6 shadow-[var(--shadow-card)] border border-primary/10 hover-lift">
+                  <div className="flex items-center justify-between gap-4 flex-wrap font-body">
+                    <span className="font-semibold text-lg text-primary">{account.col1}</span>
+                    <span className="font-mono text-muted-foreground">{account.col2}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        </AnimatedSection>
+      )}
+
       {/* RSVP Section */}
       <AnimatedSection animation="fadeInUp" delay={600}>
         <section className="max-w-2xl mx-auto">
@@ -300,6 +356,21 @@ export function GardenRomance({ invitation, events, giftItems, onOpenDirections 
           </div>
         </section>
       </AnimatedSection>
+
+      {/* Contact Info */}
+      {data.contactInfo && (
+        <AnimatedSection animation="fadeInUp" delay={650}>
+          <section className="max-w-2xl mx-auto">
+            <div className="bg-background rounded-2xl p-8 shadow-[var(--shadow-card)] border border-primary/10">
+              <h2 className="text-4xl font-accent text-primary text-center mb-6">Στοιχεία Επικοινωνίας</h2>
+              <div 
+                className="text-center text-muted-foreground font-body prose prose-sm max-w-none"
+                dangerouslySetInnerHTML={{ __html: data.contactInfo }}
+              />
+            </div>
+          </section>
+        </AnimatedSection>
+      )}
 
       {/* Gallery */}
       {data.gallery && data.gallery.length > 0 && (
