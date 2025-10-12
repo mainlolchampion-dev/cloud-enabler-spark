@@ -53,36 +53,86 @@ serve(async (req) => {
       );
     }
 
+    // Check user preferences
+    const { data: preferences } = await supabaseClient
+      .from("notification_preferences")
+      .select("email_reminders, reminder_days_before")
+      .eq("user_id", invitation.user_id)
+      .single();
+
+    if (preferences && !preferences.email_reminders) {
+      return new Response(
+        JSON.stringify({ message: "Email reminders are disabled for this user" }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 }
+      );
+    }
+
     // Send reminder emails
     const emailPromises = rsvps.map(async (rsvp) => {
       const eventDate = invitation.data?.weddingDate || invitation.data?.baptismDate || invitation.data?.partyDate;
+      let status = 'pending';
+      let errorMessage = null;
       
-      const response = await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${RESEND_API_KEY}`,
-        },
-        body: JSON.stringify({
-          from: "Προσκλήσεις <noreply@yourdomain.com>",
-          to: [rsvp.email],
-          subject: `Υπενθύμιση: ${invitation.title} - ${daysBeforeEvent} ημέρες!`,
-          html: `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-              <h2 style="color: #333;">Γεια σου ${rsvp.name}!</h2>
-              <p>Αυτό είναι ένα φιλικό υπενθύμισημα για την εκδήλωση:</p>
-              <div style="background-color: #f5f5f5; padding: 20px; border-radius: 10px; margin: 20px 0;">
-                <h3 style="margin-top: 0;">${invitation.title}</h3>
-                <p><strong>Ημερομηνία:</strong> ${new Date(eventDate).toLocaleDateString('el-GR')}</p>
-                <p><strong>Απομένουν:</strong> ${daysBeforeEvent} ημέρες!</p>
+      try {
+        const response = await fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${RESEND_API_KEY}`,
+          },
+          body: JSON.stringify({
+            from: "Προσκλήσεις <noreply@yourdomain.com>",
+            to: [rsvp.email],
+            subject: `Υπενθύμιση: ${invitation.title} - ${daysBeforeEvent} ημέρες!`,
+            html: `
+              <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                <h2 style="color: #333;">Γεια σου ${rsvp.name}!</h2>
+                <p>Αυτό είναι ένα φιλικό υπενθύμισημα για την εκδήλωση:</p>
+                <div style="background-color: #f5f5f5; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                  <h3 style="margin-top: 0;">${invitation.title}</h3>
+                  <p><strong>Ημερομηνία:</strong> ${new Date(eventDate).toLocaleDateString('el-GR')}</p>
+                  <p><strong>Απομένουν:</strong> ${daysBeforeEvent} ημέρες!</p>
+                </div>
+                <p>Ανυπομονούμε να σε δούμε!</p>
               </div>
-              <p>Ανυπομονούμε να σε δούμε!</p>
-            </div>
-          `,
-        }),
-      });
+            `,
+          }),
+        });
 
-      return response.json();
+        const result = await response.json();
+        status = response.ok ? 'sent' : 'failed';
+        if (!response.ok) {
+          errorMessage = JSON.stringify(result);
+        }
+
+        // Log to notification_history
+        await supabaseClient.from("notification_history").insert({
+          user_id: invitation.user_id,
+          invitation_id: invitationId,
+          type: 'email',
+          subject: `Υπενθύμιση: ${invitation.title} - ${daysBeforeEvent} ημέρες!`,
+          recipient: rsvp.email,
+          status,
+          error_message: errorMessage,
+        });
+
+        return result;
+      } catch (error) {
+        errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        
+        // Log failed notification
+        await supabaseClient.from("notification_history").insert({
+          user_id: invitation.user_id,
+          invitation_id: invitationId,
+          type: 'email',
+          subject: `Υπενθύμιση: ${invitation.title} - ${daysBeforeEvent} ημέρες!`,
+          recipient: rsvp.email,
+          status: 'failed',
+          error_message: errorMessage,
+        });
+
+        throw error;
+      }
     });
 
     const results = await Promise.all(emailPromises);

@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -10,6 +11,8 @@ interface RSVPSmsRequest {
   guestName: string;
   eventTitle: string;
   willAttend: string;
+  invitationId?: string;
+  userId?: string;
 }
 
 serve(async (req) => {
@@ -18,10 +21,32 @@ serve(async (req) => {
   }
 
   try {
-    const { to, guestName, eventTitle, willAttend }: RSVPSmsRequest = await req.json();
+    const { to, guestName, eventTitle, willAttend, invitationId, userId }: RSVPSmsRequest = await req.json();
 
     if (!to || !guestName || !eventTitle || !willAttend) {
       throw new Error("Missing required fields");
+    }
+
+    const supabaseClient = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+    );
+
+    // Check user preferences
+    if (userId) {
+      const { data: preferences } = await supabaseClient
+        .from("notification_preferences")
+        .select("sms_reminders")
+        .eq("user_id", userId)
+        .single();
+
+      if (preferences && !preferences.sms_reminders) {
+        console.log("SMS notifications are disabled for this user");
+        return new Response(
+          JSON.stringify({ success: false, message: "SMS notifications disabled" }),
+          { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
     }
 
     const accountSid = Deno.env.get("TWILIO_ACCOUNT_SID");
@@ -65,6 +90,19 @@ serve(async (req) => {
     const data = await response.json();
     console.log("SMS sent successfully:", data.sid);
 
+    // Log to notification_history
+    if (userId) {
+      await supabaseClient.from("notification_history").insert({
+        user_id: userId,
+        invitation_id: invitationId || null,
+        type: 'sms',
+        subject: null,
+        recipient: to,
+        status: 'sent',
+        error_message: null,
+      });
+    }
+
     return new Response(
       JSON.stringify({ success: true, messageSid: data.sid }),
       {
@@ -74,6 +112,26 @@ serve(async (req) => {
     );
   } catch (error) {
     console.error("Error in send-rsvp-sms function:", error);
+    
+    // Log failed notification
+    const { userId, invitationId, to } = await req.json().catch(() => ({}));
+    if (userId) {
+      const supabaseClient = createClient(
+        Deno.env.get('SUPABASE_URL') ?? '',
+        Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+      );
+      
+      await supabaseClient.from("notification_history").insert({
+        user_id: userId,
+        invitation_id: invitationId || null,
+        type: 'sms',
+        subject: null,
+        recipient: to || 'unknown',
+        status: 'failed',
+        error_message: error instanceof Error ? error.message : "Unknown error",
+      });
+    }
+    
     return new Response(
       JSON.stringify({ error: error instanceof Error ? error.message : "Unknown error" }),
       {

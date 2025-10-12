@@ -126,6 +126,32 @@ const handler = async (req: Request): Promise<Response> => {
       `;
     }
 
+    // Get invitation owner to check preferences
+    const { data: invitationData } = await supabaseClient
+      .from('invitations')
+      .select('user_id')
+      .eq('id', invitationId)
+      .single();
+
+    const userId = invitationData?.user_id;
+
+    // Check user preferences
+    if (userId) {
+      const { data: preferences } = await supabaseClient
+        .from("notification_preferences")
+        .select("email_rsvp_confirmations")
+        .eq("user_id", userId)
+        .single();
+
+      if (preferences && !preferences.email_rsvp_confirmations) {
+        console.log("RSVP confirmations are disabled for this user");
+        return new Response(
+          JSON.stringify({ success: false, message: "Notifications disabled" }),
+          { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+    }
+
     const emailResponse = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
@@ -141,6 +167,21 @@ const handler = async (req: Request): Promise<Response> => {
     });
 
     const emailData = await emailResponse.json();
+    const status = emailResponse.ok ? 'sent' : 'failed';
+    const errorMessage = emailResponse.ok ? null : JSON.stringify(emailData);
+
+    // Log to notification_history
+    if (userId) {
+      await supabaseClient.from("notification_history").insert({
+        user_id: userId,
+        invitation_id: invitationId,
+        type: 'email',
+        subject: subject,
+        recipient: email,
+        status,
+        error_message: errorMessage,
+      });
+    }
 
     if (!emailResponse.ok) {
       throw new Error(`Resend API error: ${JSON.stringify(emailData)}`);
