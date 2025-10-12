@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "./useAuth";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -34,6 +34,50 @@ export const useSubscription = () => {
   const [subscription, setSubscription] = useState<Subscription | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const fetchSubscription = useCallback(async () => {
+    if (!user) return;
+    
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+
+      // Call check-subscription edge function
+      const { data, error } = await supabase.functions.invoke("check-subscription", {
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
+      });
+
+      if (error) throw error;
+      
+      if (data) {
+        setSubscription({
+          plan_type: data.plan_type,
+          status: data.status,
+          expires_at: data.subscription_end,
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching subscription:", error);
+      // Fallback to database
+      try {
+        const { data, error: dbError } = await supabase
+          .from("user_subscriptions")
+          .select("plan_type, status, expires_at")
+          .eq("user_id", user?.id)
+          .single();
+
+        if (!dbError && data) {
+          setSubscription(data);
+        }
+      } catch (dbError) {
+        console.error("Error fetching from database:", dbError);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, [user]);
+
   useEffect(() => {
     if (!user) {
       setLoading(false);
@@ -65,51 +109,7 @@ export const useSubscription = () => {
       clearInterval(interval);
       supabase.removeChannel(channel);
     };
-  }, [user]);
-
-  const fetchSubscription = async () => {
-    if (!user) return;
-    
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
-
-      // Call check-subscription edge function
-      const { data, error } = await supabase.functions.invoke("check-subscription", {
-        headers: {
-          Authorization: `Bearer ${session.access_token}`,
-        },
-      });
-
-      if (error) throw error;
-      
-      if (data) {
-        setSubscription({
-          plan_type: data.plan_type,
-          status: data.status,
-          expires_at: data.subscription_end,
-        });
-      }
-    } catch (error) {
-      console.error("Error fetching subscription:", error);
-      // Fallback to database
-      try {
-        const { data, error: dbError } = await supabase
-          .from("user_subscriptions")
-          .select("plan_type, status, expires_at")
-          .eq("user_id", user.id)
-          .single();
-
-        if (!dbError && data) {
-          setSubscription(data);
-        }
-      } catch (dbError) {
-        console.error("Error fetching from database:", dbError);
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [user, fetchSubscription]);
 
   const canCreateInvitation = async () => {
     if (!user || !subscription) return false;
