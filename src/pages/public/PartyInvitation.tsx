@@ -9,6 +9,8 @@ import { format } from "date-fns";
 import { el } from "date-fns/locale";
 import { RSVPForm } from "@/components/wedding/RSVPForm";
 import { CountdownTimer } from "@/components/CountdownTimer";
+import { AddToCalendar } from "@/components/wedding/AddToCalendar";
+import { LivePhotoWall } from "@/components/wedding/LivePhotoWall";
 import partyHeroSample from "@/assets/party-hero-sample.jpg";
 
 interface PartyInvitationProps {

@@ -1,17 +1,6 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
+import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@18.5.0";
-
-const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") as string, {
-  apiVersion: "2025-08-27.basil",
-  httpClient: Stripe.createFetchHttpClient(),
-});
-
-const cryptoProvider = Stripe.createSubtleCryptoProvider();
-
-const supabaseUrl = Deno.env.get("SUPABASE_URL") as string;
-const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") as string;
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -23,117 +12,94 @@ const logStep = (step: string, details?: any) => {
   console.log(`[STRIPE-WEBHOOK] ${step}${detailsStr}`);
 };
 
-// Map Stripe price IDs to plan types
-const PRICE_TO_PLAN: Record<string, "basic" | "plus" | "premium"> = {
-  "price_1SHOW4Ks4zHW11KqsonASzmG": "basic",
-  "price_1SHOWQKs4zHW11KqQchSaA1i": "plus",
-  "price_1SHOWiKs4zHW11Kqy5Ecvlbu": "premium",
-};
-
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
-  const signature = req.headers.get("stripe-signature");
-  const webhookSecret = Deno.env.get("STRIPE_WEBHOOK_SECRET");
-
-  if (!signature || !webhookSecret) {
-    logStep("ERROR: Missing signature or webhook secret");
-    return new Response("Webhook Error", { status: 400 });
-  }
-
   try {
-    const body = await req.text();
-    const event = await stripe.webhooks.constructEventAsync(
-      body,
-      signature,
-      webhookSecret,
-      undefined,
-      cryptoProvider
+    logStep("Webhook received");
+
+    const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
+    const webhookSecret = Deno.env.get("STRIPE_WEBHOOK_SECRET");
+    if (!stripeKey || !webhookSecret) {
+      throw new Error("Missing Stripe keys");
+    }
+
+    const stripe = new Stripe(stripeKey, { apiVersion: "2025-08-27.basil" });
+    const supabaseClient = createClient(
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
     );
 
-    logStep("Received webhook event", { type: event.type });
+    const signature = req.headers.get("stripe-signature");
+    if (!signature) throw new Error("No signature");
+
+    const body = await req.text();
+    const event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
+    logStep("Event type", { type: event.type });
 
     switch (event.type) {
       case "checkout.session.completed": {
         const session = event.data.object as Stripe.Checkout.Session;
-        logStep("Checkout completed", { 
-          sessionId: session.id,
-          customerId: session.customer,
-          paymentStatus: session.payment_status 
-        });
+        const userId = session.metadata?.user_id;
+        const planType = session.metadata?.plan_type;
 
-        if (session.payment_status === "paid" && session.mode === "payment") {
-          const customerId = session.customer as string;
-          const planType = session.metadata?.plan_type as "basic" | "plus" | "premium" || "basic";
-          const userId = session.metadata?.user_id;
+        if (!userId || !planType) {
+          logStep("Missing metadata", { userId, planType });
+          break;
+        }
 
-          if (!userId) {
-            logStep("ERROR: No user_id in session metadata");
-            break;
-          }
+        // Get subscription details
+        const subscription = await stripe.subscriptions.retrieve(session.subscription as string);
+        const expiresAt = new Date(subscription.current_period_end * 1000).toISOString();
 
-          logStep("Processing one-time payment", { userId, planType, customerId });
+        // Upsert user_subscriptions
+        const { error } = await supabaseClient
+          .from("user_subscriptions")
+          .upsert({
+            user_id: userId,
+            plan_type: planType,
+            stripe_customer_id: session.customer,
+            stripe_subscription_id: session.subscription,
+            status: "active",
+            expires_at: expiresAt,
+            updated_at: new Date().toISOString(),
+          }, {
+            onConflict: "user_id"
+          });
 
-          // Update user subscription in database
-          const { error: upsertError } = await supabase
-            .from("user_subscriptions")
-            .upsert({
-              user_id: userId,
-              plan_type: planType,
-              status: "active",
-              stripe_customer_id: customerId,
-              updated_at: new Date().toISOString(),
-            }, {
-              onConflict: "user_id"
-            });
-
-          if (upsertError) {
-            logStep("ERROR: Failed to update subscription", { error: upsertError });
-          } else {
-            logStep("Subscription activated successfully", { userId, planType });
-          }
+        if (error) {
+          logStep("Database error", { error: error.message });
+        } else {
+          logStep("Subscription created/updated", { userId, planType, expiresAt });
         }
         break;
       }
 
-      case "customer.subscription.created":
       case "customer.subscription.updated": {
         const subscription = event.data.object as Stripe.Subscription;
         const customerId = subscription.customer as string;
-        
-        logStep("Subscription event", { 
-          type: event.type,
-          customerId,
-          status: subscription.status 
-        });
-        
-        // Get user from customer ID
-        const { data: existingSubscription } = await supabase
+
+        // Get plan type from metadata or price
+        const planType = subscription.metadata?.plan_type || "basic";
+        const expiresAt = new Date(subscription.current_period_end * 1000).toISOString();
+        const status = subscription.status === "active" ? "active" : "canceled";
+
+        const { error } = await supabaseClient
           .from("user_subscriptions")
-          .select("user_id")
-          .eq("stripe_customer_id", customerId)
-          .maybeSingle();
+          .update({
+            plan_type: planType,
+            status: status,
+            expires_at: expiresAt,
+            updated_at: new Date().toISOString(),
+          })
+          .eq("stripe_customer_id", customerId);
 
-        if (existingSubscription) {
-          const priceId = subscription.items.data[0].price.id;
-          const planType = PRICE_TO_PLAN[priceId] || "basic";
-
-          await supabase
-            .from("user_subscriptions")
-            .update({
-              stripe_subscription_id: subscription.id,
-              status: subscription.status,
-              plan_type: planType,
-              expires_at: subscription.current_period_end 
-                ? new Date(subscription.current_period_end * 1000).toISOString() 
-                : null,
-              updated_at: new Date().toISOString(),
-            })
-            .eq("stripe_customer_id", customerId);
-
-          logStep("Subscription updated", { customerId, planType });
+        if (error) {
+          logStep("Update error", { error: error.message });
+        } else {
+          logStep("Subscription updated", { customerId, status, expiresAt });
         }
         break;
       }
@@ -142,7 +108,7 @@ serve(async (req) => {
         const subscription = event.data.object as Stripe.Subscription;
         const customerId = subscription.customer as string;
 
-        await supabase
+        const { error } = await supabaseClient
           .from("user_subscriptions")
           .update({
             status: "canceled",
@@ -150,21 +116,21 @@ serve(async (req) => {
           })
           .eq("stripe_customer_id", customerId);
 
-        logStep("Subscription canceled", { customerId });
+        if (error) {
+          logStep("Cancellation error", { error: error.message });
+        } else {
+          logStep("Subscription canceled", { customerId });
+        }
         break;
       }
 
-      case "invoice.payment_succeeded": {
-        const invoice = event.data.object as Stripe.Invoice;
-        logStep("Payment succeeded", { invoiceId: invoice.id });
+      case "invoice.payment_succeeded":
+        logStep("Payment succeeded", { invoiceId: event.data.object.id });
         break;
-      }
 
-      case "invoice.payment_failed": {
-        const invoice = event.data.object as Stripe.Invoice;
-        logStep("Payment failed", { invoiceId: invoice.id });
+      case "invoice.payment_failed":
+        logStep("Payment failed", { invoiceId: event.data.object.id });
         break;
-      }
 
       default:
         logStep("Unhandled event type", { type: event.type });
@@ -174,14 +140,12 @@ serve(async (req) => {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
     });
-  } catch (err) {
-    logStep("ERROR in webhook", { error: err instanceof Error ? err.message : "Unknown error" });
-    return new Response(
-      JSON.stringify({ error: err instanceof Error ? err.message : "Unknown error" }),
-      {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 400,
-      }
-    );
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    logStep("ERROR", { message: errorMessage });
+    return new Response(JSON.stringify({ error: errorMessage }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 500,
+    });
   }
 });

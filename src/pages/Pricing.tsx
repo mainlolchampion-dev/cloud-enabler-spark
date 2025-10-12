@@ -10,53 +10,58 @@ import { supabase } from "@/integrations/supabase/client";
 const plans = [
   {
     name: "Basic",
-    price: "€39",
-    priceId: "price_1SHOW4Ks4zHW11KqsonASzmG",
+    price: "€9",
+    priceId: "price_1SHOWQKs4zHW11KqkHfqKVN8",
     planType: "basic",
     subtitle: "Ιδανικό για απλές εκδηλώσεις",
     features: [
-      "5 επαγγελματικά θέματα",
+      "1 πρόσκληση",
+      "Μέχρι 50 καλεσμένοι",
+      "Βασικά templates",
       "Φόρμα RSVP",
-      "Email επιβεβαιώσεις",
-      "Γκαλερί φωτογραφιών",
-      "Add-to-Calendar (.ics)",
-      "Εξαγωγή CSV/Excel",
+      "Χάρτης τοποθεσίας",
+      "Βασική gallery",
+      "Timeline εκδηλώσεων",
+      "Email support",
     ],
   },
   {
     name: "Plus",
-    price: "€69",
+    price: "€19",
     priceId: "price_1SHOWQKs4zHW11KqQchSaA1i",
     planType: "plus",
     subtitle: "Για ζευγάρια που θέλουν περισσότερα",
     features: [
-      "Όλα από Basic +",
-      "10+ premium θέματα",
-      "Προστασία με κωδικό",
-      "Gift Registry με QR codes",
-      "Live Photo Wall",
-      "Guest list management",
-      "Dietary tracking",
-      "Zapier/Make webhooks",
+      "5 προσκλήσεις",
+      "Μέχρι 200 καλεσμένοι",
+      "Όλα τα templates",
+      "Προχωρημένη gallery",
+      "Λίστα δώρων",
+      "Διαχείριση καθισμάτων",
+      "Εξαγωγή CSV/Excel",
+      "Password Protection",
+      "Add to Calendar",
+      "Email reminders",
+      "Priority support",
     ],
     popular: true,
   },
   {
     name: "Premium",
-    price: "€119",
-    priceId: "price_1SHOWiKs4zHW11Kqy5Ecvlbu",
+    price: "€39",
+    priceId: "price_1SHOWQKs4zHW11KqWoYRz3pJ",
     planType: "premium",
     subtitle: "Πλήρης έλεγχος & δυνατότητες",
     features: [
+      "Απεριόριστες προσκλήσεις",
+      "Απεριόριστοι καλεσμένοι",
       "Όλα από Plus +",
-      "Custom subdomain",
-      "Email υπενθυμίσεις",
-      "Seating chart planner",
-      "Custom fonts upload",
-      "A/B testing",
+      "Live photo wall",
+      "Webhook integrations (Zapier/Make)",
       "SMS/WhatsApp reminders",
+      "Custom branding",
       "Advanced analytics",
-      "Priority support 24/7",
+      "Dedicated support",
     ],
   },
 ];
@@ -132,7 +137,7 @@ export default function Pricing() {
                   <p className="text-sm text-muted-foreground mb-3">{plan.subtitle}</p>
                 )}
                 <div className="text-4xl font-bold mb-1">{plan.price}</div>
-                <p className="text-sm text-muted-foreground">εφάπαξ</p>
+                <p className="text-sm text-muted-foreground">/μήνα</p>
               </div>
 
               <ul className="space-y-3 mb-8">

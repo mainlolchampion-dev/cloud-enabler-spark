@@ -9,6 +9,8 @@ import { format } from "date-fns";
 import { el } from "date-fns/locale";
 import { RSVPForm } from "@/components/wedding/RSVPForm";
 import { CountdownTimer } from "@/components/CountdownTimer";
+import { AddToCalendar } from "@/components/wedding/AddToCalendar";
+import { LivePhotoWall } from "@/components/wedding/LivePhotoWall";
 import weddingHeroSample from "@/assets/wedding-hero-sample.jpg";
 
 interface WeddingInvitationProps {
@@ -40,25 +42,6 @@ export default function WeddingInvitation({ invitation }: WeddingInvitationProps
     ? format(new Date(data.weddingDate), "EEEE, d MMMM yyyy", { locale: el })
     : "";
 
-  const addToCalendar = () => {
-    const event = [
-      'BEGIN:VCALENDAR',
-      'VERSION:2.0',
-      'BEGIN:VEVENT',
-      `DTSTART:${data.weddingDate.replace(/-/g, '')}T${data.weddingTime.replace(/:/g, '')}00`,
-      `SUMMARY:Γάμος ${data.groomName} & ${data.brideName}`,
-      `LOCATION:${data.churchLocation}`,
-      'END:VEVENT',
-      'END:VCALENDAR'
-    ].join('\n');
-    
-    const blob = new Blob([event], { type: 'text/calendar' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'wedding.ics';
-    link.click();
-  };
 
   const openDirections = (position: [number, number]) => {
     window.open(`https://www.google.com/maps/dir/?api=1&destination=${position[0]},${position[1]}`, '_blank');
@@ -727,6 +710,9 @@ export default function WeddingInvitation({ invitation }: WeddingInvitationProps
           </div>
         </section>
       )}
+
+      {/* Live Photo Wall */}
+      <LivePhotoWall invitationId={invitation.id} />
 
       {/* RSVP Section - Premium */}
       <section className="max-w-5xl mx-auto px-6 py-32">
