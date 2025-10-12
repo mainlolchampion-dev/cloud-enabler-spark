@@ -1,6 +1,8 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getInvitation } from "@/lib/invitationStorage";
+import { getEvents } from "@/lib/eventsStorage";
+import { getGiftItems } from "@/lib/giftRegistryStorage";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { Button } from "@/components/ui/button";
 import { Calendar, MapPin, Share2, PartyPopper } from "lucide-react";
@@ -16,6 +18,8 @@ import "leaflet/dist/leaflet.css";
 export default function PartyInvitation() {
   const { id } = useParams();
   const [invitation, setInvitation] = useState<any>(null);
+  const [events, setEvents] = useState<any[]>([]);
+  const [giftItems, setGiftItems] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchInvitation = async () => {
@@ -35,6 +39,13 @@ export default function PartyInvitation() {
           });
           setInvitation(data);
           document.title = data.title;
+          
+          // Fetch events and gifts
+          const eventsData = await getEvents(id);
+          setEvents(eventsData);
+          
+          const giftsData = await getGiftItems(id);
+          setGiftItems(giftsData);
         } else {
           console.log('🎉 Party Invitation - Invalid data or wrong type');
         }
@@ -240,6 +251,93 @@ export default function PartyInvitation() {
                   className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
                   loading="lazy"
                 />
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Events Timeline */}
+      {events && events.length > 0 && (
+        <section className="max-w-6xl mx-auto px-4 py-16">
+          <h2 className="font-serif text-5xl text-center mb-12 text-white">Πρόγραμμα</h2>
+          <div className="space-y-6">
+            {events.map((event, idx) => (
+              <div key={event.id} className="bg-gradient-to-br from-purple-900/80 to-pink-900/80 rounded-xl shadow-lg p-6 border-l-4 border-pink-500 backdrop-blur-sm">
+                <div className="flex items-start gap-4">
+                  <div className="bg-pink-500 rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0">
+                    <span className="font-bold text-white">{idx + 1}</span>
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-xl font-semibold mb-2 text-white">{event.eventName}</h3>
+                    {event.eventDescription && (
+                      <p className="text-pink-200 mb-3">{event.eventDescription}</p>
+                    )}
+                    <div className="flex flex-wrap gap-4 text-sm text-pink-200">
+                      <div className="flex items-center gap-2">
+                        <Calendar className="w-4 h-4 text-pink-400" />
+                        <span>{format(new Date(event.eventDate), "d MMMM yyyy", { locale: el })}</span>
+                      </div>
+                      {event.eventTime && (
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium">{event.eventTime}</span>
+                        </div>
+                      )}
+                      {event.locationName && (
+                        <div className="flex items-center gap-2">
+                          <MapPin className="w-4 h-4 text-pink-400" />
+                          <span>{event.locationName}</span>
+                        </div>
+                      )}
+                    </div>
+                    {event.locationLat && event.locationLng && (
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="mt-3 bg-pink-600 hover:bg-pink-700 text-white border-pink-500"
+                        onClick={() => window.open(`https://www.google.com/maps/dir/?api=1&destination=${event.locationLat},${event.locationLng}`, '_blank')}
+                      >
+                        <MapPin className="w-3 h-3 mr-1" />
+                        Οδηγίες
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Gift Registry */}
+      {giftItems && giftItems.length > 0 && (
+        <section className="max-w-6xl mx-auto px-4 py-16">
+          <h2 className="font-serif text-5xl text-center mb-12 text-white">Λίστα Δώρων</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {giftItems.map((item) => (
+              <div key={item.id} className="bg-gradient-to-br from-purple-900/90 to-pink-900/90 rounded-xl shadow-lg overflow-hidden border-2 border-pink-500/50 backdrop-blur-sm">
+                {item.imageUrl && (
+                  <img src={item.imageUrl} alt={item.itemName} className="w-full h-48 object-cover" />
+                )}
+                <div className="p-6">
+                  <h3 className="text-xl font-semibold mb-2 text-white">{item.itemName}</h3>
+                  {item.itemDescription && (
+                    <p className="text-pink-200 text-sm mb-3">{item.itemDescription}</p>
+                  )}
+                  {item.price && (
+                    <p className="text-lg font-bold text-pink-400 mb-3">{item.price}€</p>
+                  )}
+                  {item.storeUrl && (
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="w-full bg-pink-600 hover:bg-pink-700 text-white border-pink-500"
+                      onClick={() => window.open(item.storeUrl, '_blank')}
+                    >
+                      Δες στο {item.storeName || 'Κατάστημα'}
+                    </Button>
+                  )}
+                </div>
               </div>
             ))}
           </div>

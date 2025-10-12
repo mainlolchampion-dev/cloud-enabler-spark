@@ -1,6 +1,8 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getInvitation } from "@/lib/invitationStorage";
+import { getEvents } from "@/lib/eventsStorage";
+import { getGiftItems } from "@/lib/giftRegistryStorage";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { Button } from "@/components/ui/button";
 import { Calendar, MapPin, Share2, Sparkles } from "lucide-react";
@@ -17,6 +19,8 @@ export default function BaptismInvitation() {
   const { id } = useParams();
   const [invitation, setInvitation] = useState<any>(null);
   const [activeTab, setActiveTab] = useState<'map' | 'satellite'>('map');
+  const [events, setEvents] = useState<any[]>([]);
+  const [giftItems, setGiftItems] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchInvitation = async () => {
@@ -36,6 +40,13 @@ export default function BaptismInvitation() {
           });
           setInvitation(data);
           document.title = data.title;
+          
+          // Fetch events and gifts
+          const eventsData = await getEvents(id);
+          setEvents(eventsData);
+          
+          const giftsData = await getGiftItems(id);
+          setGiftItems(giftsData);
         } else {
           console.log('🎈 Baptism Invitation - Invalid data or wrong type');
         }
@@ -334,6 +345,93 @@ export default function BaptismInvitation() {
                   className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
                   loading="lazy"
                 />
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Events Timeline */}
+      {events && events.length > 0 && (
+        <section className="max-w-6xl mx-auto px-4 py-16">
+          <h2 className="font-serif text-4xl text-center mb-12">Πρόγραμμα Εκδήλωσης</h2>
+          <div className="space-y-6">
+            {events.map((event, idx) => (
+              <div key={event.id} className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-blue-500">
+                <div className="flex items-start gap-4">
+                  <div className="bg-blue-100 rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0">
+                    <span className="font-bold text-blue-600">{idx + 1}</span>
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-xl font-semibold mb-2">{event.eventName}</h3>
+                    {event.eventDescription && (
+                      <p className="text-muted-foreground mb-3">{event.eventDescription}</p>
+                    )}
+                    <div className="flex flex-wrap gap-4 text-sm">
+                      <div className="flex items-center gap-2">
+                        <Calendar className="w-4 h-4 text-blue-500" />
+                        <span>{format(new Date(event.eventDate), "d MMMM yyyy", { locale: el })}</span>
+                      </div>
+                      {event.eventTime && (
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium">{event.eventTime}</span>
+                        </div>
+                      )}
+                      {event.locationName && (
+                        <div className="flex items-center gap-2">
+                          <MapPin className="w-4 h-4 text-blue-500" />
+                          <span>{event.locationName}</span>
+                        </div>
+                      )}
+                    </div>
+                    {event.locationLat && event.locationLng && (
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="mt-3"
+                        onClick={() => window.open(`https://www.google.com/maps/dir/?api=1&destination=${event.locationLat},${event.locationLng}`, '_blank')}
+                      >
+                        <MapPin className="w-3 h-3 mr-1" />
+                        Οδηγίες
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Gift Registry */}
+      {giftItems && giftItems.length > 0 && (
+        <section className="max-w-6xl mx-auto px-4 py-16 bg-blue-50/50 rounded-3xl">
+          <h2 className="font-serif text-4xl text-center mb-12">Λίστα Δώρων</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {giftItems.map((item) => (
+              <div key={item.id} className="bg-white rounded-xl shadow-lg overflow-hidden">
+                {item.imageUrl && (
+                  <img src={item.imageUrl} alt={item.itemName} className="w-full h-48 object-cover" />
+                )}
+                <div className="p-6">
+                  <h3 className="text-xl font-semibold mb-2">{item.itemName}</h3>
+                  {item.itemDescription && (
+                    <p className="text-muted-foreground text-sm mb-3">{item.itemDescription}</p>
+                  )}
+                  {item.price && (
+                    <p className="text-lg font-bold text-blue-600 mb-3">{item.price}€</p>
+                  )}
+                  {item.storeUrl && (
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="w-full"
+                      onClick={() => window.open(item.storeUrl, '_blank')}
+                    >
+                      Δες στο {item.storeName || 'Κατάστημα'}
+                    </Button>
+                  )}
+                </div>
               </div>
             ))}
           </div>

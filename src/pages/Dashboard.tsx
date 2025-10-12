@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getInvitationsIndex } from "@/lib/invitationStorage";
 import { supabase } from "@/integrations/supabase/client";
+import MobileNav from "@/components/layout/MobileNav";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -87,7 +88,10 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold mb-6">Πίνακας Ελέγχου</h1>
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-3xl font-bold">Πίνακας Ελέγχου</h1>
+          <MobileNav />
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <Card>
