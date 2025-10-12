@@ -6,9 +6,8 @@ import { PasswordProtection } from "@/components/wedding/PasswordProtection";
 import { ThemeProvider } from "@/components/wedding/ThemeProvider";
 import { MusicPlayer } from "@/components/wedding/MusicPlayer";
 import { FallingParticles } from "@/components/wedding/animations/FallingParticles";
-import { AnimatedSection } from "@/components/wedding/animations/AnimatedSection";
 import { TemplateRouter } from "@/components/wedding/templates/TemplateRouter";
-import weddingHeroSample from "@/assets/wedding-hero-sample.jpg";
+import { getThemeById } from "@/config/invitationThemes";
 
 interface WeddingInvitationProps {
   invitation: BaseInvitation;
@@ -34,6 +33,7 @@ export default function WeddingInvitation({ invitation }: WeddingInvitationProps
   }, [invitation.id, invitation.title]);
 
   const data = invitation.data;
+  const theme = getThemeById(invitation.theme || 'romantic');
   
   const openDirections = (position: [number, number]) => {
     window.open(`https://www.google.com/maps/dir/?api=1&destination=${position[0]},${position[1]}`, '_blank');
@@ -41,13 +41,15 @@ export default function WeddingInvitation({ invitation }: WeddingInvitationProps
 
   const invitationContent = (
     <>
-      {/* Falling Particles Animation */}
-      <FallingParticles
-        type="flowers"
-        density="medium"
-        color="#f4a7b9"
-        enabled={true}
-      />
+      {/* Falling Particles Animation - Use theme-specific settings */}
+      {theme?.animations?.enabled && (
+        <FallingParticles
+          type={theme.animations.particleType}
+          density={theme.animations.particleDensity}
+          color={theme.animations.particleColor}
+          enabled={true}
+        />
+      )}
       
       {/* Music Player */}
       {data.backgroundMusicUrl && (
@@ -69,7 +71,12 @@ export default function WeddingInvitation({ invitation }: WeddingInvitationProps
 
   return (
     <ThemeProvider themeId={invitation.theme || 'romantic'}>
-      <div className="min-h-screen bg-gradient-to-b from-background via-secondary-light to-background">
+      <div 
+        className="min-h-screen"
+        style={{ 
+          background: theme?.gradients.section || 'linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted)))' 
+        }}
+      >
         {invitation.password ? (
           <PasswordProtection correctPassword={invitation.password}>
             {invitationContent}

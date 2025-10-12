@@ -2,7 +2,9 @@ import { BaseInvitation } from "@/lib/invitationStorage";
 import { RomanticGarden } from "./RomanticGarden";
 import { ClassicFormal } from "./ClassicFormal";
 import { ModernMinimalist } from "./ModernMinimalist";
+import { GardenRomance } from "./GardenRomance";
 import { VintageRomance } from "./VintageRomance";
+import { LuxeGold } from "./LuxeGold";
 
 interface TemplateRouterProps {
   invitation: BaseInvitation;
@@ -18,9 +20,9 @@ export function TemplateRouter({ invitation, events, giftItems, onOpenDirections
     romantic: RomanticGarden,
     classic: ClassicFormal,
     modern: ModernMinimalist,
-    garden: RomanticGarden,
+    garden: GardenRomance,
     vintage: VintageRomance,
-    luxe: ClassicFormal,
+    luxe: LuxeGold,
   };
 
   const TemplateComponent = templates[theme as keyof typeof templates] || RomanticGarden;
