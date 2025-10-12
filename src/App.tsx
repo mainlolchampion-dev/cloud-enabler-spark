@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/layout/AppSidebar";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { SubscriptionProtectedRoute } from "@/components/SubscriptionProtectedRoute";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
@@ -66,14 +67,14 @@ const App = () => (
                     <Routes>
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="subscription" element={<SubscriptionManagement />} />
-              <Route path="wedding/add" element={<AddWedding />} />
-              <Route path="wedding/edit/:id" element={<AddWedding />} />
+              <Route path="wedding/add" element={<SubscriptionProtectedRoute><AddWedding /></SubscriptionProtectedRoute>} />
+              <Route path="wedding/edit/:id" element={<SubscriptionProtectedRoute><AddWedding /></SubscriptionProtectedRoute>} />
               <Route path="wedding/all" element={<AllWeddings />} />
-              <Route path="baptism/add" element={<AddBaptism />} />
-              <Route path="baptism/edit/:id" element={<AddBaptism />} />
+              <Route path="baptism/add" element={<SubscriptionProtectedRoute><AddBaptism /></SubscriptionProtectedRoute>} />
+              <Route path="baptism/edit/:id" element={<SubscriptionProtectedRoute><AddBaptism /></SubscriptionProtectedRoute>} />
               <Route path="baptism/all" element={<AllBaptisms />} />
-              <Route path="party/add" element={<AddParty />} />
-              <Route path="party/edit/:id" element={<AddParty />} />
+              <Route path="party/add" element={<SubscriptionProtectedRoute><AddParty /></SubscriptionProtectedRoute>} />
+              <Route path="party/edit/:id" element={<SubscriptionProtectedRoute><AddParty /></SubscriptionProtectedRoute>} />
               <Route path="party/all" element={<AllParties />} />
                       <Route path="rsvp/:id" element={<RSVPManagement />} />
                       <Route path="guests/:id" element={<GuestManagement />} />
