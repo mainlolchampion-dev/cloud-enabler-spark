@@ -573,6 +573,54 @@ export default function AddWedding() {
                 />
               </CardContent>
             </Card>
+
+            {/* Webhook Integration - Only in edit mode */}
+            {isEditMode && (
+              <Card className="border-2">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-xl">
+                    Webhook Integration (Προαιρετικό)
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <WebhookIntegration
+                    invitationId={id!}
+                    currentWebhookUrl={webhookUrl}
+                    onSave={handleWebhookSave}
+                  />
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Password Protection - Only in edit mode */}
+            {isEditMode && (
+              <Card className="border-2">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-xl">
+                    Προστασία με Κωδικό (Προαιρετικό)
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="password">Κωδικός Πρόσβασης</Label>
+                    <Input
+                      id="password"
+                      type="text"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="Εισάγετε κωδικό για την πρόσκληση"
+                      className="h-12"
+                    />
+                    <p className="text-sm text-muted-foreground">
+                      Οι επισκέπτες θα πρέπει να εισάγουν αυτόν τον κωδικό για να δουν την πρόσκληση
+                    </p>
+                  </div>
+                  <Button onClick={handlePasswordSave} className="w-full">
+                    Αποθήκευση Κωδικού
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
           </div>
 
           <div className="lg:sticky lg:top-6 h-fit">

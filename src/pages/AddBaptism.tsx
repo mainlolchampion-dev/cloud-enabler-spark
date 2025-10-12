@@ -14,7 +14,9 @@ import { Plus } from "lucide-react";
 import { generateUUID, publishInvitation } from "@/lib/invitationStorage";
 import { ShareModal } from "@/components/wedding/ShareModal";
 import { PreviewModal } from "@/components/wedding/PreviewModal";
+import { WebhookIntegration } from "@/components/wedding/WebhookIntegration";
 import { supabase } from "@/integrations/supabase/client";
+import { Label } from "@/components/ui/label";
 
 interface BaptismData {
   title: string;
@@ -66,6 +68,8 @@ export default function AddBaptism() {
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const [previewModalOpen, setPreviewModalOpen] = useState(false);
   const [publishedId, setPublishedId] = useState<string | null>(null);
+  const [webhookUrl, setWebhookUrl] = useState("");
+  const [password, setPassword] = useState("");
 
   useEffect(() => {
     if (isEditMode && id) {
@@ -97,6 +101,8 @@ export default function AddBaptism() {
       
       if (invitation && invitation.data) {
         setData(invitation.data as unknown as BaptismData);
+        setWebhookUrl(invitation.webhook_url || "");
+        setPassword(invitation.password || "");
       }
       
       toast.success("Η πρόσκληση φορτώθηκε επιτυχώς");
@@ -163,6 +169,34 @@ export default function AddBaptism() {
     setPreviewModalOpen(true);
   };
 
+  const handleWebhookSave = async (url: string) => {
+    if (!id) return;
+    
+    const { error } = await supabase
+      .from('invitations')
+      .update({ webhook_url: url })
+      .eq('id', id);
+
+    if (error) throw error;
+    setWebhookUrl(url);
+  };
+
+  const handlePasswordSave = async () => {
+    if (!id) return;
+    
+    const { error } = await supabase
+      .from('invitations')
+      .update({ password: password || null })
+      .eq('id', id);
+
+    if (error) {
+      toast.error("Σφάλμα αποθήκευσης κωδικού");
+      return;
+    }
+    
+    toast.success("Ο κωδικός αποθηκεύτηκε");
+  };
+
   const handlePublish = async () => {
     if (!validateData()) return;
     
@@ -170,6 +204,17 @@ export default function AddBaptism() {
       const invitationId = isEditMode ? id! : generateUUID();
       
       await publishInvitation(invitationId, data, 'baptism', data.title);
+
+      // Update webhook and password
+      if (webhookUrl || password) {
+        await supabase
+          .from('invitations')
+          .update({ 
+            webhook_url: webhookUrl || null,
+            password: password || null
+          })
+          .eq('id', invitationId);
+      }
       
       if (!isEditMode) {
         localStorage.removeItem(STORAGE_KEY);
@@ -416,6 +461,50 @@ export default function AddBaptism() {
                 />
               </CardContent>
             </Card>
+
+            {/* Webhook Integration - Only in edit mode */}
+            {isEditMode && (
+              <Card className="border-2">
+                <CardHeader>
+                  <CardTitle className="text-xl">Webhook Integration (Προαιρετικό)</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <WebhookIntegration
+                    invitationId={id!}
+                    currentWebhookUrl={webhookUrl}
+                    onSave={handleWebhookSave}
+                  />
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Password Protection - Only in edit mode */}
+            {isEditMode && (
+              <Card className="border-2">
+                <CardHeader>
+                  <CardTitle className="text-xl">Προστασία με Κωδικό (Προαιρετικό)</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="password">Κωδικός Πρόσβασης</Label>
+                    <Input
+                      id="password"
+                      type="text"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="Εισάγετε κωδικό για την πρόσκληση"
+                      className="h-12"
+                    />
+                    <p className="text-sm text-muted-foreground">
+                      Οι επισκέπτες θα πρέπει να εισάγουν αυτόν τον κωδικό για να δουν την πρόσκληση
+                    </p>
+                  </div>
+                  <Button onClick={handlePasswordSave} className="w-full">
+                    Αποθήκευση Κωδικού
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
           </div>
 
           <div className="lg:sticky lg:top-6 h-fit">
