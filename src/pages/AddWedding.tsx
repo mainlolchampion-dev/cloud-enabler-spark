@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { PublishPanel } from "@/components/wedding/PublishPanel";
 import { ImagePicker } from "@/components/wedding/ImagePicker";
+import { MusicUploader } from "@/components/wedding/MusicUploader";
 import { RichTextEditor } from "@/components/wedding/RichTextEditor";
 import { MapPicker } from "@/components/wedding/MapPicker";
 import { RepeatableTable } from "@/components/wedding/RepeatableTable";
@@ -448,15 +449,15 @@ export default function AddWedding() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <ImagePicker
-                  label="Ανέβασμα Μουσικής (MP3, WAV)"
+                <MusicUploader
+                  label="Μουσική Φόντου"
                   value={data.backgroundMusicUrl}
                   onChange={(url) => updateData("backgroundMusicUrl", url)}
                   bucket="invitations"
                   folder="music"
                 />
                 <p className="text-sm text-muted-foreground mt-2">
-                  Προσθέστε το αγαπημένο σας τραγούδι που θα παίζει όταν οι καλεσμένοι ανοίγουν το προσκλητήριο.
+                  Προσθέστε link από YouTube/Spotify ή ανεβάστε το αγαπημένο σας τραγούδι (MP3, WAV).
                 </p>
               </CardContent>
             </Card>
