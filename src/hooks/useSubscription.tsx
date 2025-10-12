@@ -112,9 +112,10 @@ export const useSubscription = () => {
     setState(prev => ({ ...prev, loading: true }));
     
     try {
-      // Call check-subscription to sync with Stripe
+      // Call check-subscription to sync with Stripe FIRST
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
+        console.log("Calling check-subscription edge function...");
         const { data: checkData, error: checkError } = await supabase.functions.invoke("check-subscription", {
           headers: {
             Authorization: `Bearer ${session.access_token}`,
@@ -126,6 +127,9 @@ export const useSubscription = () => {
         } else {
           console.log("Stripe subscription check result:", checkData);
         }
+        
+        // Wait a bit for database to be updated
+        await new Promise(resolve => setTimeout(resolve, 500));
       }
 
       // Now fetch from database
