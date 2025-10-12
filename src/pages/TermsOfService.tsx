@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Heart, ArrowLeft } from "lucide-react";
+import { Heart, ArrowLeft, FileText, Scale, Shield, AlertCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const TermsOfService = () => {
@@ -25,12 +25,38 @@ const TermsOfService = () => {
       {/* Hero Section */}
       <section className="py-16 bg-gradient-to-br from-primary/10 via-background to-secondary/10">
         <div className="container mx-auto px-6 text-center">
-          <h1 className="font-serif text-5xl md:text-6xl font-bold mb-6">
+          <div className="flex justify-center mb-6 animate-fade-in">
+            <div className="p-4 rounded-full bg-primary/10">
+              <FileText className="h-12 w-12 text-primary" />
+            </div>
+          </div>
+          <h1 className="font-serif text-5xl md:text-6xl font-bold mb-6 animate-fade-in">
             Όροι Χρήσης
           </h1>
-          <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-            Τελευταία ενημέρωση: Ιανουάριος 2025
+          <p className="text-lg text-muted-foreground max-w-3xl mx-auto animate-fade-in">
+            Τελευταία ενημέρωση: 12 Ιανουαρίου 2025
           </p>
+          
+          {/* Quick Summary */}
+          <div className="mt-12 max-w-4xl mx-auto">
+            <div className="grid md:grid-cols-3 gap-4">
+              <Card className="p-4 bg-background/80 backdrop-blur animate-fade-in hover:shadow-lg transition-all">
+                <Scale className="h-8 w-8 text-primary mx-auto mb-2" />
+                <h3 className="font-semibold text-sm">Δίκαιοι Όροι</h3>
+                <p className="text-xs text-muted-foreground mt-1">Σαφείς και απλοί</p>
+              </Card>
+              <Card className="p-4 bg-background/80 backdrop-blur animate-fade-in hover:shadow-lg transition-all">
+                <Shield className="h-8 w-8 text-primary mx-auto mb-2" />
+                <h3 className="font-semibold text-sm">Προστασία</h3>
+                <p className="text-xs text-muted-foreground mt-1">Για εσάς και εμάς</p>
+              </Card>
+              <Card className="p-4 bg-background/80 backdrop-blur animate-fade-in hover:shadow-lg transition-all">
+                <AlertCircle className="h-8 w-8 text-primary mx-auto mb-2" />
+                <h3 className="font-semibold text-sm">Διαφάνεια</h3>
+                <p className="text-xs text-muted-foreground mt-1">Χωρίς κρυφές χρεώσεις</p>
+              </Card>
+            </div>
+          </div>
         </div>
       </section>
 
