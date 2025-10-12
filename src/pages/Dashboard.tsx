@@ -1,14 +1,19 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Heart, FileText, Users, Check, PartyPopper, UserPlus } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Heart, FileText, Users, Check, PartyPopper, UserPlus, Crown, ArrowUpRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getInvitationsIndex } from "@/lib/invitationStorage";
 import { supabase } from "@/integrations/supabase/client";
+import { useSubscription } from "@/hooks/useSubscription";
+import { useToast } from "@/hooks/use-toast";
 import MobileNav from "@/components/layout/MobileNav";
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const { toast } = useToast();
+  const { subscription, loading: subLoading, canCreateInvitation, limits } = useSubscription();
   const [stats, setStats] = useState({
     total: 0,
     weddings: 0,
@@ -79,6 +84,20 @@ export default function Dashboard() {
     }
   };
 
+  const handleCreateInvitation = async (type: string) => {
+    const can = await canCreateInvitation();
+    if (!can) {
+      toast({
+        title: "Όριο προσκλήσεων",
+        description: `Έχετε φτάσει το όριο των ${limits.maxInvitations} προσκλήσεων. Αναβαθμίστε το πλάνο σας για περισσότερες.`,
+        variant: "destructive",
+      });
+      navigate("/pricing");
+      return;
+    }
+    navigate(`/${type}/add`);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto p-6 space-y-8">
@@ -92,7 +111,29 @@ export default function Dashboard() {
         </div>
 
         {/* Main Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+          {/* Subscription Card */}
+          <Card className="hover:shadow-lg transition-shadow bg-gradient-to-br from-primary/10 to-primary/5">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
+                Το Πλάνο σας
+              </CardTitle>
+              <Crown className="h-5 w-5 text-primary" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-serif font-bold capitalize mb-2">
+                {subLoading ? "..." : subscription?.plan_type || "Basic"}
+              </div>
+              <Button 
+                variant="link" 
+                className="p-0 h-auto text-xs text-primary"
+                onClick={() => navigate("/subscription")}
+              >
+                Διαχείριση <ArrowUpRight className="h-3 w-3 ml-1" />
+              </Button>
+            </CardContent>
+          </Card>
+
           <Card className="hover:shadow-lg transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -218,7 +259,7 @@ export default function Dashboard() {
           <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Button 
               className="h-auto py-6 flex flex-col gap-2" 
-              onClick={() => navigate('/wedding/add')}
+              onClick={() => handleCreateInvitation('wedding')}
             >
               <Heart className="w-6 h-6" />
               <span className="font-serif text-lg">Νέα Πρόσκληση Γάμου</span>
@@ -226,7 +267,7 @@ export default function Dashboard() {
             <Button 
               className="h-auto py-6 flex flex-col gap-2" 
               variant="outline" 
-              onClick={() => navigate('/baptism/add')}
+              onClick={() => handleCreateInvitation('baptism')}
             >
               <Users className="w-6 h-6" />
               <span className="font-serif text-lg">Νέα Πρόσκληση Βάπτισης</span>
@@ -234,7 +275,7 @@ export default function Dashboard() {
             <Button 
               className="h-auto py-6 flex flex-col gap-2" 
               variant="outline" 
-              onClick={() => navigate('/party/add')}
+              onClick={() => handleCreateInvitation('party')}
             >
               <PartyPopper className="w-6 h-6" />
               <span className="font-serif text-lg">Νέα Πρόσκληση Πάρτι</span>

@@ -74,6 +74,45 @@ export function RSVPForm({ invitationId, invitationType, invitationTitle }: RSVP
         // Don't fail the RSVP if email fails
       }
 
+      // Try to send SMS notification to invitation owner if they have premium plan
+      try {
+        const { data: invitation } = await supabase
+          .from('invitations')
+          .select('user_id')
+          .eq('id', invitationId)
+          .single();
+
+        if (invitation?.user_id) {
+          const { data: subscription } = await supabase
+            .from('user_subscriptions')
+            .select('plan_type')
+            .eq('user_id', invitation.user_id)
+            .single();
+
+          if (subscription && (subscription.plan_type === 'plus' || subscription.plan_type === 'premium')) {
+            // Get owner's phone from auth.users metadata or profiles table
+            // For now, we'll skip SMS if no phone is found
+            const { data: { user: ownerUser } } = await supabase.auth.admin.getUserById(invitation.user_id);
+            const ownerPhone = ownerUser?.phone;
+
+            if (ownerPhone) {
+              await supabase.functions.invoke('send-rsvp-sms', {
+                body: {
+                  to: ownerPhone,
+                  guestName: formData.name,
+                  eventTitle: invitationTitle || 'την εκδήλωσή σας',
+                  willAttend: formData.willAttend,
+                },
+              });
+              console.log('✅ SMS notification sent to owner');
+            }
+          }
+        }
+      } catch (smsError) {
+        console.error('⚠️ SMS sending failed:', smsError);
+        // Don't fail the RSVP if SMS fails
+      }
+
       setSubmitted(true);
       toast({
         title: "Επιτυχία!",

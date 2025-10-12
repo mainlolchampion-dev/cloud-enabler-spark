@@ -1,4 +1,4 @@
-import { ChevronDown, Heart, LayoutDashboard, LogOut, User, PartyPopper, Baby } from "lucide-react";
+import { ChevronDown, Heart, LayoutDashboard, LogOut, User, PartyPopper, Baby, CreditCard } from "lucide-react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
@@ -175,6 +175,15 @@ export function AppSidebar() {
                 </SidebarMenu>
               </CollapsibleContent>
             </Collapsible>
+
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild isActive={isActive("/subscription")}>
+                <NavLink to="/subscription" className="flex items-center gap-2">
+                  <CreditCard className="w-5 h-5" />
+                  {state === "expanded" && <span>Συνδρομή</span>}
+                </NavLink>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
 
             <SidebarMenuItem>
               <SidebarMenuButton asChild isActive={isActive("/profile")}>

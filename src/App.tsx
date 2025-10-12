@@ -29,6 +29,8 @@ import GuestManagement from "./pages/GuestManagement";
 import SeatingManagement from "./pages/SeatingManagement";
 import GiftRegistryManagement from "./pages/GiftRegistryManagement";
 import EventsTimelineManagement from "./pages/EventsTimelineManagement";
+import Pricing from "./pages/Pricing";
+import SubscriptionManagement from "./pages/SubscriptionManagement";
 import ScrollToTop from "./components/ScrollToTop";
 
 const queryClient = new QueryClient();
@@ -44,6 +46,7 @@ const App = () => (
           {/* Public routes without sidebar */}
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/pricing" element={<Pricing />} />
           <Route path="/prosklisi/:id" element={<InvitationRouter />} />
           <Route path="/proskisi/:id" element={<InvitationRouter />} /> {/* Alternative spelling for backwards compatibility */}
           <Route path="/user-guide" element={<UserGuide />} />
@@ -62,6 +65,7 @@ const App = () => (
                   <main className="flex-1 overflow-auto">
                     <Routes>
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/subscription" element={<SubscriptionManagement />} />
               <Route path="/wedding/add" element={<AddWedding />} />
               <Route path="/wedding/edit/:id" element={<AddWedding />} />
               <Route path="/wedding/all" element={<AllWeddings />} />
