@@ -14,7 +14,6 @@ import MobileNav from "@/components/layout/MobileNav";
 import { UsersManagement } from "@/components/admin/UsersManagement";
 import { SubscriptionsManagement } from "@/components/admin/SubscriptionsManagement";
 import { SystemAnalytics } from "@/components/admin/SystemAnalytics";
-import { AdminSubscriptionManager } from "@/components/admin/AdminSubscriptionManager";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -280,11 +279,10 @@ export default function Dashboard() {
 
           {/* Tabs */}
           <Tabs defaultValue="users" className="w-full">
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="users">Χρήστες</TabsTrigger>
               <TabsTrigger value="subscriptions">Συνδρομές</TabsTrigger>
               <TabsTrigger value="analytics">Analytics</TabsTrigger>
-              <TabsTrigger value="my-subscription">Η Συνδρομή μου</TabsTrigger>
             </TabsList>
 
             <TabsContent value="users" className="mt-6">
@@ -297,10 +295,6 @@ export default function Dashboard() {
 
             <TabsContent value="analytics" className="mt-6">
               <SystemAnalytics />
-            </TabsContent>
-
-            <TabsContent value="my-subscription" className="mt-6">
-              <AdminSubscriptionManager />
             </TabsContent>
           </Tabs>
         </div>

@@ -51,8 +51,12 @@ serve(async (req) => {
       planType: session.metadata?.plan_type 
     });
 
-    if (session.payment_status === "paid") {
+    if (session.payment_status === "paid" && session.subscription) {
       const planType = session.metadata?.plan_type || "basic";
+      
+      // Get subscription to get the period_end
+      const subscription = await stripe.subscriptions.retrieve(session.subscription as string);
+      const expiresAt = new Date(subscription.current_period_end * 1000).toISOString();
       
       // Update user subscription
       const { error: updateError } = await supabaseClient
@@ -62,6 +66,8 @@ serve(async (req) => {
           plan_type: planType,
           status: "active",
           stripe_customer_id: session.customer as string,
+          stripe_subscription_id: session.subscription as string,
+          expires_at: expiresAt,
           updated_at: new Date().toISOString(),
         }, {
           onConflict: "user_id"
@@ -72,7 +78,7 @@ serve(async (req) => {
         throw updateError;
       }
 
-      logStep("Subscription updated successfully", { userId: user.id, planType });
+      logStep("Subscription updated successfully", { userId: user.id, planType, expiresAt });
 
       return new Response(JSON.stringify({ 
         success: true,
