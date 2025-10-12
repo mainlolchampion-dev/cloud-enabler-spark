@@ -1,7 +1,6 @@
-import { ChevronDown, Heart, LayoutDashboard, LogOut, User, PartyPopper, Baby, CreditCard, Shield, Bell, History } from "lucide-react";
+import { ChevronDown, Heart, LayoutDashboard, LogOut, User, PartyPopper, Baby, CreditCard, Bell, History } from "lucide-react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { useAdminStatus } from "@/hooks/useAdminStatus";
 import { useToast } from "@/hooks/use-toast";
 import {
   Sidebar,
@@ -24,7 +23,6 @@ export function AppSidebar() {
   const location = useLocation();
   const navigate = useNavigate();
   const { signOut } = useAuth();
-  const { isAdmin } = useAdminStatus();
   const { toast } = useToast();
   const [gamosOpen, setGamosOpen] = useState(true);
   const [baptismOpen, setBaptismOpen] = useState(false);
@@ -213,17 +211,6 @@ export function AppSidebar() {
                 </NavLink>
               </SidebarMenuButton>
             </SidebarMenuItem>
-
-            {isAdmin && (
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={isActive("/admin")}>
-                  <NavLink to="/admin" className="flex items-center gap-2">
-                    <Shield className="w-5 h-5" />
-                    {state === "expanded" && <span>Admin</span>}
-                  </NavLink>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            )}
 
             <SidebarMenuItem>
               <SidebarMenuButton asChild>
