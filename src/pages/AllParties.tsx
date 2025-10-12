@@ -139,6 +139,33 @@ export default function AllParties() {
                               variant="link"
                               size="sm"
                               className="h-auto p-0 text-xs"
+                              onClick={() => navigate(`/seating/${invitation.id}`)}
+                            >
+                              Τραπέζια
+                            </Button>
+                            <span className="text-muted-foreground">|</span>
+                            <Button
+                              variant="link"
+                              size="sm"
+                              className="h-auto p-0 text-xs"
+                              onClick={() => navigate(`/gifts/${invitation.id}`)}
+                            >
+                              Δώρα
+                            </Button>
+                            <span className="text-muted-foreground">|</span>
+                            <Button
+                              variant="link"
+                              size="sm"
+                              className="h-auto p-0 text-xs"
+                              onClick={() => navigate(`/events/${invitation.id}`)}
+                            >
+                              Πρόγραμμα
+                            </Button>
+                            <span className="text-muted-foreground">|</span>
+                            <Button
+                              variant="link"
+                              size="sm"
+                              className="h-auto p-0 text-xs"
                               onClick={() => handleView(invitation.id)}
                             >
                               Προβολή
