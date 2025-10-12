@@ -64,23 +64,23 @@ const App = () => (
                   <AppSidebar />
                   <main className="flex-1 overflow-auto">
                     <Routes>
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/subscription" element={<SubscriptionManagement />} />
-              <Route path="/wedding/add" element={<AddWedding />} />
-              <Route path="/wedding/edit/:id" element={<AddWedding />} />
-              <Route path="/wedding/all" element={<AllWeddings />} />
-              <Route path="/baptism/add" element={<AddBaptism />} />
-              <Route path="/baptism/edit/:id" element={<AddBaptism />} />
-              <Route path="/baptism/all" element={<AllBaptisms />} />
-              <Route path="/party/add" element={<AddParty />} />
-              <Route path="/party/edit/:id" element={<AddParty />} />
-              <Route path="/party/all" element={<AllParties />} />
-                      <Route path="/rsvp/:id" element={<RSVPManagement />} />
-                      <Route path="/guests/:id" element={<GuestManagement />} />
-                      <Route path="/seating/:id" element={<SeatingManagement />} />
-                      <Route path="/gifts/:id" element={<GiftRegistryManagement />} />
-                      <Route path="/events/:id" element={<EventsTimelineManagement />} />
-                      <Route path="/profile" element={<Profile />} />
+              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="subscription" element={<SubscriptionManagement />} />
+              <Route path="wedding/add" element={<AddWedding />} />
+              <Route path="wedding/edit/:id" element={<AddWedding />} />
+              <Route path="wedding/all" element={<AllWeddings />} />
+              <Route path="baptism/add" element={<AddBaptism />} />
+              <Route path="baptism/edit/:id" element={<AddBaptism />} />
+              <Route path="baptism/all" element={<AllBaptisms />} />
+              <Route path="party/add" element={<AddParty />} />
+              <Route path="party/edit/:id" element={<AddParty />} />
+              <Route path="party/all" element={<AllParties />} />
+                      <Route path="rsvp/:id" element={<RSVPManagement />} />
+                      <Route path="guests/:id" element={<GuestManagement />} />
+                      <Route path="seating/:id" element={<SeatingManagement />} />
+                      <Route path="gifts/:id" element={<GiftRegistryManagement />} />
+                      <Route path="events/:id" element={<EventsTimelineManagement />} />
+                      <Route path="profile" element={<Profile />} />
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                   </main>
