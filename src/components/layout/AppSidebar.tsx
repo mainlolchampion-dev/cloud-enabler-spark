@@ -1,6 +1,7 @@
 import { ChevronDown, Heart, LayoutDashboard, LogOut, User, PartyPopper, Baby, CreditCard, Shield, Bell, History } from "lucide-react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { useAdminStatus } from "@/hooks/useAdminStatus";
 import { useToast } from "@/hooks/use-toast";
 import {
   Sidebar,
@@ -16,46 +17,18 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { useState, useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { useState } from "react";
 
 export function AppSidebar() {
   const { state } = useSidebar();
   const location = useLocation();
   const navigate = useNavigate();
-  const { signOut, user } = useAuth();
+  const { signOut } = useAuth();
+  const { isAdmin } = useAdminStatus();
   const { toast } = useToast();
   const [gamosOpen, setGamosOpen] = useState(true);
   const [baptismOpen, setBaptismOpen] = useState(false);
   const [partyOpen, setPartyOpen] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
-
-  useEffect(() => {
-    const checkAdminStatus = async () => {
-      if (!user) {
-        setIsAdmin(false);
-        return;
-      }
-
-      const { data, error } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', user.id)
-        .eq('role', 'admin');
-
-      if (error) {
-        console.error('Error checking admin status:', error);
-        setIsAdmin(false);
-        return;
-      }
-
-      const hasAdminRole = data && data.length > 0;
-      console.log('Sidebar Admin check:', { userId: user.id, hasAdminRole, data });
-      setIsAdmin(hasAdminRole);
-    };
-
-    checkAdminStatus();
-  }, [user?.id]);
 
   const isActive = (path: string) => location.pathname === path;
 
