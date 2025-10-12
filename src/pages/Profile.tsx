@@ -1,38 +1,22 @@
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
-import { Loader2, Mail, Lock, Phone, User as UserIcon, Trash2 } from "lucide-react";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { User as UserIcon, Mail, Lock, LogOut, Loader2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function Profile() {
+  const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
   
-  // Form states
-  const [email, setEmail] = useState("");
-  const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [phone, setPhone] = useState("");
-  
-  const { toast } = useToast();
 
   useEffect(() => {
     getUser();
@@ -43,41 +27,11 @@ export default function Profile() {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         setUser(user);
-        setEmail(user.email || "");
-        setPhone(user.phone || "");
       }
     } catch (error: any) {
-      toast({
-        title: "Σφάλμα",
-        description: error.message,
-        variant: "destructive",
-      });
+      toast.error(error.message);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleUpdateEmail = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setUpdating(true);
-
-    try {
-      const { error } = await supabase.auth.updateUser({ email });
-      
-      if (error) throw error;
-
-      toast({
-        title: "Επιτυχία",
-        description: "Το email σας ενημερώθηκε. Ελέγξτε το νέο σας email για επιβεβαίωση.",
-      });
-    } catch (error: any) {
-      toast({
-        title: "Σφάλμα",
-        description: error.message,
-        variant: "destructive",
-      });
-    } finally {
-      setUpdating(false);
     }
   };
 
@@ -85,20 +39,12 @@ export default function Profile() {
     e.preventDefault();
     
     if (newPassword !== confirmPassword) {
-      toast({
-        title: "Σφάλμα",
-        description: "Οι κωδικοί δεν ταιριάζουν",
-        variant: "destructive",
-      });
+      toast.error("Οι κωδικοί δεν ταιριάζουν");
       return;
     }
 
     if (newPassword.length < 6) {
-      toast({
-        title: "Σφάλμα",
-        description: "Ο κωδικός πρέπει να έχει τουλάχιστον 6 χαρακτήρες",
-        variant: "destructive",
-      });
+      toast.error("Ο κωδικός πρέπει να έχει τουλάχιστον 6 χαρακτήρες");
       return;
     }
 
@@ -111,64 +57,20 @@ export default function Profile() {
       
       if (error) throw error;
 
-      toast({
-        title: "Επιτυχία",
-        description: "Ο κωδικός σας ενημερώθηκε επιτυχώς",
-      });
-      
-      setCurrentPassword("");
+      toast.success("Ο κωδικός άλλαξε επιτυχώς");
       setNewPassword("");
       setConfirmPassword("");
     } catch (error: any) {
-      toast({
-        title: "Σφάλμα",
-        description: error.message,
-        variant: "destructive",
-      });
+      toast.error(error.message);
     } finally {
       setUpdating(false);
     }
   };
 
-  const handleUpdatePhone = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setUpdating(true);
-
-    try {
-      const { error } = await supabase.auth.updateUser({ phone });
-      
-      if (error) throw error;
-
-      toast({
-        title: "Επιτυχία",
-        description: "Το τηλέφωνό σας ενημερώθηκε",
-      });
-    } catch (error: any) {
-      toast({
-        title: "Σφάλμα",
-        description: error.message,
-        variant: "destructive",
-      });
-    } finally {
-      setUpdating(false);
-    }
-  };
-
-  const handleDeleteAccount = async () => {
-    try {
-      // Note: Account deletion requires admin privileges
-      // This is a placeholder - you'll need to implement this via an edge function
-      toast({
-        title: "Πληροφορία",
-        description: "Η διαγραφή λογαριασμού απαιτεί επικοινωνία με την υποστήριξη",
-      });
-    } catch (error: any) {
-      toast({
-        title: "Σφάλμα",
-        description: error.message,
-        variant: "destructive",
-      });
-    }
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    toast.success("Αποσυνδεθήκατε επιτυχώς");
+    navigate("/");
   };
 
   if (loading) {
@@ -185,9 +87,6 @@ export default function Profile() {
         <Card className="w-full max-w-md">
           <CardHeader>
             <CardTitle>Μη εξουσιοδοτημένη πρόσβαση</CardTitle>
-            <CardDescription>
-              Πρέπει να συνδεθείτε για να δείτε αυτή τη σελίδα
-            </CardDescription>
           </CardHeader>
         </Card>
       </div>
@@ -196,181 +95,119 @@ export default function Profile() {
 
   return (
     <div className="min-h-screen bg-background p-6">
-      <div className="max-w-4xl mx-auto space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold mb-2">Ρυθμίσεις Λογαριασμού</h1>
-          <p className="text-muted-foreground">
-            Διαχειριστείτε τις πληροφορίες του λογαριασμού σας
-          </p>
+      <div className="max-w-4xl mx-auto space-y-8">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="font-serif text-4xl font-bold text-foreground mb-2">Προφίλ</h1>
+          <p className="text-muted-foreground text-lg">Διαχειριστείτε τον λογαριασμό σας</p>
         </div>
 
-        {/* Account Info */}
+        {/* Account Info Card */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <UserIcon className="h-5 w-5" />
+            <CardTitle className="flex items-center gap-2 text-xl">
+              <UserIcon className="w-5 h-5 text-primary" />
               Πληροφορίες Λογαριασμού
             </CardTitle>
-            <CardDescription>
-              Βασικές πληροφορίες του λογαριασμού σας
-            </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-6">
             <div className="space-y-2">
-              <div>
-                <span className="text-sm font-medium">ID Χρήστη:</span>
-                <p className="text-sm text-muted-foreground font-mono">{user.id}</p>
-              </div>
-              <div>
-                <span className="text-sm font-medium">Δημιουργήθηκε:</span>
-                <p className="text-sm text-muted-foreground">
-                  {new Date(user.created_at).toLocaleDateString('el-GR')}
-                </p>
-              </div>
+              <Label className="flex items-center gap-2 text-base">
+                <Mail className="w-4 h-4" />
+                Email
+              </Label>
+              <Input
+                type="email"
+                value={user?.email || ""}
+                disabled
+                className="bg-muted h-12 text-base"
+              />
+              <p className="text-sm text-muted-foreground">
+                Το email σας δεν μπορεί να αλλάξει
+              </p>
+            </div>
+            
+            <div className="space-y-2">
+              <Label className="text-base">Ημερομηνία Δημιουργίας</Label>
+              <p className="text-sm text-muted-foreground">
+                {new Date(user.created_at).toLocaleDateString('el-GR')}
+              </p>
             </div>
           </CardContent>
         </Card>
 
-        {/* Update Email */}
+        {/* Change Password Card */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Mail className="h-5 w-5" />
-              Αλλαγή Email
-            </CardTitle>
-            <CardDescription>
-              Ενημερώστε το email σας
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleUpdateEmail} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">Νέο Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="email@example.com"
-                  required
-                />
-              </div>
-              <Button type="submit" disabled={updating}>
-                {updating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Ενημέρωση Email
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
-
-        {/* Update Password */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Lock className="h-5 w-5" />
+            <CardTitle className="flex items-center gap-2 text-xl">
+              <Lock className="w-5 h-5 text-primary" />
               Αλλαγή Κωδικού
             </CardTitle>
-            <CardDescription>
-              Ενημερώστε τον κωδικό πρόσβασής σας
-            </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleUpdatePassword} className="space-y-4">
+            <form onSubmit={handleUpdatePassword} className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="new-password">Νέος Κωδικός</Label>
+                <Label htmlFor="new-password" className="text-base">
+                  Νέος Κωδικός
+                </Label>
                 <Input
                   id="new-password"
                   type="password"
+                  placeholder="Νέος κωδικός"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  placeholder="Τουλάχιστον 6 χαρακτήρες"
                   required
+                  className="h-12 text-base"
                 />
               </div>
+
               <div className="space-y-2">
-                <Label htmlFor="confirm-password">Επιβεβαίωση Νέου Κωδικού</Label>
+                <Label htmlFor="confirm-password" className="text-base">
+                  Επιβεβαίωση Κωδικού
+                </Label>
                 <Input
                   id="confirm-password"
                   type="password"
+                  placeholder="Επιβεβαίωση κωδικού"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="Επαναλάβετε τον κωδικό"
                   required
+                  className="h-12 text-base"
                 />
               </div>
-              <Button type="submit" disabled={updating}>
+
+              <Button 
+                type="submit" 
+                disabled={updating}
+                size="lg"
+                className="bg-gradient-to-r from-primary to-secondary h-12"
+              >
                 {updating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Ενημέρωση Κωδικού
+                {updating ? "Αλλαγή..." : "Αλλαγή Κωδικού"}
               </Button>
             </form>
           </CardContent>
         </Card>
 
-        {/* Update Phone */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Phone className="h-5 w-5" />
-              Τηλέφωνο
-            </CardTitle>
-            <CardDescription>
-              Ενημερώστε τον αριθμό τηλεφώνου σας
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleUpdatePhone} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="phone">Αριθμός Τηλεφώνου</Label>
-                <Input
-                  id="phone"
-                  type="tel"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="+30 XXX XXX XXXX"
-                />
+        {/* Logout Card */}
+        <Card className="border-destructive/50">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="font-semibold text-lg mb-1">Αποσύνδεση</h3>
+                <p className="text-sm text-muted-foreground">
+                  Αποσυνδεθείτε από τον λογαριασμό σας
+                </p>
               </div>
-              <Button type="submit" disabled={updating}>
-                {updating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Ενημέρωση Τηλεφώνου
+              <Button 
+                onClick={handleLogout} 
+                variant="destructive"
+                size="lg"
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Αποσύνδεση
               </Button>
-            </form>
-          </CardContent>
-        </Card>
-
-        {/* Danger Zone */}
-        <Card className="border-destructive">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-destructive">
-              <Trash2 className="h-5 w-5" />
-              Επικίνδυνη Ζώνη
-            </CardTitle>
-            <CardDescription>
-              Μη αναστρέψιμες ενέργειες
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button variant="destructive">
-                  Διαγραφή Λογαριασμού
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Είστε απόλυτα σίγουροι;</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    Αυτή η ενέργεια δεν μπορεί να αναιρεθεί. Θα διαγραφούν μόνιμα όλα τα δεδομένα
-                    του λογαριασμού σας.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Ακύρωση</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleDeleteAccount} className="bg-destructive">
-                    Διαγραφή
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+            </div>
           </CardContent>
         </Card>
       </div>

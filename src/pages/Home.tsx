@@ -116,11 +116,9 @@ const Home = () => {
             {/* Wedding Template */}
             <Card className="group overflow-hidden bg-card hover:shadow-2xl transition-all duration-300 hover:-translate-y-3">
               <div className="aspect-[3/4] relative overflow-hidden bg-gradient-to-br from-rose-100 to-pink-50">
-                <img 
-                  src="/src/assets/wedding-hero-sample.jpg" 
-                  alt="Wedding Template"
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                />
+                <div className="w-full h-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
+                  <Heart className="w-32 h-32 text-primary/40" />
+                </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                   <h3 className="font-serif text-3xl font-bold mb-2">Γάμος</h3>
@@ -157,11 +155,9 @@ const Home = () => {
             {/* Baptism Template */}
             <Card className="group overflow-hidden bg-card hover:shadow-2xl transition-all duration-300 hover:-translate-y-3">
               <div className="aspect-[3/4] relative overflow-hidden bg-gradient-to-br from-blue-100 to-sky-50">
-                <img 
-                  src="/src/assets/baptism-hero-sample.jpg" 
-                  alt="Baptism Template"
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                />
+                <div className="w-full h-full bg-gradient-to-br from-accent/20 to-primary/20 flex items-center justify-center">
+                  <Sparkles className="w-32 h-32 text-accent/40" />
+                </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                   <h3 className="font-serif text-3xl font-bold mb-2">Βάπτιση</h3>
@@ -198,11 +194,9 @@ const Home = () => {
             {/* Party Template */}
             <Card className="group overflow-hidden bg-card hover:shadow-2xl transition-all duration-300 hover:-translate-y-3">
               <div className="aspect-[3/4] relative overflow-hidden bg-gradient-to-br from-purple-100 to-violet-50">
-                <img 
-                  src="/src/assets/party-hero-sample.jpg" 
-                  alt="Party Template"
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                />
+                <div className="w-full h-full bg-gradient-to-br from-secondary/20 to-accent/20 flex items-center justify-center">
+                  <Sparkles className="w-32 h-32 text-secondary/40" />
+                </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                   <h3 className="font-serif text-3xl font-bold mb-2">Πάρτυ</h3>

@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
-import { Heart } from "lucide-react";
+import { Heart, Sparkles } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -18,7 +18,6 @@ const Login = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  // Redirect if already logged in
   useEffect(() => {
     if (user) {
       navigate("/dashboard");
@@ -73,26 +72,30 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <Card className="w-full max-w-md p-8">
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <Heart className="h-8 w-8 text-primary" />
-            <span className="font-bold text-2xl">WediLink</span>
+    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5 flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Background pattern */}
+      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAxOGMzLjMxNCAwIDYgMi42ODYgNiA2cy0yLjY4NiA2LTYgNi02LTIuNjg2LTYtNiAyLjY4Ni02IDYtNiIgc3Ryb2tlPSJyZ2JhKDI1NSwgMTAwLCAxNTAsIDAuMSkiIHN0cm9rZS13aWR0aD0iMiIvPjwvZz48L3N2Zz4=')] opacity-40" />
+      
+      <Card className="w-full max-w-md p-10 shadow-2xl relative bg-card/95 backdrop-blur-sm border-2">
+        <div className="text-center mb-10">
+          <div className="flex items-center justify-center gap-3 mb-6">
+            <div className="p-3 bg-gradient-to-br from-primary to-secondary rounded-2xl">
+              <Heart className="h-8 w-8 text-white" fill="currentColor" />
+            </div>
           </div>
-          <h1 className="text-3xl font-bold mb-2">
-            {isLogin ? "Σύνδεση" : "Εγγραφή"}
+          <h1 className="font-serif text-4xl font-bold mb-3 text-foreground">
+            {isLogin ? "Καλώς Ήρθατε" : "Δημιουργία Λογαριασμού"}
           </h1>
-          <p className="text-muted-foreground">
+          <p className="text-muted-foreground text-lg">
             {isLogin
-              ? "Συνδεθείτε στον λογαριασμό σας"
-              : "Δημιουργήστε νέο λογαριασμό"}
+              ? "Συνδεθείτε για να συνεχίσετε"
+              : "Ξεκινήστε τη δημιουργία προσκλητηρίων"}
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email" className="text-base">Email</Label>
             <Input
               id="email"
               type="email"
@@ -100,11 +103,12 @@ const Login = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              className="h-12 text-base"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password">Κωδικός</Label>
+            <Label htmlFor="password" className="text-base">Κωδικός</Label>
             <Input
               id="password"
               type="password"
@@ -112,10 +116,15 @@ const Login = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              className="h-12 text-base"
             />
           </div>
 
-          <Button type="submit" className="w-full" disabled={loading}>
+          <Button 
+            type="submit" 
+            className="w-full h-12 text-base bg-gradient-to-r from-primary to-secondary hover:shadow-lg transition-all font-medium" 
+            disabled={loading}
+          >
             {loading
               ? "Παρακαλώ περιμένετε..."
               : isLogin
@@ -124,10 +133,10 @@ const Login = () => {
           </Button>
         </form>
 
-        <div className="mt-6 text-center">
+        <div className="mt-8 text-center">
           <button
             onClick={() => setIsLogin(!isLogin)}
-            className="text-sm text-primary hover:underline"
+            className="text-base text-primary hover:text-primary/80 font-medium transition-colors"
           >
             {isLogin
               ? "Δεν έχετε λογαριασμό; Εγγραφείτε"
@@ -135,8 +144,8 @@ const Login = () => {
           </button>
         </div>
 
-        <div className="mt-6 text-center">
-          <Link to="/" className="text-sm text-muted-foreground hover:underline">
+        <div className="mt-8 pt-6 border-t text-center">
+          <Link to="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-2">
             ← Επιστροφή στην αρχική
           </Link>
         </div>

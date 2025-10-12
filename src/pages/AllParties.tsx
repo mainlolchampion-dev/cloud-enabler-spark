@@ -1,17 +1,13 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { getInvitationsIndex, deleteInvitation, BaseInvitation } from "@/lib/invitationStorage";
+import { PartyPopper, Calendar, Eye, Trash2, Edit, Users, Gift, MapPin, List, Plus } from "lucide-react";
+import { format } from "date-fns";
+import { el } from "date-fns/locale";
+import { Badge } from "@/components/ui/badge";
 
 export default function AllParties() {
   const navigate = useNavigate();
@@ -57,135 +53,152 @@ export default function AllParties() {
     window.open(`/prosklisi/${id}`, '_blank');
   };
 
-  const formatDate = (dateStr: string) => {
-    if (!dateStr) return "-";
-    return dateStr.replace(/-/g, "");
-  };
-
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-7xl mx-auto">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0">
-            <CardTitle className="text-2xl">Party</CardTitle>
-            <Button onClick={() => navigate("/party/add")}>
-              Προσθήκη Πρόσκλησης
+        {/* Header */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="font-serif text-4xl font-bold text-foreground mb-2">Πάρτυ</h1>
+              <p className="text-muted-foreground text-lg">Διαχειριστείτε τις προσκλήσεις πάρτυ σας</p>
+            </div>
+            <Button 
+              onClick={() => navigate("/party/add")}
+              size="lg"
+              className="bg-gradient-to-r from-primary to-secondary hover:shadow-lg transition-all"
+            >
+              <Plus className="w-5 h-5 mr-2" />
+              Νέα Πρόσκληση
             </Button>
-          </CardHeader>
-          <CardContent>
-            {loading ? (
-              <div className="text-center py-12 text-muted-foreground">
-                Φόρτωση...
-              </div>
-            ) : invitations.length === 0 ? (
-              <div className="text-center py-12 text-muted-foreground">
-                Δεν υπάρχουν προσκλήσεις. Δημιουργήστε την πρώτη σας πρόσκληση!
-              </div>
-            ) : (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Τίτλος</TableHead>
-                    <TableHead>Ημερομηνία Party</TableHead>
-                    <TableHead>Κατάσταση</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {invitations.map((invitation) => (
-                    <TableRow key={invitation.id}>
-                      <TableCell>
-                        <div>
-                          <div className="font-medium text-primary">
-                            {invitation.title}
-                          </div>
-                          <div className="text-sm space-x-2">
-                            <Button
-                              variant="link"
-                              size="sm"
-                              className="h-auto p-0 text-xs"
-                              onClick={() => handleEdit(invitation.id)}
-                            >
-                              Επεξεργασία
-                            </Button>
-                            <span className="text-muted-foreground">|</span>
-                            <Button
-                              variant="link"
-                              size="sm"
-                              className="h-auto p-0 text-xs text-destructive"
-                              onClick={() => handleDelete(invitation.id)}
-                            >
-                              Διαγραφή
-                            </Button>
-                            <span className="text-muted-foreground">|</span>
-                            <Button
-                              variant="link"
-                              size="sm"
-                              className="h-auto p-0 text-xs"
-                              onClick={() => navigate(`/rsvp/${invitation.id}`)}
-                            >
-                              RSVP ({invitation.data?._rsvpCount || 0})
-                            </Button>
-                            <span className="text-muted-foreground">|</span>
-                            <Button
-                              variant="link"
-                              size="sm"
-                              className="h-auto p-0 text-xs"
-                              onClick={() => navigate(`/guests/${invitation.id}`)}
-                            >
-                              Καλεσμένοι
-                            </Button>
-                            <span className="text-muted-foreground">|</span>
-                            <Button
-                              variant="link"
-                              size="sm"
-                              className="h-auto p-0 text-xs"
-                              onClick={() => navigate(`/seating/${invitation.id}`)}
-                            >
-                              Τραπέζια
-                            </Button>
-                            <span className="text-muted-foreground">|</span>
-                            <Button
-                              variant="link"
-                              size="sm"
-                              className="h-auto p-0 text-xs"
-                              onClick={() => navigate(`/gifts/${invitation.id}`)}
-                            >
-                              Δώρα
-                            </Button>
-                            <span className="text-muted-foreground">|</span>
-                            <Button
-                              variant="link"
-                              size="sm"
-                              className="h-auto p-0 text-xs"
-                              onClick={() => navigate(`/events/${invitation.id}`)}
-                            >
-                              Πρόγραμμα
-                            </Button>
-                            <span className="text-muted-foreground">|</span>
-                            <Button
-                              variant="link"
-                              size="sm"
-                              className="h-auto p-0 text-xs"
-                              onClick={() => handleView(invitation.id)}
-                            >
-                              Προβολή
-                            </Button>
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>{invitation.data?.partyDate ? formatDate(invitation.data.partyDate) : '-'}</TableCell>
-                      <TableCell>
-                        <span className={invitation.status === 'published' ? 'text-green-600' : 'text-yellow-600'}>
-                          {invitation.status === 'published' ? 'Δημοσιευμένη' : 'Προσχέδιο'}
+          </div>
+        </div>
+
+        {/* Content */}
+        {loading ? (
+          <div className="text-center py-20">
+            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent"></div>
+            <p className="mt-4 text-muted-foreground">Φόρτωση...</p>
+          </div>
+        ) : invitations.length === 0 ? (
+          <Card className="p-20 text-center">
+            <PartyPopper className="w-16 h-16 mx-auto text-muted-foreground/40 mb-6" />
+            <h2 className="font-serif text-2xl font-semibold mb-3">Δεν υπάρχουν προσκλήσεις ακόμα</h2>
+            <p className="text-muted-foreground mb-6">Δημιουργήστε την πρώτη σας πρόσκληση πάρτυ</p>
+            <Button 
+              onClick={() => navigate("/party/add")}
+              size="lg"
+              className="bg-gradient-to-r from-primary to-secondary"
+            >
+              <Plus className="w-5 h-5 mr-2" />
+              Δημιουργία Πρόσκλησης
+            </Button>
+          </Card>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {invitations.map((invitation) => (
+              <Card key={invitation.id} className="overflow-hidden hover:shadow-xl transition-all duration-300 group">
+                <div className="h-32 bg-gradient-to-br from-secondary/20 to-accent/20 relative overflow-hidden">
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <PartyPopper className="w-16 h-16 text-secondary/30 group-hover:scale-110 transition-transform" />
+                  </div>
+                  <div className="absolute top-4 right-4">
+                    <Badge variant={invitation.status === 'published' ? 'default' : 'secondary'}>
+                      {invitation.status === 'published' ? 'Δημοσιευμένη' : 'Προσχέδιο'}
+                    </Badge>
+                  </div>
+                </div>
+
+                <div className="p-6 space-y-4">
+                  <div>
+                    <h3 className="font-serif text-2xl font-bold text-foreground mb-2">{invitation.title}</h3>
+                    {invitation.data?.partyDate && (
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <Calendar className="w-4 h-4" />
+                        <span className="text-sm">
+                          {format(new Date(invitation.data.partyDate), "d MMMM yyyy", { locale: el })}
                         </span>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            )}
-          </CardContent>
-        </Card>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-4 pt-2 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-1">
+                      <Users className="w-4 h-4" />
+                      <span>{invitation.data?._rsvpCount || 0}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-2 pt-4 border-t">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                      onClick={() => handleEdit(invitation.id)}
+                    >
+                      <Edit className="w-4 h-4 mr-1" />
+                      Επεξεργασία
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleView(invitation.id)}
+                    >
+                      <Eye className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleDelete(invitation.id)}
+                      className="text-destructive hover:text-destructive"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 pt-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-xs justify-start"
+                      onClick={() => navigate(`/rsvp/${invitation.id}`)}
+                    >
+                      <List className="w-3 h-3 mr-1" />
+                      RSVP
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-xs justify-start"
+                      onClick={() => navigate(`/guests/${invitation.id}`)}
+                    >
+                      <Users className="w-3 h-3 mr-1" />
+                      Καλεσμένοι
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-xs justify-start"
+                      onClick={() => navigate(`/seating/${invitation.id}`)}
+                    >
+                      <MapPin className="w-3 h-3 mr-1" />
+                      Τραπέζια
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-xs justify-start"
+                      onClick={() => navigate(`/gifts/${invitation.id}`)}
+                    >
+                      <Gift className="w-3 h-3 mr-1" />
+                      Δώρα
+                    </Button>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

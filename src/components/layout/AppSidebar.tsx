@@ -40,13 +40,13 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar className="border-r-0">
-      <div className="flex items-center gap-2 p-4 border-b border-sidebar-border">
-        <div className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
-          <Heart className="w-6 h-6 text-white" fill="currentColor" />
+    <Sidebar className="border-r bg-card">
+      <div className="flex items-center gap-2 p-4 border-b">
+        <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+          <Heart className="w-6 h-6 text-primary" fill="currentColor" />
         </div>
         {state === "expanded" && (
-          <span className="font-semibold text-white text-lg">Προσκλητήρια</span>
+          <span className="font-serif text-xl font-semibold text-foreground">WediLink</span>
         )}
       </div>
 
