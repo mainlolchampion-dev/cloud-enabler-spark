@@ -42,6 +42,9 @@ export const useSubscription = () => {
 
     fetchSubscription();
 
+    // Auto-refresh every minute
+    const interval = setInterval(fetchSubscription, 60000);
+
     const channel = supabase
       .channel("subscription-changes")
       .on(
@@ -59,22 +62,50 @@ export const useSubscription = () => {
       .subscribe();
 
     return () => {
+      clearInterval(interval);
       supabase.removeChannel(channel);
     };
   }, [user]);
 
   const fetchSubscription = async () => {
+    if (!user) return;
+    
     try {
-      const { data, error } = await supabase
-        .from("user_subscriptions")
-        .select("plan_type, status, expires_at")
-        .eq("user_id", user?.id)
-        .single();
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+
+      // Call check-subscription edge function
+      const { data, error } = await supabase.functions.invoke("check-subscription", {
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
+      });
 
       if (error) throw error;
-      setSubscription(data);
+      
+      if (data) {
+        setSubscription({
+          plan_type: data.plan_type,
+          status: data.status,
+          expires_at: data.subscription_end,
+        });
+      }
     } catch (error) {
       console.error("Error fetching subscription:", error);
+      // Fallback to database
+      try {
+        const { data, error: dbError } = await supabase
+          .from("user_subscriptions")
+          .select("plan_type, status, expires_at")
+          .eq("user_id", user.id)
+          .single();
+
+        if (!dbError && data) {
+          setSubscription(data);
+        }
+      } catch (dbError) {
+        console.error("Error fetching from database:", dbError);
+      }
     } finally {
       setLoading(false);
     }

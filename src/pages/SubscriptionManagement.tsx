@@ -61,13 +61,21 @@ export default function SubscriptionManagement() {
 
     setPortalLoading(true);
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        navigate("/auth");
+        return;
+      }
+
       const { data, error } = await supabase.functions.invoke("create-portal-session", {
-        body: { userId: user.id },
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
       });
 
       if (error) throw error;
 
-      if (data.url) {
+      if (data?.url) {
         window.location.href = data.url;
       }
     } catch (error) {
