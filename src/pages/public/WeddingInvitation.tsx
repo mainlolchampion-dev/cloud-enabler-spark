@@ -149,102 +149,179 @@ export default function WeddingInvitation({ invitation }: WeddingInvitationProps
         </section>
       )}
 
-      {/* Koumbaroi Section */}
+      {/* Koumbaroi Section - Premium */}
       {data.koumbaroi && data.koumbaroi.length > 0 && data.koumbaroi.some((k: any) => k.col1) && (
-        <section className="max-w-5xl mx-auto px-6 py-32">
-          <h2 className="font-serif text-5xl text-center mb-20 text-foreground">Κουμπάροι</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
-            {data.koumbaroi.filter((k: any) => k.col1).map((koumbaros: any) => (
-              <div key={koumbaros.id} className="text-center space-y-6 group">
-                {koumbaros.col2 && (
-                  <div className="relative w-48 h-48 mx-auto overflow-hidden rounded-full shadow-xl">
-                    <img 
-                      src={koumbaros.col2} 
-                      alt={koumbaros.col1} 
-                      className="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-500"
-                    />
+        <section className="relative py-32 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/10 to-background" />
+          <div className="relative max-w-6xl mx-auto px-6">
+            <div className="text-center mb-20 space-y-6">
+              <div className="inline-flex items-center gap-4 mb-6">
+                <div className="h-px w-20 bg-gradient-to-r from-transparent to-primary" />
+                <Heart className="w-6 h-6 text-primary" />
+                <div className="h-px w-20 bg-gradient-to-l from-transparent to-primary" />
+              </div>
+              <h2 className="font-serif text-6xl text-foreground tracking-tight">Κουμπάροι</h2>
+              <p className="text-muted-foreground text-lg font-light max-w-2xl mx-auto">
+                Οι αγαπημένοι μας άνθρωποι που θα μας συνοδεύσουν σε αυτή την ξεχωριστή στιγμή
+              </p>
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-16">
+              {data.koumbaroi.filter((k: any) => k.col1).map((koumbaros: any) => (
+                <div key={koumbaros.id} className="group">
+                  <div className="relative mb-8">
+                    {koumbaros.col2 && (
+                      <div className="relative">
+                        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full blur-2xl group-hover:blur-3xl transition-all duration-500" />
+                        <div className="relative w-64 h-64 mx-auto overflow-hidden rounded-full border-4 border-card shadow-elegant group-hover:shadow-xl transition-all duration-500">
+                          <img 
+                            src={koumbaros.col2} 
+                            alt={koumbaros.col1} 
+                            className="w-full h-full object-cover sepia-[15%] group-hover:sepia-0 group-hover:scale-110 transition-all duration-700"
+                          />
+                        </div>
+                      </div>
+                    )}
                   </div>
-                )}
-                <h3 className="font-serif text-3xl text-foreground">{koumbaros.col1}</h3>
-              </div>
-            ))}
+                  <div className="text-center space-y-2">
+                    <h3 className="font-serif text-3xl text-foreground tracking-tight">{koumbaros.col1}</h3>
+                    <div className="h-px w-12 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto" />
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
       )}
 
-      {/* Families Section */}
+      {/* Families Section - Elegant */}
       {((data.groomFamily && data.groomFamily.length > 0) || (data.brideFamily && data.brideFamily.length > 0)) && (
-        <section className="max-w-5xl mx-auto px-6 py-32 bg-muted/20">
-          <h2 className="font-serif text-5xl text-center mb-20 text-foreground">Οικογένειες</h2>
-          <div className="grid md:grid-cols-2 gap-16">
-            {data.groomFamily && data.groomFamily.length > 0 && (
-              <div className="space-y-8">
-                <h3 className="font-serif text-3xl text-center text-foreground">Οικογένεια Γαμπρού</h3>
-                <div className="bg-card border border-border/50 rounded-xl shadow-lg p-8">
-                  <ul className="space-y-4">
-                    {data.groomFamily.map((member: string, idx: number) => (
-                      <li key={idx} className="text-xl text-foreground/80 text-center font-light">
-                        {member}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+        <section className="relative py-32 bg-gradient-to-b from-background via-primary-light/20 to-background">
+          <div className="max-w-6xl mx-auto px-6">
+            <div className="text-center mb-20 space-y-6">
+              <div className="inline-flex items-center gap-4 mb-6">
+                <div className="h-px w-20 bg-gradient-to-r from-transparent to-primary" />
+                <Heart className="w-6 h-6 text-primary" />
+                <div className="h-px w-20 bg-gradient-to-l from-transparent to-primary" />
               </div>
-            )}
-            {data.brideFamily && data.brideFamily.length > 0 && (
-              <div className="space-y-8">
-                <h3 className="font-serif text-3xl text-center text-foreground">Οικογένεια Νύφης</h3>
-                <div className="bg-card border border-border/50 rounded-xl shadow-lg p-8">
-                  <ul className="space-y-4">
-                    {data.brideFamily.map((member: string, idx: number) => (
-                      <li key={idx} className="text-xl text-foreground/80 text-center font-light">
-                        {member}
-                      </li>
-                    ))}
-                  </ul>
+              <h2 className="font-serif text-6xl text-foreground tracking-tight">Οικογένειες</h2>
+              <p className="text-muted-foreground text-lg font-light">Με την ευλογία και αγάπη των οικογενειών μας</p>
+            </div>
+            <div className="grid md:grid-cols-2 gap-16">
+              {data.groomFamily && data.groomFamily.length > 0 && (
+                <div className="space-y-8">
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 rounded-2xl blur-2xl" />
+                    <div className="relative bg-card/80 backdrop-blur-sm border border-border/30 rounded-2xl shadow-elegant p-12 hover:shadow-xl transition-all duration-500">
+                      <h3 className="font-serif text-4xl text-center text-foreground mb-8 tracking-tight">
+                        Οικογένεια Γαμπρού
+                      </h3>
+                      <div className="h-px w-24 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto mb-8" />
+                      <ul className="space-y-5">
+                        {data.groomFamily.map((member: string, idx: number) => (
+                          <li key={idx} className="text-xl text-foreground/70 text-center font-light tracking-wide hover:text-foreground transition-colors">
+                            {member}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+              {data.brideFamily && data.brideFamily.length > 0 && (
+                <div className="space-y-8">
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 rounded-2xl blur-2xl" />
+                    <div className="relative bg-card/80 backdrop-blur-sm border border-border/30 rounded-2xl shadow-elegant p-12 hover:shadow-xl transition-all duration-500">
+                      <h3 className="font-serif text-4xl text-center text-foreground mb-8 tracking-tight">
+                        Οικογένεια Νύφης
+                      </h3>
+                      <div className="h-px w-24 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto mb-8" />
+                      <ul className="space-y-5">
+                        {data.brideFamily.map((member: string, idx: number) => (
+                          <li key={idx} className="text-xl text-foreground/70 text-center font-light tracking-wide hover:text-foreground transition-colors">
+                            {member}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </section>
       )}
 
-      {/* Bank Accounts Section */}
+      {/* Bank Accounts Section - Elegant */}
       {data.bankAccounts && data.bankAccounts.length > 0 && data.bankAccounts.some((b: any) => b.col1 || b.col2) && (
-        <section className="max-w-4xl mx-auto px-6 py-32">
-          <h2 className="font-serif text-5xl text-center mb-20 text-foreground">Αριθμοί Κατάθεσης</h2>
-          <div className="space-y-6">
-            {data.bankAccounts.filter((b: any) => b.col1 || b.col2).map((account: any) => (
-              <div key={account.id} className="bg-card border border-border/50 rounded-xl shadow-lg p-8 hover:shadow-xl transition-shadow">
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-                  {account.col1 && (
-                    <div className="space-y-2">
-                      <p className="text-sm text-muted-foreground uppercase tracking-wider">Τράπεζα</p>
-                      <p className="text-2xl font-serif text-foreground">{account.col1}</p>
-                    </div>
-                  )}
-                  {account.col2 && (
-                    <div className="space-y-2 md:text-right">
-                      <p className="text-sm text-muted-foreground uppercase tracking-wider">IBAN</p>
-                      <p className="text-xl font-mono text-foreground/80">{account.col2}</p>
-                    </div>
-                  )}
-                </div>
+        <section className="relative py-32 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/10 to-background" />
+          <div className="relative max-w-5xl mx-auto px-6">
+            <div className="text-center mb-20 space-y-6">
+              <div className="inline-flex items-center gap-4 mb-6">
+                <div className="h-px w-20 bg-gradient-to-r from-transparent to-accent" />
+                <Gift className="w-6 h-6 text-accent" />
+                <div className="h-px w-20 bg-gradient-to-l from-transparent to-accent" />
               </div>
-            ))}
+              <h2 className="font-serif text-6xl text-foreground tracking-tight">Αριθμοί Κατάθεσης</h2>
+              <p className="text-muted-foreground text-lg font-light max-w-2xl mx-auto">
+                Αν επιθυμείτε να μας τιμήσετε με κάποιο δώρο
+              </p>
+            </div>
+            <div className="space-y-8">
+              {data.bankAccounts.filter((b: any) => b.col1 || b.col2).map((account: any, idx: number) => (
+                <div key={account.id} className="group relative">
+                  <div className="absolute inset-0 bg-gradient-to-r from-accent/10 via-primary/10 to-accent/10 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-500" />
+                  <div className="relative bg-card/90 backdrop-blur-sm border-2 border-border/50 rounded-2xl shadow-elegant p-10 hover:shadow-xl hover:border-accent/30 transition-all duration-500">
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-8">
+                      <div className="flex items-center gap-6">
+                        <div className="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-accent/20 to-primary/20 rounded-xl flex items-center justify-center">
+                          <span className="font-serif text-2xl text-primary">{idx + 1}</span>
+                        </div>
+                        {account.col1 && (
+                          <div className="space-y-2">
+                            <p className="text-xs text-muted-foreground uppercase tracking-[0.2em] font-medium">Τράπεζα</p>
+                            <p className="text-3xl font-serif text-foreground tracking-tight">{account.col1}</p>
+                          </div>
+                        )}
+                      </div>
+                      {account.col2 && (
+                        <div className="space-y-2 md:text-right bg-muted/50 rounded-xl p-6">
+                          <p className="text-xs text-muted-foreground uppercase tracking-[0.2em] font-medium">IBAN</p>
+                          <p className="text-xl font-mono text-foreground/90 tracking-wider">{account.col2}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
       )}
 
-      {/* Contact Information Section */}
+      {/* Contact Information Section - Elegant */}
       {data.contactInfo && (
-        <section className="max-w-3xl mx-auto px-6 py-32 bg-muted/20">
-          <h2 className="font-serif text-5xl text-center mb-16 text-foreground">Στοιχεία Επικοινωνίας</h2>
-          <div className="bg-card border border-border/50 rounded-xl shadow-lg p-12">
-            <div 
-              className="prose prose-lg max-w-none text-center [&>p]:text-foreground/70 [&>p]:leading-loose [&>p]:text-lg [&>p]:mb-4 [&>h1]:font-serif [&>h2]:font-serif [&>h3]:font-serif"
-              dangerouslySetInnerHTML={{ __html: data.contactInfo }}
-            />
+        <section className="relative py-32 bg-gradient-to-b from-background via-secondary-light/30 to-background">
+          <div className="max-w-4xl mx-auto px-6">
+            <div className="text-center mb-20 space-y-6">
+              <div className="inline-flex items-center gap-4 mb-6">
+                <div className="h-px w-20 bg-gradient-to-r from-transparent to-secondary" />
+                <Heart className="w-6 h-6 text-secondary" />
+                <div className="h-px w-20 bg-gradient-to-l from-transparent to-secondary" />
+              </div>
+              <h2 className="font-serif text-6xl text-foreground tracking-tight">Στοιχεία Επικοινωνίας</h2>
+              <p className="text-muted-foreground text-lg font-light">Για οποιαδήποτε πληροφορία</p>
+            </div>
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-br from-secondary/10 to-primary/10 rounded-3xl blur-2xl" />
+              <div className="relative bg-card/90 backdrop-blur-sm border-2 border-border/30 rounded-3xl shadow-elegant p-16 hover:shadow-xl transition-all duration-500">
+                <div 
+                  className="prose prose-lg max-w-none text-center [&>p]:text-foreground/80 [&>p]:leading-loose [&>p]:text-xl [&>p]:mb-6 [&>h1]:font-serif [&>h2]:font-serif [&>h3]:font-serif [&>p]:font-light [&>p]:tracking-wide"
+                  dangerouslySetInnerHTML={{ __html: data.contactInfo }}
+                />
+              </div>
+            </div>
           </div>
         </section>
       )}
