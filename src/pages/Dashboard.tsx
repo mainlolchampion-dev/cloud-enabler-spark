@@ -1,12 +1,13 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Heart, FileText, Users, Check, PartyPopper, UserPlus, Crown, ArrowUpRight } from "lucide-react";
+import { Heart, FileText, Users, Check, PartyPopper, UserPlus, Crown, ArrowUpRight, Shield } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getInvitationsIndex } from "@/lib/invitationStorage";
 import { supabase } from "@/integrations/supabase/client";
 import { useSubscription } from "@/hooks/useSubscription";
+import { useAdminStatus } from "@/hooks/useAdminStatus";
 import { useToast } from "@/hooks/use-toast";
 import MobileNav from "@/components/layout/MobileNav";
 
@@ -14,6 +15,7 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { subscription, loading: subLoading, canCreateInvitation, limits } = useSubscription();
+  const { isAdmin } = useAdminStatus();
   const [stats, setStats] = useState({
     total: 0,
     weddings: 0,
@@ -154,6 +156,32 @@ export default function Dashboard() {
 
         {/* Main Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+          {/* Admin Panel Card - Only visible for admins */}
+          {isAdmin && (
+            <Card 
+              className="hover:shadow-lg transition-shadow bg-gradient-to-br from-red-500/10 to-red-500/5 cursor-pointer border-red-200 dark:border-red-800"
+              onClick={() => navigate("/admin")}
+            >
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">
+                  Admin Panel
+                </CardTitle>
+                <Shield className="h-5 w-5 text-red-600" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-serif font-bold text-red-600 mb-2">
+                  Διαχείριση
+                </div>
+                <Button 
+                  variant="link" 
+                  className="p-0 h-auto text-xs text-red-600"
+                >
+                  Άνοιγμα <ArrowUpRight className="h-3 w-3 ml-1" />
+                </Button>
+              </CardContent>
+            </Card>
+          )}
+
           {/* Subscription Card */}
           <Card className="hover:shadow-lg transition-shadow bg-gradient-to-br from-primary/10 to-primary/5">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
