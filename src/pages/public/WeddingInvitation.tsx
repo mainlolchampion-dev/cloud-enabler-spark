@@ -65,83 +65,170 @@ export default function WeddingInvitation({ invitation }: WeddingInvitationProps
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Hero Section - Premium & Elegant */}
+    <div className="min-h-screen bg-gradient-to-b from-background via-secondary-light to-background">
+      {/* Hero Section - Romantic & Elegant */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <div 
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: `url(${data.mainImage || weddingHeroSample})` }}
         >
-          <div className="absolute inset-0 bg-black/50" />
+          <div className="absolute inset-0 bg-gradient-to-b from-primary-dark/40 via-secondary/30 to-primary-dark/40" />
         </div>
         
-        <div className="relative z-10 text-center text-white px-6 max-w-5xl mx-auto">
-          <div className="space-y-8 animate-fade-in">
-            <p className="text-sm tracking-[0.4em] uppercase font-light">Πρόσκληση Γάμου</p>
-            <h1 className="font-serif text-6xl md:text-8xl lg:text-9xl font-light leading-tight">
+        {/* Decorative floral corners */}
+        <div className="absolute top-0 left-0 w-64 h-64 opacity-30">
+          <svg viewBox="0 0 200 200" className="w-full h-full text-primary-foreground">
+            <path d="M0,0 Q50,50 0,100 Q50,50 100,0 Z" fill="currentColor" opacity="0.3"/>
+          </svg>
+        </div>
+        <div className="absolute top-0 right-0 w-64 h-64 opacity-30 scale-x-[-1]">
+          <svg viewBox="0 0 200 200" className="w-full h-full text-primary-foreground">
+            <path d="M0,0 Q50,50 0,100 Q50,50 100,0 Z" fill="currentColor" opacity="0.3"/>
+          </svg>
+        </div>
+        
+        <div className="relative z-10 text-center text-white px-6 max-w-6xl mx-auto">
+          <div className="space-y-10 animate-fade-in">
+            {/* Ornamental divider top */}
+            <div className="flex items-center justify-center gap-6">
+              <div className="h-px w-24 bg-gradient-to-r from-transparent via-primary-foreground to-transparent opacity-60" />
+              <Heart className="w-6 h-6 fill-primary-foreground/80 text-primary-foreground animate-pulse" />
+              <div className="h-px w-24 bg-gradient-to-l from-transparent via-primary-foreground to-transparent opacity-60" />
+            </div>
+            
+            <p className="text-sm tracking-[0.5em] uppercase font-light opacity-90">Σας προσκαλούμε στον γάμο</p>
+            
+            <h1 className="font-script text-7xl md:text-9xl lg:text-[10rem] font-light leading-tight italic">
               {data.groomName}
-              <span className="block text-4xl md:text-6xl my-4">&</span>
+              <span className="block text-5xl md:text-7xl my-8 not-italic font-serif">&</span>
               {data.brideName}
             </h1>
+            
             {data.weddingDate && (
-              <p className="text-xl md:text-2xl font-light tracking-wider capitalize opacity-90">
-                {formattedDate}
-              </p>
+              <div className="space-y-4">
+                <p className="text-2xl md:text-3xl font-light tracking-[0.2em] capitalize">
+                  {formattedDate}
+                </p>
+              </div>
             )}
+            
+            {/* Ornamental divider bottom */}
+            <div className="flex items-center justify-center gap-6 pt-4">
+              <div className="h-px w-24 bg-gradient-to-r from-transparent via-primary-foreground to-transparent opacity-60" />
+              <Heart className="w-6 h-6 fill-primary-foreground/80 text-primary-foreground animate-pulse" />
+              <div className="h-px w-24 bg-gradient-to-l from-transparent via-primary-foreground to-transparent opacity-60" />
+            </div>
           </div>
         </div>
         
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-          <div className="w-8 h-12 border-2 border-white/50 rounded-full flex items-start justify-center p-2">
-            <div className="w-1.5 h-3 bg-white/50 rounded-full" />
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
+          <div className="w-8 h-14 border-2 border-primary-foreground/40 rounded-full flex items-start justify-center p-2">
+            <div className="w-1.5 h-4 bg-primary-foreground/40 rounded-full" />
           </div>
         </div>
       </section>
 
       {/* Countdown Timer */}
       {data.weddingDate && (
-        <section className="py-24 bg-gradient-to-b from-card to-background">
-          <CountdownTimer targetDate={data.weddingDate} targetTime={data.weddingTime} />
+        <section className="relative py-32 overflow-hidden">
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZmxvcmFsIiB4PSIwIiB5PSIwIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PGNpcmNsZSBjeD0iMTAwIiBjeT0iMTAwIiByPSIyIiBmaWxsPSIjZjNlOGU4IiBvcGFjaXR5PSIwLjMiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZmxvcmFsKSIvPjwvc3ZnPg==')] opacity-40" />
+          <div className="relative">
+            <CountdownTimer targetDate={data.weddingDate} targetTime={data.weddingTime} />
+          </div>
         </section>
       )}
 
       {/* Invitation Text */}
       {data.invitationText && (
-        <section className="max-w-3xl mx-auto px-6 py-32">
-          <div 
-            className="prose prose-lg max-w-none text-center [&>p]:text-foreground/70 [&>p]:leading-loose [&>p]:text-lg [&>p]:mb-8 [&>h1]:font-serif [&>h2]:font-serif [&>h3]:font-serif"
-            dangerouslySetInnerHTML={{ __html: data.invitationText }}
-          />
+        <section className="relative max-w-4xl mx-auto px-6 py-36">
+          <div className="absolute inset-0 bg-gradient-radial from-primary/5 via-transparent to-transparent" />
+          <div className="relative">
+            {/* Decorative top border */}
+            <div className="flex items-center justify-center gap-8 mb-16">
+              <div className="h-px w-32 bg-gradient-to-r from-transparent via-primary to-transparent" />
+              <div className="w-3 h-3 rounded-full bg-primary/40" />
+              <div className="h-px w-32 bg-gradient-to-l from-transparent via-primary to-transparent" />
+            </div>
+            
+            <div 
+              className="prose prose-xl max-w-none text-center [&>p]:text-foreground/80 [&>p]:leading-loose [&>p]:text-xl [&>p]:mb-10 [&>p]:font-light [&>h1]:font-script [&>h1]:italic [&>h2]:font-script [&>h2]:italic [&>h3]:font-serif [&>p]:tracking-wide"
+              dangerouslySetInnerHTML={{ __html: data.invitationText }}
+            />
+            
+            {/* Decorative bottom border */}
+            <div className="flex items-center justify-center gap-8 mt-16">
+              <div className="h-px w-32 bg-gradient-to-r from-transparent via-primary to-transparent" />
+              <div className="w-3 h-3 rounded-full bg-primary/40" />
+              <div className="h-px w-32 bg-gradient-to-l from-transparent via-primary to-transparent" />
+            </div>
+          </div>
         </section>
       )}
 
-      {/* Couple Section - Refined */}
+      {/* Couple Section - Romantic */}
       {(data.groomPhoto || data.bridePhoto) && (
-        <section className="py-32 bg-muted/20">
-          <div className="max-w-6xl mx-auto px-6">
-            <div className="grid md:grid-cols-2 gap-20">
+        <section className="relative py-40 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-b from-secondary-light/30 via-primary-light/20 to-secondary-light/30" />
+          <div className="absolute inset-0 opacity-10 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9InBldGFscyIgeD0iMCIgeT0iMCIgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48Y2lyY2xlIGN4PSIzMCIgY3k9IjMwIiByPSIxLjUiIGZpbGw9IiNmMWM0YzQiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjcGV0YWxzKSIvPjwvc3ZnPg==')]" />
+          
+          <div className="relative max-w-7xl mx-auto px-6">
+            <div className="grid md:grid-cols-2 gap-28">
               {data.groomPhoto && (
-                <div className="space-y-8 text-center group">
-                  <div className="relative w-80 h-80 mx-auto overflow-hidden rounded-full shadow-2xl">
-                    <img 
-                      src={data.groomPhoto} 
-                      alt={data.groomName} 
-                      className="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-500"
-                    />
+                <div className="space-y-10 text-center group">
+                  <div className="relative">
+                    {/* Glow effect */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/30 via-accent/20 to-secondary/30 rounded-full blur-3xl scale-90 group-hover:scale-110 transition-all duration-700" />
+                    
+                    {/* Frame with double border */}
+                    <div className="relative w-96 h-96 mx-auto">
+                      <div className="absolute inset-0 border-2 border-primary/30 rounded-full -rotate-6" />
+                      <div className="absolute inset-0 border-2 border-accent/30 rounded-full rotate-6" />
+                      <div className="relative overflow-hidden rounded-full border-4 border-card shadow-romantic">
+                        <img 
+                          src={data.groomPhoto} 
+                          alt={data.groomName} 
+                          className="w-full h-full object-cover sepia-[10%] group-hover:sepia-0 group-hover:scale-110 transition-all duration-700"
+                        />
+                      </div>
+                    </div>
                   </div>
-                  <h2 className="font-serif text-5xl text-foreground">{data.groomName}</h2>
+                  <div className="space-y-4">
+                    <h2 className="font-script text-6xl text-primary italic">{data.groomName}</h2>
+                    <div className="flex items-center justify-center gap-4">
+                      <div className="h-px w-16 bg-gradient-to-r from-transparent to-primary/50" />
+                      <Heart className="w-4 h-4 fill-primary/40 text-primary" />
+                      <div className="h-px w-16 bg-gradient-to-l from-transparent to-primary/50" />
+                    </div>
+                  </div>
                 </div>
               )}
               {data.bridePhoto && (
-                <div className="space-y-8 text-center group">
-                  <div className="relative w-80 h-80 mx-auto overflow-hidden rounded-full shadow-2xl">
-                    <img 
-                      src={data.bridePhoto} 
-                      alt={data.brideName} 
-                      className="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-500"
-                    />
+                <div className="space-y-10 text-center group">
+                  <div className="relative">
+                    {/* Glow effect */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-secondary/30 via-primary/20 to-accent/30 rounded-full blur-3xl scale-90 group-hover:scale-110 transition-all duration-700" />
+                    
+                    {/* Frame with double border */}
+                    <div className="relative w-96 h-96 mx-auto">
+                      <div className="absolute inset-0 border-2 border-secondary/30 rounded-full -rotate-6" />
+                      <div className="absolute inset-0 border-2 border-accent/30 rounded-full rotate-6" />
+                      <div className="relative overflow-hidden rounded-full border-4 border-card shadow-romantic">
+                        <img 
+                          src={data.bridePhoto} 
+                          alt={data.brideName} 
+                          className="w-full h-full object-cover sepia-[10%] group-hover:sepia-0 group-hover:scale-110 transition-all duration-700"
+                        />
+                      </div>
+                    </div>
                   </div>
-                  <h2 className="font-serif text-5xl text-foreground">{data.brideName}</h2>
+                  <div className="space-y-4">
+                    <h2 className="font-script text-6xl text-primary italic">{data.brideName}</h2>
+                    <div className="flex items-center justify-center gap-4">
+                      <div className="h-px w-16 bg-gradient-to-r from-transparent to-primary/50" />
+                      <Heart className="w-4 h-4 fill-primary/40 text-primary" />
+                      <div className="h-px w-16 bg-gradient-to-l from-transparent to-primary/50" />
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
@@ -149,42 +236,68 @@ export default function WeddingInvitation({ invitation }: WeddingInvitationProps
         </section>
       )}
 
-      {/* Koumbaroi Section - Premium */}
+      {/* Koumbaroi Section - Romantic */}
       {data.koumbaroi && data.koumbaroi.length > 0 && data.koumbaroi.some((k: any) => k.col1) && (
-        <section className="relative py-32 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/10 to-background" />
-          <div className="relative max-w-6xl mx-auto px-6">
-            <div className="text-center mb-20 space-y-6">
-              <div className="inline-flex items-center gap-4 mb-6">
-                <div className="h-px w-20 bg-gradient-to-r from-transparent to-primary" />
-                <Heart className="w-6 h-6 text-primary" />
-                <div className="h-px w-20 bg-gradient-to-l from-transparent to-primary" />
+        <section className="relative py-40 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary-light/40 via-secondary-light/30 to-accent/10" />
+          <div className="absolute inset-0 opacity-20 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZmxvcmFsLXBhdHRlcm4iIHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIyIiBmaWxsPSIjZjFjNGM0IiBvcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSIyNSIgY3k9IjI1IiByPSIxLjUiIGZpbGw9IiNmM2U4ZTgiIG9wYWNpdHk9IjAuMyIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNmbG9yYWwtcGF0dGVybikiLz48L3N2Zz4=')]" />
+          
+          <div className="relative max-w-7xl mx-auto px-6">
+            <div className="text-center mb-24 space-y-8">
+              {/* Ornate divider top */}
+              <div className="inline-flex items-center gap-6 mb-8">
+                <div className="h-px w-24 bg-gradient-to-r from-transparent via-primary to-transparent" />
+                <Heart className="w-8 h-8 text-primary fill-primary/20 animate-pulse" />
+                <div className="h-px w-24 bg-gradient-to-l from-transparent via-primary to-transparent" />
               </div>
-              <h2 className="font-serif text-6xl text-foreground tracking-tight">Κουμπάροι</h2>
-              <p className="text-muted-foreground text-lg font-light max-w-2xl mx-auto">
-                Οι αγαπημένοι μας άνθρωποι που θα μας συνοδεύσουν σε αυτή την ξεχωριστή στιγμή
+              
+              <h2 className="font-script text-7xl text-primary tracking-tight italic">Κουμπάροι</h2>
+              
+              <p className="text-foreground/70 text-xl font-light max-w-3xl mx-auto tracking-wide leading-relaxed">
+                Οι αγαπημένοι μας άνθρωποι που θα μας συνοδεύσουν<br />
+                σε αυτή την ξεχωριστή στιγμή της ζωής μας
               </p>
+              
+              {/* Ornate divider bottom */}
+              <div className="flex items-center justify-center gap-4 pt-4">
+                <div className="w-2 h-2 rounded-full bg-primary/30" />
+                <div className="w-3 h-3 rounded-full bg-primary/40" />
+                <div className="w-2 h-2 rounded-full bg-primary/30" />
+              </div>
             </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-16">
+            
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-20">
               {data.koumbaroi.filter((k: any) => k.col1).map((koumbaros: any) => (
                 <div key={koumbaros.id} className="group">
-                  <div className="relative mb-8">
+                  <div className="relative mb-10">
                     {koumbaros.col2 && (
                       <div className="relative">
-                        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full blur-2xl group-hover:blur-3xl transition-all duration-500" />
-                        <div className="relative w-64 h-64 mx-auto overflow-hidden rounded-full border-4 border-card shadow-elegant group-hover:shadow-xl transition-all duration-500">
+                        {/* Multi-layered glow */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-primary/25 via-accent/15 to-secondary/25 rounded-full blur-3xl group-hover:blur-[60px] transition-all duration-700" />
+                        <div className="absolute inset-0 bg-gradient-to-tl from-secondary/20 to-primary/20 rounded-full blur-2xl group-hover:scale-110 transition-all duration-700" />
+                        
+                        {/* Decorative circles */}
+                        <div className="absolute -inset-4 border border-primary/20 rounded-full animate-pulse" style={{ animationDuration: '3s' }} />
+                        <div className="absolute -inset-2 border border-accent/15 rounded-full" />
+                        
+                        <div className="relative w-72 h-72 mx-auto overflow-hidden rounded-full border-[6px] border-card shadow-romantic group-hover:shadow-[0_25px_70px_-18px_hsl(15_65%_65%/0.35)] transition-all duration-700">
+                          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-secondary/10 mix-blend-overlay" />
                           <img 
                             src={koumbaros.col2} 
                             alt={koumbaros.col1} 
-                            className="w-full h-full object-cover sepia-[15%] group-hover:sepia-0 group-hover:scale-110 transition-all duration-700"
+                            className="w-full h-full object-cover saturate-[0.85] group-hover:saturate-100 group-hover:scale-110 transition-all duration-700"
                           />
                         </div>
                       </div>
                     )}
                   </div>
-                  <div className="text-center space-y-2">
-                    <h3 className="font-serif text-3xl text-foreground tracking-tight">{koumbaros.col1}</h3>
-                    <div className="h-px w-12 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto" />
+                  <div className="text-center space-y-4">
+                    <h3 className="font-script text-4xl text-primary italic tracking-tight">{koumbaros.col1}</h3>
+                    <div className="flex items-center justify-center gap-3">
+                      <div className="h-px w-10 bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+                      <Heart className="w-3 h-3 fill-primary/30 text-primary" />
+                      <div className="h-px w-10 bg-gradient-to-l from-transparent via-primary/40 to-transparent" />
+                    </div>
                   </div>
                 </div>
               ))}
@@ -193,32 +306,59 @@ export default function WeddingInvitation({ invitation }: WeddingInvitationProps
         </section>
       )}
 
-      {/* Families Section - Elegant */}
+      {/* Families Section - Romantic & Elegant */}
       {((data.groomFamily && data.groomFamily.length > 0) || (data.brideFamily && data.brideFamily.length > 0)) && (
-        <section className="relative py-32 bg-gradient-to-b from-background via-primary-light/20 to-background">
-          <div className="max-w-6xl mx-auto px-6">
-            <div className="text-center mb-20 space-y-6">
-              <div className="inline-flex items-center gap-4 mb-6">
-                <div className="h-px w-20 bg-gradient-to-r from-transparent to-primary" />
-                <Heart className="w-6 h-6 text-primary" />
-                <div className="h-px w-20 bg-gradient-to-l from-transparent to-primary" />
+        <section className="relative py-40 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/30 to-background" />
+          
+          <div className="relative max-w-6xl mx-auto px-6">
+            <div className="text-center mb-24 space-y-8">
+              <div className="inline-flex items-center gap-6 mb-8">
+                <div className="h-px w-24 bg-gradient-to-r from-transparent via-secondary to-transparent" />
+                <Heart className="w-8 h-8 text-secondary fill-secondary/20 animate-pulse" />
+                <div className="h-px w-24 bg-gradient-to-l from-transparent via-secondary to-transparent" />
               </div>
-              <h2 className="font-serif text-6xl text-foreground tracking-tight">Οικογένειες</h2>
-              <p className="text-muted-foreground text-lg font-light">Με την ευλογία και αγάπη των οικογενειών μας</p>
+              
+              <h2 className="font-script text-7xl text-secondary tracking-tight italic">Οικογένειες</h2>
+              
+              <p className="text-foreground/70 text-xl font-light tracking-wide">
+                Με την ευλογία και αγάπη των οικογενειών μας
+              </p>
+              
+              <div className="flex items-center justify-center gap-4 pt-4">
+                <div className="w-2 h-2 rounded-full bg-secondary/30" />
+                <div className="w-3 h-3 rounded-full bg-secondary/40" />
+                <div className="w-2 h-2 rounded-full bg-secondary/30" />
+              </div>
             </div>
-            <div className="grid md:grid-cols-2 gap-16">
+            
+            <div className="grid md:grid-cols-2 gap-20">
               {data.groomFamily && data.groomFamily.length > 0 && (
-                <div className="space-y-8">
-                  <div className="relative">
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 rounded-2xl blur-2xl" />
-                    <div className="relative bg-card/80 backdrop-blur-sm border border-border/30 rounded-2xl shadow-elegant p-12 hover:shadow-xl transition-all duration-500">
-                      <h3 className="font-serif text-4xl text-center text-foreground mb-8 tracking-tight">
+                <div className="space-y-10">
+                  <div className="relative group">
+                    {/* Glow backdrop */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/15 via-accent/10 to-secondary/15 rounded-3xl blur-2xl group-hover:blur-3xl transition-all duration-700" />
+                    
+                    {/* Decorative corners */}
+                    <div className="absolute -top-4 -left-4 w-12 h-12 border-l-2 border-t-2 border-primary/30 rounded-tl-3xl" />
+                    <div className="absolute -top-4 -right-4 w-12 h-12 border-r-2 border-t-2 border-primary/30 rounded-tr-3xl" />
+                    <div className="absolute -bottom-4 -left-4 w-12 h-12 border-l-2 border-b-2 border-primary/30 rounded-bl-3xl" />
+                    <div className="absolute -bottom-4 -right-4 w-12 h-12 border-r-2 border-b-2 border-primary/30 rounded-br-3xl" />
+                    
+                    <div className="relative bg-card/95 backdrop-blur-sm border-2 border-primary/20 rounded-3xl shadow-romantic p-14 group-hover:shadow-[0_30px_80px_-20px_hsl(15_65%_65%/0.25)] transition-all duration-700">
+                      <h3 className="font-script text-5xl text-center text-primary mb-10 tracking-tight italic">
                         Οικογένεια Γαμπρού
                       </h3>
-                      <div className="h-px w-24 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto mb-8" />
-                      <ul className="space-y-5">
+                      
+                      <div className="flex items-center justify-center gap-4 mb-10">
+                        <div className="h-px w-20 bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+                        <Heart className="w-4 h-4 fill-primary/30 text-primary" />
+                        <div className="h-px w-20 bg-gradient-to-l from-transparent via-primary/40 to-transparent" />
+                      </div>
+                      
+                      <ul className="space-y-6">
                         {data.groomFamily.map((member: string, idx: number) => (
-                          <li key={idx} className="text-xl text-foreground/70 text-center font-light tracking-wide hover:text-foreground transition-colors">
+                          <li key={idx} className="text-2xl text-foreground/80 text-center font-light tracking-wide hover:text-primary transition-colors duration-300">
                             {member}
                           </li>
                         ))}
@@ -227,18 +367,33 @@ export default function WeddingInvitation({ invitation }: WeddingInvitationProps
                   </div>
                 </div>
               )}
+              
               {data.brideFamily && data.brideFamily.length > 0 && (
-                <div className="space-y-8">
-                  <div className="relative">
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 rounded-2xl blur-2xl" />
-                    <div className="relative bg-card/80 backdrop-blur-sm border border-border/30 rounded-2xl shadow-elegant p-12 hover:shadow-xl transition-all duration-500">
-                      <h3 className="font-serif text-4xl text-center text-foreground mb-8 tracking-tight">
+                <div className="space-y-10">
+                  <div className="relative group">
+                    {/* Glow backdrop */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-secondary/15 via-primary/10 to-accent/15 rounded-3xl blur-2xl group-hover:blur-3xl transition-all duration-700" />
+                    
+                    {/* Decorative corners */}
+                    <div className="absolute -top-4 -left-4 w-12 h-12 border-l-2 border-t-2 border-secondary/30 rounded-tl-3xl" />
+                    <div className="absolute -top-4 -right-4 w-12 h-12 border-r-2 border-t-2 border-secondary/30 rounded-tr-3xl" />
+                    <div className="absolute -bottom-4 -left-4 w-12 h-12 border-l-2 border-b-2 border-secondary/30 rounded-bl-3xl" />
+                    <div className="absolute -bottom-4 -right-4 w-12 h-12 border-r-2 border-b-2 border-secondary/30 rounded-br-3xl" />
+                    
+                    <div className="relative bg-card/95 backdrop-blur-sm border-2 border-secondary/20 rounded-3xl shadow-romantic p-14 group-hover:shadow-[0_30px_80px_-20px_hsl(340_45%_75%/0.25)] transition-all duration-700">
+                      <h3 className="font-script text-5xl text-center text-secondary mb-10 tracking-tight italic">
                         Οικογένεια Νύφης
                       </h3>
-                      <div className="h-px w-24 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto mb-8" />
-                      <ul className="space-y-5">
+                      
+                      <div className="flex items-center justify-center gap-4 mb-10">
+                        <div className="h-px w-20 bg-gradient-to-r from-transparent via-secondary/40 to-transparent" />
+                        <Heart className="w-4 h-4 fill-secondary/30 text-secondary" />
+                        <div className="h-px w-20 bg-gradient-to-l from-transparent via-secondary/40 to-transparent" />
+                      </div>
+                      
+                      <ul className="space-y-6">
                         {data.brideFamily.map((member: string, idx: number) => (
-                          <li key={idx} className="text-xl text-foreground/70 text-center font-light tracking-wide hover:text-foreground transition-colors">
+                          <li key={idx} className="text-2xl text-foreground/80 text-center font-light tracking-wide hover:text-secondary transition-colors duration-300">
                             {member}
                           </li>
                         ))}
@@ -252,43 +407,68 @@ export default function WeddingInvitation({ invitation }: WeddingInvitationProps
         </section>
       )}
 
-      {/* Bank Accounts Section - Elegant */}
+      {/* Bank Accounts Section - Romantic & Luxurious */}
       {data.bankAccounts && data.bankAccounts.length > 0 && data.bankAccounts.some((b: any) => b.col1 || b.col2) && (
-        <section className="relative py-32 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/10 to-background" />
+        <section className="relative py-40 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-accent/10 via-primary-light/20 to-secondary-light/20" />
+          
           <div className="relative max-w-5xl mx-auto px-6">
-            <div className="text-center mb-20 space-y-6">
-              <div className="inline-flex items-center gap-4 mb-6">
-                <div className="h-px w-20 bg-gradient-to-r from-transparent to-accent" />
-                <Gift className="w-6 h-6 text-accent" />
-                <div className="h-px w-20 bg-gradient-to-l from-transparent to-accent" />
+            <div className="text-center mb-24 space-y-8">
+              <div className="inline-flex items-center gap-6 mb-8">
+                <div className="h-px w-24 bg-gradient-to-r from-transparent via-accent to-transparent" />
+                <Gift className="w-8 h-8 text-accent animate-pulse" />
+                <div className="h-px w-24 bg-gradient-to-l from-transparent via-accent to-transparent" />
               </div>
-              <h2 className="font-serif text-6xl text-foreground tracking-tight">Αριθμοί Κατάθεσης</h2>
-              <p className="text-muted-foreground text-lg font-light max-w-2xl mx-auto">
-                Αν επιθυμείτε να μας τιμήσετε με κάποιο δώρο
+              
+              <h2 className="font-script text-7xl text-accent tracking-tight italic">Αριθμοί Κατάθεσης</h2>
+              
+              <p className="text-foreground/70 text-xl font-light max-w-3xl mx-auto tracking-wide leading-relaxed">
+                Αν επιθυμείτε να μας τιμήσετε με κάποιο δώρο,<br />
+                θα χαρούμε να το υποδεχθούμε με την πιο ευγνώμονη καρδιά
               </p>
+              
+              <div className="flex items-center justify-center gap-4 pt-4">
+                <div className="w-2 h-2 rounded-full bg-accent/30" />
+                <div className="w-3 h-3 rounded-full bg-accent/40" />
+                <div className="w-2 h-2 rounded-full bg-accent/30" />
+              </div>
             </div>
-            <div className="space-y-8">
+            
+            <div className="space-y-10">
               {data.bankAccounts.filter((b: any) => b.col1 || b.col2).map((account: any, idx: number) => (
                 <div key={account.id} className="group relative">
-                  <div className="absolute inset-0 bg-gradient-to-r from-accent/10 via-primary/10 to-accent/10 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-500" />
-                  <div className="relative bg-card/90 backdrop-blur-sm border-2 border-border/50 rounded-2xl shadow-elegant p-10 hover:shadow-xl hover:border-accent/30 transition-all duration-500">
-                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-8">
-                      <div className="flex items-center gap-6">
-                        <div className="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-accent/20 to-primary/20 rounded-xl flex items-center justify-center">
-                          <span className="font-serif text-2xl text-primary">{idx + 1}</span>
+                  {/* Multi-layer glow */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-accent/15 via-primary/10 to-accent/15 rounded-3xl blur-2xl group-hover:blur-3xl transition-all duration-700" />
+                  
+                  {/* Decorative frame */}
+                  <div className="absolute -inset-1 bg-gradient-to-r from-accent/30 via-primary/20 to-accent/30 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                  
+                  <div className="relative bg-card/95 backdrop-blur-xl border-2 border-accent/30 rounded-3xl shadow-romantic p-12 group-hover:shadow-[0_30px_80px_-20px_hsl(25_75%_55%/0.3)] group-hover:border-accent/50 transition-all duration-700">
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-10">
+                      <div className="flex items-center gap-8">
+                        {/* Number badge */}
+                        <div className="relative flex-shrink-0 w-20 h-20">
+                          <div className="absolute inset-0 bg-gradient-to-br from-accent/30 to-primary/30 rounded-2xl blur-md" />
+                          <div className="relative w-full h-full bg-gradient-to-br from-accent/20 to-primary/20 rounded-2xl border-2 border-accent/30 flex items-center justify-center group-hover:scale-110 transition-all duration-500">
+                            <span className="font-script text-3xl text-accent italic">{idx + 1}</span>
+                          </div>
                         </div>
+                        
                         {account.col1 && (
-                          <div className="space-y-2">
-                            <p className="text-xs text-muted-foreground uppercase tracking-[0.2em] font-medium">Τράπεζα</p>
-                            <p className="text-3xl font-serif text-foreground tracking-tight">{account.col1}</p>
+                          <div className="space-y-3">
+                            <p className="text-xs text-muted-foreground uppercase tracking-[0.3em] font-medium">Τράπεζα</p>
+                            <p className="text-4xl font-script text-accent italic tracking-tight">{account.col1}</p>
                           </div>
                         )}
                       </div>
+                      
                       {account.col2 && (
-                        <div className="space-y-2 md:text-right bg-muted/50 rounded-xl p-6">
-                          <p className="text-xs text-muted-foreground uppercase tracking-[0.2em] font-medium">IBAN</p>
-                          <p className="text-xl font-mono text-foreground/90 tracking-wider">{account.col2}</p>
+                        <div className="relative space-y-3 md:text-right">
+                          <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-primary/5 rounded-2xl blur-sm" />
+                          <div className="relative bg-muted/60 backdrop-blur-sm border border-accent/20 rounded-2xl p-8">
+                            <p className="text-xs text-muted-foreground uppercase tracking-[0.3em] font-medium mb-3">IBAN</p>
+                            <p className="text-xl font-mono text-foreground/90 tracking-wider">{account.col2}</p>
+                          </div>
                         </div>
                       )}
                     </div>
@@ -300,24 +480,62 @@ export default function WeddingInvitation({ invitation }: WeddingInvitationProps
         </section>
       )}
 
-      {/* Contact Information Section - Elegant */}
+      {/* Contact Information Section - Romantic */}
       {data.contactInfo && (
-        <section className="relative py-32 bg-gradient-to-b from-background via-secondary-light/30 to-background">
-          <div className="max-w-4xl mx-auto px-6">
-            <div className="text-center mb-20 space-y-6">
-              <div className="inline-flex items-center gap-4 mb-6">
-                <div className="h-px w-20 bg-gradient-to-r from-transparent to-secondary" />
-                <Heart className="w-6 h-6 text-secondary" />
-                <div className="h-px w-20 bg-gradient-to-l from-transparent to-secondary" />
+        <section className="relative py-40 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-b from-background via-secondary-light/40 to-background" />
+          <div className="absolute inset-0 opacity-10 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImhlYXJ0cyIgeD0iMCIgeT0iMCIgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48Y2lyY2xlIGN4PSI0MCIgY3k9IjQwIiByPSIxLjUiIGZpbGw9IiNmMWM0YzQiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjaGVhcnRzKSIvPjwvc3ZnPg==')]" />
+          
+          <div className="relative max-w-4xl mx-auto px-6">
+            <div className="text-center mb-24 space-y-8">
+              <div className="inline-flex items-center gap-6 mb-8">
+                <div className="h-px w-24 bg-gradient-to-r from-transparent via-secondary to-transparent" />
+                <Heart className="w-8 h-8 text-secondary fill-secondary/20 animate-pulse" />
+                <div className="h-px w-24 bg-gradient-to-l from-transparent via-secondary to-transparent" />
               </div>
-              <h2 className="font-serif text-6xl text-foreground tracking-tight">Στοιχεία Επικοινωνίας</h2>
-              <p className="text-muted-foreground text-lg font-light">Για οποιαδήποτε πληροφορία</p>
+              
+              <h2 className="font-script text-7xl text-secondary tracking-tight italic">Στοιχεία Επικοινωνίας</h2>
+              
+              <p className="text-foreground/70 text-xl font-light tracking-wide">
+                Για οποιαδήποτε πληροφορία, είμαστε στη διάθεσή σας
+              </p>
+              
+              <div className="flex items-center justify-center gap-4 pt-4">
+                <div className="w-2 h-2 rounded-full bg-secondary/30" />
+                <div className="w-3 h-3 rounded-full bg-secondary/40" />
+                <div className="w-2 h-2 rounded-full bg-secondary/30" />
+              </div>
             </div>
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-secondary/10 to-primary/10 rounded-3xl blur-2xl" />
-              <div className="relative bg-card/90 backdrop-blur-sm border-2 border-border/30 rounded-3xl shadow-elegant p-16 hover:shadow-xl transition-all duration-500">
+            
+            <div className="relative group">
+              {/* Glowing backdrop */}
+              <div className="absolute inset-0 bg-gradient-to-br from-secondary/15 via-primary/10 to-accent/15 rounded-[2rem] blur-3xl group-hover:blur-[60px] transition-all duration-700" />
+              
+              {/* Decorative ornate corners */}
+              <div className="absolute -top-6 -left-6 w-16 h-16">
+                <svg viewBox="0 0 100 100" className="w-full h-full text-secondary/30">
+                  <path d="M0,50 Q25,25 50,0 M0,50 Q25,75 50,100" stroke="currentColor" strokeWidth="2" fill="none"/>
+                </svg>
+              </div>
+              <div className="absolute -top-6 -right-6 w-16 h-16 scale-x-[-1]">
+                <svg viewBox="0 0 100 100" className="w-full h-full text-secondary/30">
+                  <path d="M0,50 Q25,25 50,0 M0,50 Q25,75 50,100" stroke="currentColor" strokeWidth="2" fill="none"/>
+                </svg>
+              </div>
+              <div className="absolute -bottom-6 -left-6 w-16 h-16 scale-y-[-1]">
+                <svg viewBox="0 0 100 100" className="w-full h-full text-secondary/30">
+                  <path d="M0,50 Q25,25 50,0 M0,50 Q25,75 50,100" stroke="currentColor" strokeWidth="2" fill="none"/>
+                </svg>
+              </div>
+              <div className="absolute -bottom-6 -right-6 w-16 h-16 scale-[-1]">
+                <svg viewBox="0 0 100 100" className="w-full h-full text-secondary/30">
+                  <path d="M0,50 Q25,25 50,0 M0,50 Q25,75 50,100" stroke="currentColor" strokeWidth="2" fill="none"/>
+                </svg>
+              </div>
+              
+              <div className="relative bg-card/95 backdrop-blur-xl border-2 border-secondary/20 rounded-[2rem] shadow-romantic p-20 group-hover:shadow-[0_35px_90px_-25px_hsl(340_45%_75%/0.35)] transition-all duration-700">
                 <div 
-                  className="prose prose-lg max-w-none text-center [&>p]:text-foreground/80 [&>p]:leading-loose [&>p]:text-xl [&>p]:mb-6 [&>h1]:font-serif [&>h2]:font-serif [&>h3]:font-serif [&>p]:font-light [&>p]:tracking-wide"
+                  className="prose prose-xl max-w-none text-center [&>p]:text-foreground/80 [&>p]:leading-loose [&>p]:text-2xl [&>p]:mb-8 [&>h1]:font-script [&>h1]:italic [&>h2]:font-script [&>h2]:italic [&>h3]:font-serif [&>p]:font-light [&>p]:tracking-wide"
                   dangerouslySetInnerHTML={{ __html: data.contactInfo }}
                 />
               </div>
