@@ -140,7 +140,7 @@ export default function AdminDashboard() {
             <TabsTrigger value="users">Χρήστες</TabsTrigger>
             <TabsTrigger value="subscriptions">Συνδρομές</TabsTrigger>
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
-            <TabsTrigger value="my-subscription">Η Συνδρομή μου</TabsTrigger>
+            <TabsTrigger value="my-subscription">Δοκιμή Πλάνων</TabsTrigger>
           </TabsList>
 
           <TabsContent value="users" className="mt-6">
@@ -148,7 +148,7 @@ export default function AdminDashboard() {
           </TabsContent>
 
           <TabsContent value="subscriptions" className="mt-6">
-            <SubscriptionsManagement />
+            <SubscriptionsManagement onUpdate={loadDashboardStats} />
           </TabsContent>
 
           <TabsContent value="analytics" className="mt-6">
