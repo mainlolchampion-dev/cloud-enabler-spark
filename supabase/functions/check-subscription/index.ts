@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import Stripe from "https://esm.sh/stripe@18.5.0";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
+import Stripe from "https://esm.sh/stripe@14.21.0";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -17,15 +17,7 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
-  // Create client with ANON key for authentication
-  const supabaseAuth = createClient(
-    Deno.env.get("SUPABASE_URL") ?? "",
-    Deno.env.get("SUPABASE_ANON_KEY") ?? "",
-    { auth: { persistSession: false } }
-  );
-
-  // Create client with SERVICE_ROLE key for database queries
-  const supabaseAdmin = createClient(
+  const supabaseClient = createClient(
     Deno.env.get("SUPABASE_URL") ?? "",
     Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
     { auth: { persistSession: false } }
@@ -45,39 +37,124 @@ serve(async (req) => {
     const token = authHeader.replace("Bearer ", "");
     logStep("Authenticating user with token");
     
-    const { data: userData, error: userError } = await supabaseAuth.auth.getUser(token);
+    const { data: userData, error: userError } = await supabaseClient.auth.getUser(token);
     if (userError) throw new Error(`Authentication error: ${userError.message}`);
     const user = userData.user;
     if (!user?.email) throw new Error("User not authenticated or email not available");
     logStep("User authenticated", { userId: user.id, email: user.email });
 
-    // Check database first for active subscription using admin client
-    const { data: dbSub } = await supabaseAdmin
-      .from("user_subscriptions")
-      .select("*")
-      .eq("user_id", user.id)
-      .eq("status", "active")
-      .single();
+    const stripe = new Stripe(stripeKey, { apiVersion: "2023-10-16" });
+    const customers = await stripe.customers.list({ email: user.email, limit: 1 });
+    
+    if (customers.data.length === 0) {
+      logStep("No customer found, updating unsubscribed state");
+      
+      // Update or create subscription record as inactive
+      const { error: upsertError } = await supabaseClient
+        .from('user_subscriptions')
+        .upsert({
+          user_id: user.id,
+          plan_type: 'basic',
+          status: 'active',
+          stripe_customer_id: null,
+          stripe_subscription_id: null,
+          expires_at: null,
+        }, {
+          onConflict: 'user_id'
+        });
 
-    if (dbSub) {
-      logStep("Found active subscription in database", { planType: dbSub.plan_type });
-      return new Response(JSON.stringify({
-        subscribed: true,
-        plan_type: dbSub.plan_type,
-        status: dbSub.status,
-        subscription_end: dbSub.expires_at
+      if (upsertError) {
+        logStep("Error updating subscription", { error: upsertError.message });
+      }
+
+      return new Response(JSON.stringify({ 
+        subscribed: false,
+        plan_type: 'basic'
       }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 200,
       });
     }
 
-    logStep("No active subscription found");
-    
-    return new Response(JSON.stringify({ 
-      subscribed: false,
-      plan_type: null,
-      status: "inactive"
+    const customerId = customers.data[0].id;
+    logStep("Found Stripe customer", { customerId });
+
+    const subscriptions = await stripe.subscriptions.list({
+      customer: customerId,
+      status: "active",
+      limit: 1,
+    });
+    const hasActiveSub = subscriptions.data.length > 0;
+    let planType = 'basic';
+    let subscriptionEnd = null;
+    let stripeSubscriptionId = null;
+
+    if (hasActiveSub) {
+      const subscription = subscriptions.data[0];
+      stripeSubscriptionId = subscription.id;
+      subscriptionEnd = new Date(subscription.current_period_end * 1000).toISOString();
+      logStep("Active subscription found", { subscriptionId: subscription.id, endDate: subscriptionEnd });
+      
+      // Get the price ID to determine plan type
+      const priceId = subscription.items.data[0].price.id;
+      logStep("Price ID", { priceId });
+      
+      // Map price IDs to plan types
+      if (priceId === "price_1SHSVmKs4zHW11Kq4sC36tyT") {
+        planType = 'basic';
+      } else if (priceId === "price_1SHSWTKs4zHW11KqQSrpFt2r") {
+        planType = 'plus';
+      } else if (priceId === "price_1SHSWgKs4zHW11Kq48weQSt8") {
+        planType = 'premium';
+      }
+      
+      logStep("Determined plan type", { planType });
+
+      // Update subscription in database
+      const { error: updateError } = await supabaseClient
+        .from('user_subscriptions')
+        .upsert({
+          user_id: user.id,
+          plan_type: planType,
+          status: 'active',
+          stripe_customer_id: customerId,
+          stripe_subscription_id: stripeSubscriptionId,
+          expires_at: subscriptionEnd,
+        }, {
+          onConflict: 'user_id'
+        });
+
+      if (updateError) {
+        logStep("Error updating subscription", { error: updateError.message });
+      } else {
+        logStep("Subscription updated successfully");
+      }
+    } else {
+      logStep("No active subscription found");
+      
+      // Update subscription as inactive
+      const { error: updateError } = await supabaseClient
+        .from('user_subscriptions')
+        .upsert({
+          user_id: user.id,
+          plan_type: 'basic',
+          status: 'active',
+          stripe_customer_id: customerId,
+          stripe_subscription_id: null,
+          expires_at: null,
+        }, {
+          onConflict: 'user_id'
+        });
+
+      if (updateError) {
+        logStep("Error updating subscription", { error: updateError.message });
+      }
+    }
+
+    return new Response(JSON.stringify({
+      subscribed: hasActiveSub,
+      plan_type: planType,
+      subscription_end: subscriptionEnd
     }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
