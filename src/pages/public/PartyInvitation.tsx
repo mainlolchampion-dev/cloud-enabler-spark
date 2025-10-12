@@ -1,6 +1,5 @@
-import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getInvitation } from "@/lib/invitationStorage";
+import { BaseInvitation } from "@/lib/invitationStorage";
 import { getEvents } from "@/lib/eventsStorage";
 import { getGiftItems } from "@/lib/giftRegistryStorage";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
@@ -13,49 +12,27 @@ import { CountdownTimer } from "@/components/CountdownTimer";
 import partyHeroSample from "@/assets/party-hero-sample.jpg";
 import "leaflet/dist/leaflet.css";
 
-export default function PartyInvitation() {
-  const { id } = useParams();
-  const [invitation, setInvitation] = useState<any>(null);
+interface PartyInvitationProps {
+  invitation: BaseInvitation;
+}
+
+export default function PartyInvitation({ invitation }: PartyInvitationProps) {
   const [events, setEvents] = useState<any[]>([]);
   const [giftItems, setGiftItems] = useState<any[]>([]);
 
   useEffect(() => {
-    const fetchInvitation = async () => {
-      if (id) {
-        const data = await getInvitation(id);
-        if (data && data.type === 'party') {
-          setInvitation(data);
-          
-          const eventsData = await getEvents(id);
-          setEvents(eventsData);
-          
-          const giftsData = await getGiftItems(id);
-          setGiftItems(giftsData);
-          
-          document.title = data.title;
-        }
-      }
+    const fetchData = async () => {
+      const eventsData = await getEvents(invitation.id);
+      setEvents(eventsData);
+      
+      const giftsData = await getGiftItems(invitation.id);
+      setGiftItems(giftsData);
+      
+      document.title = invitation.title;
     };
     
-    fetchInvitation();
-  }, [id]);
-
-  if (!invitation) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background p-6">
-        <div className="text-center space-y-6 max-w-md">
-          <PartyPopper className="w-16 h-16 mx-auto text-muted-foreground" />
-          <h1 className="font-serif text-4xl text-foreground">Η πρόσκληση δεν βρέθηκε</h1>
-          <p className="text-muted-foreground">
-            Αυτή η πρόσκληση δεν υπάρχει ή έχει διαγραφεί.
-          </p>
-          <Button onClick={() => window.location.href = '/'} size="lg">
-            Επιστροφή στην Αρχική
-          </Button>
-        </div>
-      </div>
-    );
-  }
+    fetchData();
+  }, [invitation.id, invitation.title]);
 
   const data = invitation.data;
   const formattedDate = data.partyDate 
@@ -335,7 +312,7 @@ export default function PartyInvitation() {
             Πες μας αν έρχεσαι!
           </p>
         </div>
-        <RSVPForm invitationId={id!} invitationType="party" invitationTitle={data.title} />
+        <RSVPForm invitationId={invitation.id} invitationType="party" invitationTitle={data.title} />
       </section>
 
       {/* Footer - Elegant */}

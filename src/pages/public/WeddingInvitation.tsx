@@ -1,6 +1,5 @@
-import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getInvitation } from "@/lib/invitationStorage";
+import { BaseInvitation } from "@/lib/invitationStorage";
 import { getEvents } from "@/lib/eventsStorage";
 import { getGiftItems } from "@/lib/giftRegistryStorage";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
@@ -13,51 +12,29 @@ import { CountdownTimer } from "@/components/CountdownTimer";
 import weddingHeroSample from "@/assets/wedding-hero-sample.jpg";
 import "leaflet/dist/leaflet.css";
 
-export default function WeddingInvitation() {
-  const { id } = useParams();
-  const [invitation, setInvitation] = useState<any>(null);
+interface WeddingInvitationProps {
+  invitation: BaseInvitation;
+}
+
+export default function WeddingInvitation({ invitation }: WeddingInvitationProps) {
   const [events, setEvents] = useState<any[]>([]);
   const [giftItems, setGiftItems] = useState<any[]>([]);
   const [activeTab, setActiveTab] = useState<'map' | 'satellite'>('map');
 
   useEffect(() => {
-    const fetchInvitation = async () => {
-      if (id) {
-        const data = await getInvitation(id);
-        if (data && data.type === 'wedding') {
-          setInvitation(data);
-          
-          const [eventsData, giftsData] = await Promise.all([
-            getEvents(id),
-            getGiftItems(id)
-          ]);
-          setEvents(eventsData);
-          setGiftItems(giftsData.filter(item => !item.purchased));
-          
-          document.title = data.title;
-        }
-      }
+    const fetchData = async () => {
+      const [eventsData, giftsData] = await Promise.all([
+        getEvents(invitation.id),
+        getGiftItems(invitation.id)
+      ]);
+      setEvents(eventsData);
+      setGiftItems(giftsData.filter(item => !item.purchased));
+      
+      document.title = invitation.title;
     };
     
-    fetchInvitation();
-  }, [id]);
-
-  if (!invitation) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background p-6">
-        <div className="text-center space-y-6 max-w-md">
-          <Heart className="w-16 h-16 mx-auto text-muted-foreground" />
-          <h1 className="font-serif text-4xl text-foreground">Η πρόσκληση δεν βρέθηκε</h1>
-          <p className="text-muted-foreground">
-            Αυτή η πρόσκληση δεν υπάρχει ή έχει διαγραφεί.
-          </p>
-          <Button onClick={() => window.location.href = '/'} size="lg">
-            Επιστροφή στην Αρχική
-          </Button>
-        </div>
-      </div>
-    );
-  }
+    fetchData();
+  }, [invitation.id, invitation.title]);
 
   const data = invitation.data;
   const formattedDate = data.weddingDate 
@@ -404,7 +381,7 @@ export default function WeddingInvitation() {
             Θα χαρούμε πολύ να γιορτάσετε μαζί μας
           </p>
         </div>
-        <RSVPForm invitationId={id!} invitationType="wedding" invitationTitle={data.title} />
+        <RSVPForm invitationId={invitation.id} invitationType="wedding" invitationTitle={data.title} />
       </section>
 
       {/* Footer - Elegant */}

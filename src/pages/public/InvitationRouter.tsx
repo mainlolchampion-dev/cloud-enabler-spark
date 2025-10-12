@@ -50,15 +50,15 @@ export default function InvitationRouter() {
 
   // Render appropriate invitation type
   if (invitation.type === 'wedding') {
-    return <WeddingInvitation />;
+    return <WeddingInvitation invitation={invitation} />;
   }
   
   if (invitation.type === 'baptism') {
-    return <BaptismInvitation />;
+    return <BaptismInvitation invitation={invitation} />;
   }
   
   if (invitation.type === 'party') {
-    return <PartyInvitation />;
+    return <PartyInvitation invitation={invitation} />;
   }
 
   return (
