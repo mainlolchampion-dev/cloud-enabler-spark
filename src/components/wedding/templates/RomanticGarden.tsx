@@ -138,62 +138,8 @@ export function RomanticGarden({ invitation, events, giftItems, onOpenDirections
         </section>
       </AnimatedSection>
 
-      {/* Gift Section */}
-      {giftItems && giftItems.length > 0 && (
-        <AnimatedSection animation="fadeInUp" delay={250}>
-          <section>
-            <h2 className="text-3xl font-script text-primary text-center mb-12">Λίστα Γάμου</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
-              {giftItems.map((gift) => (
-                <div key={gift.id} className="bg-background rounded-xl p-4 shadow-lg border border-primary/10 hover-lift">
-                  <div className="flex items-center gap-4">
-                    <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                      <Gift className="w-6 h-6 text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold">{gift.name}</h3>
-                      <p className="text-muted-foreground text-sm">{gift.description}</p>
-                      <a href={gift.url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline block mt-2">
-                        Αγορά
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-        </AnimatedSection>
-      )}
-      
-      {/* Seating Chart */}
-      {data.seatingChart && (
-        <AnimatedSection animation="fadeInUp" delay={275}>
-          <section>
-            <h2 className="text-3xl font-script text-primary text-center mb-12">
-              Κατανομή Θέσεων
-            </h2>
-            <SeatingDisplay seatingChart={data.seatingChart} />
-          </section>
-        </AnimatedSection>
-      )}
-      
-      {/* Add to Calendar */}
-      {data.weddingDate && (
-        <AnimatedSection animation="fadeInScale" delay={280}>
-          <section className="max-w-2xl mx-auto">
-            <div className="bg-gradient-to-br from-primary/5 to-accent/5 rounded-2xl p-8 shadow-lg border border-primary/10">
-              <AddToCalendar event={{
-                title: `${data.groomName} & ${data.brideName} Wedding`,
-                description: data.invitationText || 'Wedding Celebration',
-                location: data.receptionLocation || data.churchLocation || 'Various Locations',
-                startTime: data.weddingDate,
-                endTime: data.weddingDate,
-              }} />
-            </div>
-          </section>
-        </AnimatedSection>
-      )}
-      
+      <GeometricDivider style="elegant" color="#f4a7b9" className="my-16" />
+
       {/* Countdown Timer */}
       {data.weddingDate && (
         <AnimatedSection animation="fadeInScale" delay={300}>
