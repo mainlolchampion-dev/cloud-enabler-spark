@@ -99,8 +99,14 @@ export const useSubscription = () => {
   const [loading, setLoading] = useState(true);
 
   const fetchSubscription = useCallback(async () => {
-    if (!user) return;
+    if (!user) {
+      setSubscription(null);
+      setLoading(false);
+      return;
+    }
  
+    setLoading(true);
+    
     try {
       // CRITICAL: Always get fresh session before calling edge function
       const { data: { session } } = await supabase.auth.getSession();
@@ -128,15 +134,18 @@ export const useSubscription = () => {
           status: data.status,
           expires_at: data.subscription_end,
         });
+        
+        // CRITICAL: Set subscription and loading together to prevent race conditions
         setSubscription({
           plan_type: data.plan_type,
           status: data.status,
           expires_at: data.subscription_end,
         });
+        setLoading(false);
       } else {
         console.log("No active subscription found");
-        // No active subscription
         setSubscription(null);
+        setLoading(false);
       }
     } catch (error) {
       console.error("Error fetching subscription:", error);
@@ -163,7 +172,6 @@ export const useSubscription = () => {
         console.error("Error fetching from database:", dbError);
         setSubscription(null);
       }
-    } finally {
       setLoading(false);
     }
   }, [user]);
