@@ -17,7 +17,7 @@ const plans = [
     features: [
       "5 επαγγελματικά θέματα",
       "Φόρμα RSVP",
-      "Email επιβεβαίωσεις",
+      "Email επιβεβαιώσεις",
       "Γκαλερί φωτογραφιών",
       "Add-to-Calendar (.ics)",
       "Εξαγωγή CSV/Excel",

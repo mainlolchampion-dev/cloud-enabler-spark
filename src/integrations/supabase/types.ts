@@ -232,36 +232,77 @@ export type Database = {
           created_at: string
           data: Json
           id: string
+          password: string | null
           published_at: string | null
           status: string
           title: string
           type: string
           updated_at: string
           user_id: string
+          webhook_url: string | null
         }
         Insert: {
           created_at?: string
           data?: Json
           id?: string
+          password?: string | null
           published_at?: string | null
           status?: string
           title: string
           type: string
           updated_at?: string
           user_id: string
+          webhook_url?: string | null
         }
         Update: {
           created_at?: string
           data?: Json
           id?: string
+          password?: string | null
           published_at?: string | null
           status?: string
           title?: string
           type?: string
           updated_at?: string
           user_id?: string
+          webhook_url?: string | null
         }
         Relationships: []
+      }
+      live_photo_wall: {
+        Row: {
+          created_at: string
+          id: string
+          invitation_id: string
+          photo_url: string
+          uploaded_at: string
+          uploaded_by: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          invitation_id: string
+          photo_url: string
+          uploaded_at?: string
+          uploaded_by: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          invitation_id?: string
+          photo_url?: string
+          uploaded_at?: string
+          uploaded_by?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "live_photo_wall_invitation_id_fkey"
+            columns: ["invitation_id"]
+            isOneToOne: false
+            referencedRelation: "invitations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       rsvps: {
         Row: {

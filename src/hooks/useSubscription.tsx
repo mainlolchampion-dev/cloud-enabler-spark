@@ -12,7 +12,7 @@ const PLAN_LIMITS = {
   basic: {
     maxInvitations: 1,
     maxGuests: 50,
-    // Basic Features
+    // Basic Features - ENABLED
     themes: 5,
     rsvpForm: true,
     emailConfirmations: true,
@@ -41,7 +41,7 @@ const PLAN_LIMITS = {
     maxInvitations: 5,
     maxGuests: Infinity,
     // Basic Features - ALL ENABLED
-    themes: 5,
+    themes: 10,
     rsvpForm: true,
     emailConfirmations: true,
     photoGallery: true,

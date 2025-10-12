@@ -1,25 +1,18 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Camera, Upload, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { uploadImageToSupabase } from "@/lib/imageUpload";
 
 interface LivePhotoWallProps {
   invitationId: string;
   isPublic?: boolean;
 }
 
-interface GuestPhoto {
-  id: string;
-  url: string;
-  uploaded_by: string;
-  uploaded_at: string;
-}
-
 export const LivePhotoWall = ({ invitationId, isPublic = false }: LivePhotoWallProps) => {
-  const [photos, setPhotos] = useState<GuestPhoto[]>([]);
+  const [photos, setPhotos] = useState<any[]>([]);
   const [uploading, setUploading] = useState(false);
   const [guestName, setGuestName] = useState("");
   const { toast } = useToast();
@@ -68,7 +61,7 @@ export const LivePhotoWall = ({ invitationId, isPublic = false }: LivePhotoWallP
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (!isPublic && !guestName) {
+    if (isPublic && !guestName) {
       toast({
         title: "Απαιτείται Όνομα",
         description: "Παρακαλώ εισάγετε το όνομά σας πριν ανεβάσετε φωτογραφία.",
@@ -79,14 +72,26 @@ export const LivePhotoWall = ({ invitationId, isPublic = false }: LivePhotoWallP
 
     setUploading(true);
     try {
-      const imageUrl = await uploadImageToSupabase(file, 'gallery');
+      // Upload to Supabase Storage
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${invitationId}/${Date.now()}.${fileExt}`;
+      
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from('gallery')
+        .upload(fileName, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('gallery')
+        .getPublicUrl(fileName);
       
       const { error } = await supabase
         .from('live_photo_wall')
         .insert({
           invitation_id: invitationId,
-          photo_url: imageUrl,
-          uploaded_by: guestName || 'Καλεσμένος',
+          photo_url: publicUrl,
+          uploaded_by: isPublic ? (guestName || 'Καλεσμένος') : 'Διαχειριστής',
         });
 
       if (error) throw error;
@@ -97,6 +102,7 @@ export const LivePhotoWall = ({ invitationId, isPublic = false }: LivePhotoWallP
       });
       
       e.target.value = '';
+      if (isPublic) setGuestName('');
     } catch (error) {
       console.error('Upload error:', error);
       toast({
@@ -142,48 +148,47 @@ export const LivePhotoWall = ({ invitationId, isPublic = false }: LivePhotoWallP
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Upload Section */}
-        {isPublic && (
-          <div className="space-y-3">
-            <input
+        <div className="space-y-3">
+          {isPublic && (
+            <Input
               type="text"
               placeholder="Το όνομά σας"
               value={guestName}
               onChange={(e) => setGuestName(e.target.value)}
-              className="w-full px-3 py-2 border rounded-md"
             />
-            <div className="flex gap-2">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleFileUpload}
+          )}
+          <div className="flex gap-2">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileUpload}
+              disabled={uploading}
+              className="hidden"
+              id="photo-upload"
+            />
+            <label htmlFor="photo-upload" className="flex-1">
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full"
                 disabled={uploading}
-                className="hidden"
-                id="photo-upload"
-              />
-              <label htmlFor="photo-upload" className="flex-1">
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-full"
-                  disabled={uploading}
-                  asChild
-                >
-                  <span>
-                    <Upload className="w-4 h-4 mr-2" />
-                    {uploading ? "Ανέβασμα..." : "Ανέβασμα Φωτογραφίας"}
-                  </span>
-                </Button>
-              </label>
-            </div>
+                asChild
+              >
+                <span>
+                  <Upload className="w-4 h-4 mr-2" />
+                  {uploading ? "Ανέβασμα..." : "Ανέβασμα Φωτογραφίας"}
+                </span>
+              </Button>
+            </label>
           </div>
-        )}
+        </div>
 
         {/* Photos Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {photos.map((photo) => (
             <div key={photo.id} className="relative group aspect-square">
               <img
-                src={photo.url}
+                src={photo.photo_url}
                 alt={`Από ${photo.uploaded_by}`}
                 className="w-full h-full object-cover rounded-lg"
               />
@@ -209,7 +214,11 @@ export const LivePhotoWall = ({ invitationId, isPublic = false }: LivePhotoWallP
           <div className="text-center py-12 text-muted-foreground">
             <Camera className="w-12 h-12 mx-auto mb-3 opacity-50" />
             <p>Δεν υπάρχουν φωτογραφίες ακόμα</p>
-            <p className="text-sm">Οι καλεσμένοι μπορούν να ανεβάσουν φωτογραφίες εδώ!</p>
+            <p className="text-sm">
+              {isPublic 
+                ? "Ανεβάστε τις πρώτες φωτογραφίες από την εκδήλωση!"
+                : "Οι καλεσμένοι μπορούν να ανεβάσουν φωτογραφίες εδώ!"}
+            </p>
           </div>
         )}
       </CardContent>

@@ -78,11 +78,38 @@ export function RSVPForm({ invitationId, invitationType, invitationTitle }: RSVP
       try {
         const { data: invitation } = await supabase
           .from('invitations')
-          .select('user_id')
+          .select('user_id, webhook_url')
           .eq('id', invitationId)
           .single();
 
         if (invitation?.user_id) {
+          // Send webhook if configured (Plus/Premium feature)
+          if (invitation.webhook_url) {
+            try {
+              await fetch(invitation.webhook_url, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                mode: "no-cors",
+                body: JSON.stringify({
+                  event: "rsvp_created",
+                  invitation_id: invitationId,
+                  rsvp: {
+                    name: formData.name,
+                    email: formData.email,
+                    will_attend: formData.willAttend,
+                    number_of_guests: parseInt(formData.numberOfGuests),
+                  },
+                  timestamp: new Date().toISOString(),
+                }),
+              });
+              console.log('✅ Webhook triggered');
+            } catch (webhookError) {
+              console.error('⚠️ Webhook failed:', webhookError);
+            }
+          }
+
           const { data: subscription } = await supabase
             .from('user_subscriptions')
             .select('plan_type')
