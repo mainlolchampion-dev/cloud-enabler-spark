@@ -202,16 +202,27 @@ export const useSubscription = () => {
   }, [user, fetchSubscription]);
 
   const canCreateInvitation = async () => {
-    if (!user || !subscription) return false;
+    console.log("canCreateInvitation called:", { hasUser: !!user, hasSubscription: !!subscription, planType: subscription?.plan_type });
+    
+    if (!user || !subscription) {
+      console.log("canCreateInvitation: No user or subscription");
+      return false;
+    }
 
     const limits = PLAN_LIMITS[subscription.plan_type];
-    if (limits.maxInvitations === Infinity) return true;
+    console.log("canCreateInvitation: Plan limits:", { planType: subscription.plan_type, maxInvitations: limits.maxInvitations });
+    
+    if (limits.maxInvitations === Infinity) {
+      console.log("canCreateInvitation: Unlimited invitations (Infinity)");
+      return true;
+    }
 
     const { count } = await supabase
       .from("invitations")
       .select("*", { count: "exact", head: true })
       .eq("user_id", user.id);
 
+    console.log("canCreateInvitation: Current count:", count, "Limit:", limits.maxInvitations);
     return (count || 0) < limits.maxInvitations;
   };
 
