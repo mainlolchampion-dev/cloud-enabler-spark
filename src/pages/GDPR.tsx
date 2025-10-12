@@ -1,26 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Heart, ArrowLeft, Shield, Download, Trash2, Eye, Edit } from "lucide-react";
+import { Shield, Download, Trash2, Eye, Edit } from "lucide-react";
 import { Link } from "react-router-dom";
+import PageHeader from "@/components/layout/PageHeader";
 
 const GDPR = () => {
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b bg-white/80 backdrop-blur-md sticky top-0 z-50">
-        <div className="container mx-auto px-6 py-5 flex justify-between items-center">
-          <Link to="/" className="flex items-center gap-3">
-            <Heart className="h-7 w-7 text-primary" fill="currentColor" />
-            <span className="font-serif text-2xl font-semibold text-foreground tracking-tight">WediLink</span>
-          </Link>
-          <Link to="/">
-            <Button variant="ghost" className="gap-2">
-              <ArrowLeft className="h-4 w-4" />
-              Επιστροφή
-            </Button>
-          </Link>
-        </div>
-      </header>
+      <PageHeader />
 
       {/* Hero Section */}
       <section className="py-16 bg-gradient-to-br from-primary/10 via-background to-secondary/10">

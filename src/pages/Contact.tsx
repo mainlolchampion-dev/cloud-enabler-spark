@@ -3,12 +3,13 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Heart, ArrowLeft, Mail, Phone, MapPin, Send, MessageCircle, Clock } from "lucide-react";
+import { Mail, Phone, MapPin, Send, MessageCircle, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { z } from "zod";
+import PageHeader from "@/components/layout/PageHeader";
 
 const contactSchema = z.object({
   name: z.string().trim().min(1, "Το όνομα είναι υποχρεωτικό").max(100, "Το όνομα πρέπει να είναι έως 100 χαρακτήρες"),
@@ -99,21 +100,7 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b bg-white/80 backdrop-blur-md sticky top-0 z-50">
-        <div className="container mx-auto px-6 py-5 flex justify-between items-center">
-          <Link to="/" className="flex items-center gap-3">
-            <Heart className="h-7 w-7 text-primary" fill="currentColor" />
-            <span className="font-serif text-2xl font-semibold text-foreground tracking-tight">WediLink</span>
-          </Link>
-          <Link to="/">
-            <Button variant="ghost" className="gap-2">
-              <ArrowLeft className="h-4 w-4" />
-              Επιστροφή
-            </Button>
-          </Link>
-        </div>
-      </header>
+      <PageHeader />
 
       {/* Hero Section */}
       <section className="py-16 bg-gradient-to-br from-primary/10 via-background to-secondary/10">

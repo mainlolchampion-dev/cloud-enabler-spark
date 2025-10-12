@@ -29,6 +29,7 @@ import GuestManagement from "./pages/GuestManagement";
 import SeatingManagement from "./pages/SeatingManagement";
 import GiftRegistryManagement from "./pages/GiftRegistryManagement";
 import EventsTimelineManagement from "./pages/EventsTimelineManagement";
+import ScrollToTop from "./components/ScrollToTop";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <ScrollToTop />
         <Routes>
           {/* Public routes without sidebar */}
           <Route path="/" element={<Home />} />
