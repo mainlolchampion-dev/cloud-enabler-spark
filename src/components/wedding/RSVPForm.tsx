@@ -54,7 +54,7 @@ export function RSVPForm({ invitationId, invitationType, invitationTitle }: RSVP
         message: formData.message,
       });
 
-      // Send confirmation email
+      // Send confirmation email to guest
       try {
         await supabase.functions.invoke('send-rsvp-confirmation', {
           body: {
@@ -68,9 +68,31 @@ export function RSVPForm({ invitationId, invitationType, invitationTitle }: RSVP
             invitationType,
           },
         });
-        console.log('✅ Confirmation email sent');
+        console.log('✅ Confirmation email sent to guest');
       } catch (emailError) {
-        console.error('⚠️ Email sending failed:', emailError);
+        console.error('⚠️ Guest email sending failed:', emailError);
+        // Don't fail the RSVP if email fails
+      }
+
+      // Send notification email to invitation owner
+      try {
+        await supabase.functions.invoke('send-rsvp-notification', {
+          body: {
+            invitationId,
+            guestName: formData.name,
+            guestEmail: formData.email,
+            guestPhone: formData.phone,
+            willAttend: formData.willAttend,
+            numberOfGuests: parseInt(formData.numberOfGuests),
+            dietaryRestrictions: formData.dietaryRestrictions,
+            message: formData.message,
+            invitationTitle,
+            invitationType,
+          },
+        });
+        console.log('✅ Notification email sent to owner');
+      } catch (emailError) {
+        console.error('⚠️ Owner notification email failed:', emailError);
         // Don't fail the RSVP if email fails
       }
 
