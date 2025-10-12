@@ -11,6 +11,8 @@ export interface BaseInvitation {
   createdAt: string;
   updatedAt: string;
   publishedAt?: string;
+  password?: string;
+  webhookUrl?: string;
   data: any;
 }
 
@@ -46,6 +48,8 @@ export async function getInvitationsIndex(): Promise<BaseInvitation[]> {
     createdAt: inv.created_at,
     updatedAt: inv.updated_at,
     publishedAt: inv.published_at || undefined,
+    password: inv.password || undefined,
+    webhookUrl: inv.webhook_url || undefined,
     data: inv.data,
   }));
 }
@@ -170,6 +174,8 @@ export async function getInvitation(id: string): Promise<BaseInvitation | null> 
     createdAt: data.created_at,
     updatedAt: data.updated_at,
     publishedAt: data.published_at || undefined,
+    password: data.password || undefined,
+    webhookUrl: data.webhook_url || undefined,
     data: data.data,
   };
 }

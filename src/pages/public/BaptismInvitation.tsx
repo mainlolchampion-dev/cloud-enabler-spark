@@ -11,6 +11,7 @@ import { RSVPForm } from "@/components/wedding/RSVPForm";
 import { CountdownTimer } from "@/components/CountdownTimer";
 import { AddToCalendar } from "@/components/wedding/AddToCalendar";
 import { LivePhotoWall } from "@/components/wedding/LivePhotoWall";
+import { PasswordProtection } from "@/components/wedding/PasswordProtection";
 import baptismHeroSample from "@/assets/baptism-hero-sample.jpg";
 
 interface BaptismInvitationProps {
@@ -41,344 +42,269 @@ export default function BaptismInvitation({ invitation }: BaptismInvitationProps
     ? format(new Date(data.baptismDate), "EEEE, d MMMM yyyy", { locale: el })
     : "";
 
-  const addToCalendar = () => {
-    const event = [
-      'BEGIN:VCALENDAR',
-      'VERSION:2.0',
-      'BEGIN:VEVENT',
-      `DTSTART:${data.baptismDate.replace(/-/g, '')}T${data.baptismTime.replace(/:/g, '')}00`,
-      `SUMMARY:Βάπτιση ${data.childName}`,
-      `LOCATION:${data.churchLocation}`,
-      'END:VEVENT',
-      'END:VCALENDAR'
-    ].join('\n');
-    
-    const blob = new Blob([event], { type: 'text/calendar' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'baptism.ics';
-    link.click();
-  };
-
   const openDirections = (position: [number, number]) => {
     window.open(`https://www.google.com/maps/dir/?api=1&destination=${position[0]},${position[1]}`, '_blank');
   };
 
-  return (
-    <div className="min-h-screen bg-background">
-      {/* Hero Section - Premium & Elegant */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        <div 
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${data.mainImage || baptismHeroSample})` }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/50 to-black/60" />
-        </div>
-        
-        <div className="relative z-10 text-center text-white px-6 max-w-5xl mx-auto">
-          <div className="space-y-8 animate-fade-in">
-            <Sparkles className="w-16 h-16 mx-auto opacity-90" />
-            <p className="text-sm tracking-[0.4em] uppercase font-light">Πρόσκληση Βάπτισης</p>
-            <h1 className="font-serif text-7xl md:text-9xl font-light leading-tight">
-              Η Βάπτιση
-            </h1>
-            {data.childName && (
-              <p className="text-4xl md:text-5xl font-serif opacity-95">{data.childName}</p>
-            )}
-          </div>
-        </div>
-        
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-          <div className="w-8 h-12 border-2 border-white/50 rounded-full flex items-start justify-center p-2">
-            <div className="w-1.5 h-3 bg-white/50 rounded-full" />
-          </div>
+  const invitationContent = (
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
+      {/* Hero Section */}
+      <section className="relative">
+        <img
+          src={data.heroImage || baptismHeroSample}
+          alt="Baptism Celebration"
+          className="w-full rounded-lg shadow-lg object-cover aspect-[16/9]"
+        />
+        <div className="absolute inset-0 bg-black/20 rounded-lg"></div>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white font-serif text-center">
+            {data.title}
+          </h1>
         </div>
       </section>
-
-      {/* Countdown Timer */}
-      {data.baptismDate && (
-        <section className="py-24 bg-gradient-to-b from-card to-background">
-          <CountdownTimer targetDate={data.baptismDate} targetTime={data.baptismTime} />
-        </section>
-      )}
 
       {/* Invitation Text */}
       {data.invitationText && (
-        <section className="max-w-3xl mx-auto px-6 py-32">
-          <div 
-            className="prose prose-lg max-w-none text-center [&>p]:text-foreground/70 [&>p]:leading-loose [&>p]:text-lg [&>p]:mb-8 [&>h1]:font-serif [&>h2]:font-serif [&>h3]:font-serif"
-            dangerouslySetInnerHTML={{ __html: data.invitationText }}
-          />
+        <section className="prose max-w-none text-center">
+          <div dangerouslySetInnerHTML={{ __html: data.invitationText }} />
         </section>
       )}
 
-      {/* Child Details - Refined */}
-      {data.childName && (
-        <section className="py-32 bg-muted/20">
-          <div className="max-w-5xl mx-auto px-6 text-center space-y-10">
-            {data.childPhoto && (
-              <div className="relative w-80 h-80 mx-auto overflow-hidden rounded-full shadow-2xl group">
-                <img 
-                  src={data.childPhoto} 
-                  alt={data.childName} 
-                  className="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-500"
-                />
-              </div>
-            )}
-            <h2 className="font-serif text-6xl text-foreground">{data.childName}</h2>
-          </div>
-        </section>
-      )}
-
-      {/* Godparents - Elegant Grid */}
-      {data.godparents && data.godparents.length > 0 && (
-        <section className="max-w-6xl mx-auto px-6 py-32">
-          <h2 className="font-serif text-5xl text-center mb-20 text-foreground">Ανάδοχοι</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-12">
-            {data.godparents.map((godparent: any, idx: number) => (
-              <div key={idx} className="text-center space-y-6 group">
-                {godparent.col2 && (
-                  <div className="w-40 h-40 mx-auto rounded-full overflow-hidden shadow-xl">
-                    <img 
-                      src={godparent.col2} 
-                      alt={godparent.col1} 
-                      className="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-500"
-                    />
-                  </div>
-                )}
-                <p className="font-medium text-lg text-foreground">{godparent.col1}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* Date & Time - Premium Card */}
-      <section className="max-w-5xl mx-auto px-6 py-32 bg-muted/20">
-        <div className="bg-card border border-border/50 rounded-2xl shadow-xl p-16 text-center space-y-10">
-          <div className="w-16 h-16 mx-auto bg-secondary/10 rounded-full flex items-center justify-center">
-            <Sparkles className="w-8 h-8 text-secondary" />
-          </div>
-          <h2 className="font-serif text-5xl text-foreground">Ημερομηνία & Ώρα</h2>
-          <div className="h-px bg-border/50 w-32 mx-auto" />
-          <p className="text-3xl capitalize text-muted-foreground font-light">{formattedDate}</p>
-          <div className="flex items-center justify-center gap-3 text-2xl text-foreground/80">
-            <Clock className="w-6 h-6" />
-            <span className="font-light">{data.baptismTime}</span>
-          </div>
-          <Button onClick={addToCalendar} size="lg" className="mt-8 h-14 px-10 text-base">
-            <Calendar className="w-5 h-5 mr-2" />
-            Προσθήκη στο Ημερολόγιο
-          </Button>
-        </div>
-      </section>
-
-      {/* Church Location - Elegant Map Section */}
-      {data.churchPosition && (
-        <section className="max-w-7xl mx-auto px-6 py-32">
-          <div className="text-center mb-16 space-y-4">
-            <h2 className="font-serif text-5xl text-foreground">Εκκλησία</h2>
-            <p className="text-2xl text-muted-foreground font-light">{data.churchLocation}</p>
-          </div>
-          
-          <div className="space-y-6">
-            <div className="flex justify-center gap-3">
-              <Button 
-                variant={activeTab === 'map' ? 'default' : 'outline'}
-                onClick={() => setActiveTab('map')}
-                className="h-12 px-8"
-              >
-                Χάρτης
-              </Button>
-              <Button 
-                variant={activeTab === 'satellite' ? 'default' : 'outline'}
-                onClick={() => setActiveTab('satellite')}
-                className="h-12 px-8"
-              >
-                Δορυφόρος
-              </Button>
-            </div>
-            
-            <div className="h-[500px] rounded-2xl overflow-hidden shadow-2xl border border-border/50">
-              <MapDisplay 
-                position={data.churchPosition}
-                locationName={data.churchLocation}
-                mapType={activeTab}
-              />
-            </div>
-            
-            <div className="text-center">
-              <Button onClick={() => openDirections(data.churchPosition)} size="lg" variant="outline" className="h-14 px-10">
-                <MapPin className="w-5 h-5 mr-2" />
-                Οδηγίες Πλοήγησης
-              </Button>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Reception */}
-      {data.receptionLocation && data.receptionPosition && (
-        <section className="max-w-7xl mx-auto px-6 py-32 bg-muted/20">
-          <div className="text-center mb-16 space-y-4">
-            <h2 className="font-serif text-5xl text-foreground">Δεξίωση</h2>
-            <p className="text-2xl text-muted-foreground font-light">{data.receptionLocation}</p>
-          </div>
-          
-          <div className="h-[500px] rounded-2xl overflow-hidden shadow-2xl border border-border/50">
-            <MapDisplay 
-              position={data.receptionPosition}
-              locationName={data.receptionLocation}
+      {/* Child's Details */}
+      <section className="text-center">
+        <div className="space-y-4">
+          <div className="relative inline-block">
+            <img
+              src={data.childPhoto || '/boy-sample.png'}
+              alt="Child's Photo"
+              className="rounded-full w-48 h-48 object-cover shadow-md border-4 border-white"
             />
           </div>
-          
-          <div className="text-center mt-8">
-            <Button onClick={() => openDirections(data.receptionPosition)} size="lg" variant="outline" className="h-14 px-10">
-              <MapPin className="w-5 h-5 mr-2" />
-              Οδηγίες Πλοήγησης
-            </Button>
-          </div>
-        </section>
-      )}
-
-      {/* Events Timeline - Premium Design */}
-      {events && events.length > 0 && (
-        <section className="max-w-5xl mx-auto px-6 py-32">
-          <h2 className="font-serif text-5xl text-center mb-20 text-foreground">Πρόγραμμα Εκδήλωσης</h2>
-          <div className="space-y-6">
-            {events.map((event, idx) => (
-              <div key={event.id} className="bg-card border border-border/50 rounded-xl shadow-lg p-10 hover:shadow-xl transition-shadow">
-                <div className="flex items-start gap-8">
-                  <div className="bg-secondary/10 text-secondary rounded-full w-16 h-16 flex items-center justify-center flex-shrink-0 font-serif text-2xl">
-                    {idx + 1}
-                  </div>
-                  <div className="flex-1 space-y-4">
-                    <h3 className="text-3xl font-serif text-foreground">{event.eventName}</h3>
-                    {event.eventDescription && (
-                      <p className="text-muted-foreground text-lg leading-relaxed">{event.eventDescription}</p>
-                    )}
-                    <div className="flex flex-wrap gap-6 text-base">
-                      <div className="flex items-center gap-2 text-foreground/70">
-                        <Calendar className="w-5 h-5 text-secondary" />
-                        <span>{format(new Date(event.eventDate), "d MMMM yyyy", { locale: el })}</span>
-                      </div>
-                      {event.eventTime && (
-                        <div className="flex items-center gap-2 text-foreground/70">
-                          <Clock className="w-5 h-5 text-secondary" />
-                          <span>{event.eventTime}</span>
-                        </div>
-                      )}
-                      {event.locationName && (
-                        <div className="flex items-center gap-2 text-foreground/70">
-                          <MapPin className="w-5 h-5 text-secondary" />
-                          <span>{event.locationName}</span>
-                        </div>
-                      )}
-                    </div>
-                    {event.locationLat && event.locationLng && (
-                      <Button 
-                        variant="outline" 
-                        size="default"
-                        className="mt-4"
-                        onClick={() => window.open(`https://www.google.com/maps/dir/?api=1&destination=${event.locationLat},${event.locationLng}`, '_blank')}
-                      >
-                        <MapPin className="w-4 h-4 mr-2" />
-                        Οδηγίες
-                      </Button>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* Gift Registry - Elegant Cards */}
-      {giftItems && giftItems.length > 0 && (
-        <section className="max-w-7xl mx-auto px-6 py-32 bg-muted/20">
-          <div className="text-center mb-20 space-y-4">
-            <Gift className="w-12 h-12 mx-auto text-secondary" />
-            <h2 className="font-serif text-5xl text-foreground">Λίστα Δώρων</h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {giftItems.map((item) => (
-              <div key={item.id} className="bg-card border border-border/50 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all group">
-                {item.imageUrl && (
-                  <div className="relative h-56 overflow-hidden bg-muted">
-                    <img 
-                      src={item.imageUrl} 
-                      alt={item.itemName} 
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                  </div>
-                )}
-                <div className="p-8 space-y-4">
-                  <h3 className="text-2xl font-serif text-foreground">{item.itemName}</h3>
-                  {item.itemDescription && (
-                    <p className="text-muted-foreground leading-relaxed">{item.itemDescription}</p>
-                  )}
-                  {item.price && (
-                    <p className="text-2xl font-semibold text-secondary">{item.price}€</p>
-                  )}
-                  {item.storeUrl && (
-                    <Button 
-                      variant="outline" 
-                      className="w-full h-12"
-                      onClick={() => window.open(item.storeUrl, '_blank')}
-                    >
-                      <ExternalLink className="w-4 h-4 mr-2" />
-                      Δες στο {item.storeName || 'Κατάστημα'}
-                    </Button>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* Gallery - Premium Grid */}
-      {data.gallery && data.gallery.length > 0 && (
-        <section className="max-w-7xl mx-auto px-6 py-32">
-          <h2 className="font-serif text-5xl text-center mb-20 text-foreground">Φωτογραφίες</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {data.gallery.map((img: any) => (
-              <div key={img.id} className="aspect-square overflow-hidden rounded-xl shadow-lg group">
-                <img 
-                  src={img.url} 
-                  alt="" 
-                  className="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 group-hover:scale-110 transition-all duration-500"
-                  loading="lazy"
-                />
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* RSVP Section - Premium */}
-      <section className="max-w-5xl mx-auto px-6 py-32 bg-muted/20">
-        <div className="text-center mb-16 space-y-6">
-          <div className="w-16 h-16 mx-auto bg-secondary/10 rounded-full flex items-center justify-center">
-            <Sparkles className="w-8 h-8 text-secondary" />
-          </div>
-          <h2 className="font-serif text-6xl text-foreground">Επιβεβαίωση Παρουσίας</h2>
-          <p className="text-xl text-muted-foreground font-light max-w-2xl mx-auto leading-relaxed">
-            Θα χαρούμε πολύ να γιορτάσετε μαζί μας αυτή την ξεχωριστή στιγμή
+          <h2 className="text-3xl font-semibold font-serif">{data.childName}</h2>
+          <p className="text-lg text-muted-foreground">
+            {data.childTitle || 'With joy, we invite you to celebrate the baptism of our child'}
           </p>
         </div>
-        <RSVPForm invitationId={invitation.id} invitationType="baptism" invitationTitle={data.title} />
       </section>
 
-      {/* Footer - Elegant */}
-      <footer className="bg-card border-t border-border/50 py-16">
-        <div className="max-w-5xl mx-auto px-6 text-center space-y-6">
-          <Sparkles className="w-10 h-10 mx-auto text-secondary/50" />
-          <p className="font-serif text-4xl text-foreground/80">{data.childName}</p>
+      {/* Event Details */}
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Baptism Event */}
+        <div className="flex items-start gap-4">
+          <Calendar className="w-6 h-6 text-primary" />
+          <div>
+            <h3 className="text-xl font-semibold">Βάπτιση</h3>
+            <p className="text-muted-foreground">
+              {formattedDate}
+              {data.baptismTime && `, ${data.baptismTime}`}
+            </p>
+            <p className="text-muted-foreground">{data.churchLocation}</p>
+            {data.churchPosition && (
+              <Button variant="link" onClick={() => openDirections(data.churchPosition)}>
+                <MapPin className="w-4 h-4 mr-2" />
+                Οδηγίες
+              </Button>
+            )}
+            {data.baptismDate && data.baptismTime && (
+              <AddToCalendar
+                title="Baptism Ceremony"
+                startTime={new Date(`${data.baptismDate}T${data.baptismTime}`)}
+                location={data.churchLocation}
+                description={data.title}
+              />
+            )}
+          </div>
         </div>
+
+        {/* Party Event */}
+        {data.receptionLocation && (
+          <div className="flex items-start gap-4">
+            <PartyPopper className="w-6 h-6 text-primary" />
+            <div>
+              <h3 className="text-xl font-semibold">Δεξίωση</h3>
+              <p className="text-muted-foreground">{data.receptionLocation}</p>
+              {data.receptionPosition && (
+                <Button variant="link" onClick={() => openDirections(data.receptionPosition)}>
+                  <MapPin className="w-4 h-4 mr-2" />
+                  Οδηγίες
+                </Button>
+              )}
+            </div>
+          </div>
+        )}
+      </section>
+
+      {/* Countdown Timer */}
+      {(data.baptismDate && data.baptismTime) && (
+        <section>
+          <h2 className="text-2xl font-semibold font-serif text-center mb-6">Μετράμε αντίστροφα για τη μεγάλη μέρα!</h2>
+          <CountdownTimer targetDate={`${data.baptismDate}T${data.baptismTime}`} />
+        </section>
+      )}
+
+      {/* Map Section */}
+      {(data.churchPosition || data.receptionPosition) && (
+        <section>
+          <h2 className="text-2xl font-semibold font-serif text-center mb-6">
+            {data.churchPosition && data.receptionPosition
+              ? "Τοποθεσίες"
+              : "Τοποθεσία"}
+          </h2>
+          <div className="relative w-full aspect-video rounded-lg overflow-hidden shadow-lg border border-muted/20">
+            <MapDisplay
+              churchPosition={data.churchPosition}
+              receptionPosition={data.receptionPosition}
+            />
+          </div>
+          <div className="mt-4 flex justify-center gap-4">
+            {data.churchPosition && (
+              <Button variant="outline" onClick={() => openDirections(data.churchPosition)}>
+                <MapPin className="w-4 h-4 mr-2" />
+                Οδηγίες για την Εκκλησία
+              </Button>
+            )}
+            {data.receptionPosition && (
+              <Button variant="outline" onClick={() => openDirections(data.receptionPosition)}>
+                <MapPin className="w-4 h-4 mr-2" />
+                Οδηγίες για τη Δεξίωση
+              </Button>
+            )}
+          </div>
+        </section>
+      )}
+
+      {/* Events Section */}
+      {events.length > 0 && (
+        <section>
+          <h2 className="text-2xl font-semibold font-serif text-center mb-6">Εκδηλώσεις</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {events.map((event) => (
+              <div key={event.id} className="bg-muted/5 rounded-lg p-4 shadow-sm">
+                <h3 className="text-lg font-semibold">{event.title}</h3>
+                <p className="text-muted-foreground">{event.description}</p>
+                {event.link && (
+                  <Button variant="link" asChild>
+                    <a href={event.link} target="_blank" rel="noopener noreferrer" className="mt-2">
+                      <ExternalLink className="w-4 h-4 mr-2" />
+                      Περισσότερα
+                    </a>
+                  </Button>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Gift Registry Section */}
+      {giftItems.length > 0 && (
+        <section>
+          <h2 className="text-2xl font-semibold font-serif text-center mb-6">Λίστα Δώρων</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {giftItems.map((gift) => (
+              <div key={gift.id} className="bg-muted/5 rounded-lg p-4 shadow-sm">
+                <h3 className="text-lg font-semibold">{gift.name}</h3>
+                <p className="text-muted-foreground">{gift.description}</p>
+                <div className="flex justify-between items-center mt-4">
+                  <span className="text-sm text-muted-foreground">Τιμή: {gift.price}€</span>
+                  <Button variant="link" asChild>
+                    <a href={gift.link} target="_blank" rel="noopener noreferrer">
+                      <Gift className="w-4 h-4 mr-2" />
+                      Αγορά
+                    </a>
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* RSVP Form */}
+      <section>
+        <h2 className="text-2xl font-semibold font-serif text-center mb-6">
+          Επιβεβαίωση Παρουσίας
+        </h2>
+        <RSVPForm invitationId={invitation.id} />
+      </section>
+
+      {/* Parents Section */}
+      {(data.parentsText || data.grandparentsText) && (
+        <section className="text-center">
+          {data.parentsText && (
+            <div className="mb-8">
+              <p className="text-lg">{data.parentsText}</p>
+            </div>
+          )}
+          {data.grandparentsText && (
+            <div>
+              <p className="text-lg">{data.grandparentsText}</p>
+            </div>
+          )}
+        </section>
+      )}
+
+      {/* Gallery Section */}
+      {data.gallery && data.gallery.length > 0 && (
+        <section>
+          <h2 className="text-2xl font-semibold font-serif text-center mb-6">Φωτογραφίες</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {data.gallery.map((image) => (
+              <img
+                key={image.id}
+                src={image.url}
+                alt="Gallery Image"
+                className="rounded-lg shadow-md object-cover aspect-square"
+              />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Contact Section */}
+      {data.contactInfo && (
+        <section>
+          <h2 className="text-2xl font-semibold font-serif text-center mb-6">Επικοινωνία</h2>
+          <div className="prose max-w-none text-center">
+            <div dangerouslySetInnerHTML={{ __html: data.contactInfo }} />
+          </div>
+        </section>
+      )}
+
+      {/* Wishes Section */}
+      {data.wishesText && (
+        <section>
+          <h2 className="text-2xl font-semibold font-serif text-center mb-6">Ευχές</h2>
+          <div className="prose max-w-none text-center">
+            <div dangerouslySetInnerHTML={{ __html: data.wishesText }} />
+          </div>
+        </section>
+      )}
+
+      {/* Footer Section */}
+      <footer className="text-center text-muted-foreground py-8">
+        Με χαρά σας περιμένουμε!
       </footer>
+
+      {/* Live Photo Wall */}
+      <section className="py-32">
+        <LivePhotoWall invitationId={invitation.id} isPublic />
+      </section>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-background">
+      {invitation.password ? (
+        <PasswordProtection
+          invitationId={invitation.id}
+          correctPassword={invitation.password}
+        >
+          {invitationContent}
+        </PasswordProtection>
+      ) : (
+        invitationContent
+      )}
     </div>
   );
 }

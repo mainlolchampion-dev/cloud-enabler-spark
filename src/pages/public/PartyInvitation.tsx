@@ -11,6 +11,7 @@ import { RSVPForm } from "@/components/wedding/RSVPForm";
 import { CountdownTimer } from "@/components/CountdownTimer";
 import { AddToCalendar } from "@/components/wedding/AddToCalendar";
 import { LivePhotoWall } from "@/components/wedding/LivePhotoWall";
+import { PasswordProtection } from "@/components/wedding/PasswordProtection";
 import partyHeroSample from "@/assets/party-hero-sample.jpg";
 
 interface PartyInvitationProps {
@@ -40,283 +41,212 @@ export default function PartyInvitation({ invitation }: PartyInvitationProps) {
     ? format(new Date(data.partyDate), "EEEE, d MMMM yyyy", { locale: el })
     : "";
 
-  const addToCalendar = () => {
-    const event = [
-      'BEGIN:VCALENDAR',
-      'VERSION:2.0',
-      'BEGIN:VEVENT',
-      `DTSTART:${data.partyDate.replace(/-/g, '')}T${data.partyTime.replace(/:/g, '')}00`,
-      `SUMMARY:${data.title}`,
-      `LOCATION:${data.venueLocation}`,
-      'END:VEVENT',
-      'END:VCALENDAR'
-    ].join('\n');
-    
-    const blob = new Blob([event], { type: 'text/calendar' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'party.ics';
-    link.click();
-  };
-
   const openDirections = (position: [number, number]) => {
     window.open(`https://www.google.com/maps/dir/?api=1&destination=${position[0]},${position[1]}`, '_blank');
   };
 
-  return (
-    <div className="min-h-screen bg-background">
-      {/* Hero Section - Premium & Energetic */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        <div 
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${data.mainImage || partyHeroSample})` }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/60 to-black/70" />
-        </div>
-        
-        <div className="relative z-10 text-center text-white px-6 max-w-5xl mx-auto">
-          <div className="space-y-10 animate-fade-in">
-            <PartyPopper className="w-20 h-20 mx-auto opacity-95" />
-            <h1 className="font-serif text-7xl md:text-9xl lg:text-[10rem] font-light leading-tight">
-              {data.title}
-            </h1>
-            {data.occasion && (
-              <p className="text-3xl md:text-4xl font-light opacity-90">{data.occasion}</p>
-            )}
-          </div>
-        </div>
-        
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-          <div className="w-8 h-12 border-2 border-white/50 rounded-full flex items-start justify-center p-2">
-            <div className="w-1.5 h-3 bg-white/50 rounded-full" />
-          </div>
+  const invitationContent = (
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
+      {/* Hero Section */}
+      <section className="relative">
+        <img
+          src={data.mainImage || partyHeroSample}
+          alt="Party Invitation"
+          className="w-full rounded-lg shadow-lg object-cover aspect-[16/9]"
+        />
+        <div className="absolute inset-0 bg-black/20 rounded-lg"></div>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <h1 className="text-white text-5xl font-bold font-serif text-center">
+            {data.title}
+          </h1>
         </div>
       </section>
+
+      {/* Invitation Text */}
+      <section className="text-center">
+        <div
+          className="text-gray-700 text-lg"
+          dangerouslySetInnerHTML={{ __html: data.invitationText }}
+        />
+      </section>
+
+      {/* Date and Time */}
+      {data.partyDate && data.partyTime && (
+        <section className="bg-muted/50 rounded-lg p-8">
+          <h2 className="text-2xl font-bold font-serif text-center mb-4">
+            <PartyPopper className="inline-block mr-2" size={30} />
+            Πληροφορίες
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="flex items-center justify-center">
+              <Calendar className="mr-2 text-primary" size={20} />
+              <span className="font-semibold">Ημερομηνία:</span> {formattedDate}
+            </div>
+            <div className="flex items-center justify-center">
+              <Clock className="mr-2 text-primary" size={20} />
+              <span className="font-semibold">Ώρα:</span> {data.partyTime}
+            </div>
+          </div>
+          <div className="mt-4 flex justify-center">
+            <AddToCalendar
+              title={data.title}
+              description={data.invitationText}
+              location={data.partyLocation}
+              startTime={new Date(`${data.partyDate}T${data.partyTime}`)}
+              endTime={new Date(`${data.partyDate}T${data.partyTime}`)}
+            />
+          </div>
+        </section>
+      )}
 
       {/* Countdown Timer */}
       {data.partyDate && (
-        <section className="py-24 bg-gradient-to-b from-card to-background">
-          <CountdownTimer targetDate={data.partyDate} targetTime={data.partyTime} />
+        <section>
+          <h2 className="text-2xl font-bold font-serif text-center mb-4">
+            Αντίστροφη Μέτρηση
+          </h2>
+          <CountdownTimer targetDate={new Date(data.partyDate)} />
         </section>
       )}
 
-      {/* Invitation Text */}
-      {data.invitationText && (
-        <section className="max-w-3xl mx-auto px-6 py-32">
-          <div 
-            className="prose prose-lg max-w-none text-center [&>p]:text-foreground/70 [&>p]:leading-loose [&>p]:text-lg [&>p]:mb-8 [&>h1]:font-serif [&>h2]:font-serif [&>h3]:font-serif"
-            dangerouslySetInnerHTML={{ __html: data.invitationText }}
+      {/* Location */}
+      {data.partyLocation && data.partyPosition && (
+        <section>
+          <h2 className="text-2xl font-bold font-serif text-center mb-4">
+            <MapPin className="inline-block mr-2" size={30} />
+            Τοποθεσία
+          </h2>
+          <p className="text-center">{data.partyLocation}</p>
+          <MapDisplay
+            locationName={data.partyLocation}
+            position={data.partyPosition}
+            activeTab={activeTab}
+            onChangeTab={(tab) => setActiveTab(tab)}
           />
-        </section>
-      )}
-
-      {/* Hosts - Refined Grid */}
-      {data.hosts && data.hosts.length > 0 && (
-        <section className="py-32 bg-muted/20">
-          <div className="max-w-6xl mx-auto px-6">
-            <h2 className="font-serif text-6xl text-center mb-20 text-foreground">Οργανωτές</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-12">
-              {data.hosts.map((host: any, idx: number) => (
-                <div key={idx} className="text-center space-y-6 group">
-                  {host.col2 && (
-                    <div className="relative w-44 h-44 mx-auto rounded-full overflow-hidden shadow-xl">
-                      <img 
-                        src={host.col2} 
-                        alt={host.col1} 
-                        className="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-500"
-                      />
-                    </div>
-                  )}
-                  <p className="font-semibold text-xl text-foreground">{host.col1}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Date & Time - Premium Card */}
-      <section className="max-w-5xl mx-auto px-6 py-32">
-        <div className="bg-card border border-border/50 rounded-2xl shadow-xl p-16 text-center space-y-10">
-          <div className="w-16 h-16 mx-auto bg-accent/10 rounded-full flex items-center justify-center">
-            <Calendar className="w-8 h-8 text-accent" />
-          </div>
-          <h2 className="font-serif text-5xl text-foreground">Πότε;</h2>
-          <div className="h-px bg-border/50 w-32 mx-auto" />
-          <p className="text-3xl capitalize text-muted-foreground font-light">{formattedDate}</p>
-          <div className="flex items-center justify-center gap-3 text-2xl text-foreground/80">
-            <Clock className="w-6 h-6" />
-            <span className="font-light">{data.partyTime}</span>
-          </div>
-          <Button onClick={addToCalendar} size="lg" className="mt-8 h-14 px-10 text-base">
-            <Calendar className="w-5 h-5 mr-2" />
-            Προσθήκη στο Ημερολόγιο
-          </Button>
-        </div>
-      </section>
-
-      {/* Location - Elegant Map Section */}
-      {data.venuePosition && (
-        <section className="max-w-7xl mx-auto px-6 py-32 bg-muted/20">
-          <div className="text-center mb-16 space-y-4">
-            <h2 className="font-serif text-5xl text-foreground">Που;</h2>
-            <p className="text-2xl text-muted-foreground font-light">{data.venueLocation}</p>
-          </div>
-          
-          <div className="h-[500px] rounded-2xl overflow-hidden shadow-2xl border border-border/50">
-            <MapDisplay 
-              position={data.venuePosition}
-              locationName={data.venueLocation}
-            />
-          </div>
-          
-          <div className="text-center mt-8">
-            <Button onClick={() => openDirections(data.venuePosition)} size="lg" variant="outline" className="h-14 px-10">
-              <MapPin className="w-5 h-5 mr-2" />
-              Οδηγίες Πλοήγησης
+          <div className="flex justify-center mt-4">
+            <Button onClick={() => openDirections(data.partyPosition!)} variant="outline">
+              <ExternalLink className="mr-2" size={20} />
+              Οδηγίες
             </Button>
           </div>
         </section>
       )}
 
-      {/* Events Timeline - Premium Design */}
-      {events && events.length > 0 && (
-        <section className="max-w-5xl mx-auto px-6 py-32">
-          <h2 className="font-serif text-5xl text-center mb-20 text-foreground">Πρόγραμμα</h2>
-          <div className="space-y-6">
-            {events.map((event, idx) => (
-              <div key={event.id} className="bg-card border border-border/50 rounded-xl shadow-lg p-10 hover:shadow-xl transition-shadow">
-                <div className="flex items-start gap-8">
-                  <div className="bg-accent/10 text-accent rounded-full w-16 h-16 flex items-center justify-center flex-shrink-0 font-serif text-2xl">
-                    {idx + 1}
-                  </div>
-                  <div className="flex-1 space-y-4">
-                    <h3 className="text-3xl font-serif text-foreground">{event.eventName}</h3>
-                    {event.eventDescription && (
-                      <p className="text-muted-foreground text-lg leading-relaxed">{event.eventDescription}</p>
-                    )}
-                    <div className="flex flex-wrap gap-6 text-base">
-                      <div className="flex items-center gap-2 text-foreground/70">
-                        <Calendar className="w-5 h-5 text-accent" />
-                        <span>{format(new Date(event.eventDate), "d MMMM yyyy", { locale: el })}</span>
-                      </div>
-                      {event.eventTime && (
-                        <div className="flex items-center gap-2 text-foreground/70">
-                          <Clock className="w-5 h-5 text-accent" />
-                          <span>{event.eventTime}</span>
-                        </div>
-                      )}
-                      {event.locationName && (
-                        <div className="flex items-center gap-2 text-foreground/70">
-                          <MapPin className="w-5 h-5 text-accent" />
-                          <span>{event.locationName}</span>
-                        </div>
-                      )}
-                    </div>
-                    {event.locationLat && event.locationLng && (
-                      <Button 
-                        variant="outline" 
-                        size="default"
-                        className="mt-4"
-                        onClick={() => window.open(`https://www.google.com/maps/dir/?api=1&destination=${event.locationLat},${event.locationLng}`, '_blank')}
-                      >
-                        <MapPin className="w-4 h-4 mr-2" />
-                        Οδηγίες
-                      </Button>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* Gift Registry - Elegant Cards */}
-      {giftItems && giftItems.length > 0 && (
-        <section className="max-w-7xl mx-auto px-6 py-32 bg-muted/20">
-          <div className="text-center mb-20 space-y-4">
-            <Gift className="w-12 h-12 mx-auto text-accent" />
-            <h2 className="font-serif text-5xl text-foreground">Λίστα Δώρων</h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {giftItems.map((item) => (
-              <div key={item.id} className="bg-card border border-border/50 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all group">
-                {item.imageUrl && (
-                  <div className="relative h-56 overflow-hidden bg-muted">
-                    <img 
-                      src={item.imageUrl} 
-                      alt={item.itemName} 
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                  </div>
+      {/* Events */}
+      {events.length > 0 && (
+        <section>
+          <h2 className="text-2xl font-bold font-serif text-center mb-4">
+            Εκδηλώσεις
+          </h2>
+          <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {events.map((event) => (
+              <li key={event.id} className="bg-white rounded-lg shadow-md p-4">
+                <h3 className="font-semibold text-lg">{event.title}</h3>
+                <p className="text-gray-600">{event.description}</p>
+                {event.date && (
+                  <p className="text-gray-500">
+                    <Calendar className="inline-block mr-1" size={16} />
+                    {format(new Date(event.date), "EEEE, d MMMM yyyy", { locale: el })}
+                  </p>
                 )}
-                <div className="p-8 space-y-4">
-                  <h3 className="text-2xl font-serif text-foreground">{item.itemName}</h3>
-                  {item.itemDescription && (
-                    <p className="text-muted-foreground leading-relaxed">{item.itemDescription}</p>
-                  )}
-                  {item.price && (
-                    <p className="text-2xl font-semibold text-accent">{item.price}€</p>
-                  )}
-                  {item.storeUrl && (
-                    <Button 
-                      variant="outline" 
-                      className="w-full h-12"
-                      onClick={() => window.open(item.storeUrl, '_blank')}
-                    >
-                      <ExternalLink className="w-4 h-4 mr-2" />
-                      Δες στο {item.storeName || 'Κατάστημα'}
-                    </Button>
-                  )}
-                </div>
-              </div>
+                {event.time && (
+                  <p className="text-gray-500">
+                    <Clock className="inline-block mr-1" size={16} />
+                    {event.time}
+                  </p>
+                )}
+              </li>
             ))}
-          </div>
+          </ul>
         </section>
       )}
 
-      {/* Gallery - Premium Grid */}
-      {data.gallery && data.gallery.length > 0 && (
-        <section className="max-w-7xl mx-auto px-6 py-32">
-          <h2 className="font-serif text-5xl text-center mb-20 text-foreground">Φωτογραφίες</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {data.gallery.map((img: any) => (
-              <div key={img.id} className="aspect-square overflow-hidden rounded-xl shadow-lg group">
-                <img 
-                  src={img.url} 
-                  alt="" 
-                  className="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 group-hover:scale-110 transition-all duration-500"
-                  loading="lazy"
-                />
-              </div>
+      {/* Gift Registry */}
+      {giftItems.length > 0 && (
+        <section>
+          <h2 className="text-2xl font-bold font-serif text-center mb-4">
+            <Gift className="inline-block mr-2" size={30} />
+            Λίστα Δώρων
+          </h2>
+          <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {giftItems.map((item) => (
+              <li key={item.id} className="bg-white rounded-lg shadow-md p-4">
+                <h3 className="font-semibold text-lg">{item.name}</h3>
+                <p className="text-gray-600">{item.description}</p>
+                <a
+                  href={item.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-500 hover:underline flex items-center"
+                >
+                  <ExternalLink className="inline-block mr-1" size={16} />
+                  Αγορά
+                </a>
+              </li>
             ))}
-          </div>
+          </ul>
         </section>
       )}
 
-      {/* RSVP Section - Premium */}
-      <section className="max-w-5xl mx-auto px-6 py-32 bg-muted/20">
-        <div className="text-center mb-16 space-y-6">
-          <div className="w-16 h-16 mx-auto bg-accent/10 rounded-full flex items-center justify-center">
-            <PartyPopper className="w-8 h-8 text-accent" />
-          </div>
-          <h2 className="font-serif text-6xl text-foreground">Επιβεβαίωση Παρουσίας</h2>
-          <p className="text-xl text-muted-foreground font-light max-w-2xl mx-auto leading-relaxed">
-            Πες μας αν έρχεσαι!
-          </p>
-        </div>
-        <RSVPForm invitationId={invitation.id} invitationType="party" invitationTitle={data.title} />
+      {/* RSVP Form */}
+      <section>
+        <h2 className="text-2xl font-bold font-serif text-center mb-4">
+          Επιβεβαίωση Παρουσίας
+        </h2>
+        <RSVPForm invitationId={invitation.id} />
       </section>
 
-      {/* Footer - Elegant */}
-      <footer className="bg-card border-t border-border/50 py-16">
-        <div className="max-w-5xl mx-auto px-6 text-center space-y-6">
-          <PartyPopper className="w-10 h-10 mx-auto text-accent/50" />
-          <p className="font-serif text-4xl text-foreground/80">{data.title}</p>
-        </div>
-      </footer>
+      {/* Contact Info */}
+      {data.contactInfo && (
+        <section>
+          <h2 className="text-2xl font-bold font-serif text-center mb-4">
+            Επικοινωνία
+          </h2>
+          <div
+            className="text-gray-700 text-center"
+            dangerouslySetInnerHTML={{ __html: data.contactInfo }}
+          />
+        </section>
+      )}
+
+      {/* Gallery */}
+      {data.gallery && data.gallery.length > 0 && (
+        <section>
+          <h2 className="text-2xl font-bold font-serif text-center mb-4">
+            Φωτογραφίες
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {data.gallery.map((image) => (
+              <img
+                key={image.id}
+                src={image.url}
+                alt="Gallery"
+                className="rounded-lg shadow-md"
+              />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Live Photo Wall */}
+      <section className="py-32 bg-muted/20">
+        <LivePhotoWall invitationId={invitation.id} isPublic />
+      </section>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-background">
+      {invitation.password ? (
+        <PasswordProtection
+          invitationId={invitation.id}
+          correctPassword={invitation.password}
+        >
+          {invitationContent}
+        </PasswordProtection>
+      ) : (
+        invitationContent
+      )}
     </div>
   );
 }

@@ -14,7 +14,9 @@ import { Plus } from "lucide-react";
 import { generateUUID, publishInvitation } from "@/lib/invitationStorage";
 import { ShareModal } from "@/components/wedding/ShareModal";
 import { PreviewModal } from "@/components/wedding/PreviewModal";
+import { WebhookIntegration } from "@/components/wedding/WebhookIntegration";
 import { supabase } from "@/integrations/supabase/client";
+import { Label } from "@/components/ui/label";
 
 interface WeddingData {
   title: string;
@@ -73,6 +75,8 @@ export default function AddWedding() {
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const [previewModalOpen, setPreviewModalOpen] = useState(false);
   const [publishedId, setPublishedId] = useState<string | null>(null);
+  const [webhookUrl, setWebhookUrl] = useState("");
+  const [password, setPassword] = useState("");
 
   useEffect(() => {
     if (isEditMode && id) {
@@ -105,6 +109,8 @@ export default function AddWedding() {
       
       if (invitation && invitation.data) {
         setData(invitation.data as unknown as WeddingData);
+        setWebhookUrl(invitation.webhook_url || "");
+        setPassword(invitation.password || "");
       }
       
       toast.success("Η πρόσκληση φορτώθηκε επιτυχώς");
@@ -187,6 +193,34 @@ export default function AddWedding() {
     setPreviewModalOpen(true);
   };
 
+  const handleWebhookSave = async (url: string) => {
+    if (!id) return;
+    
+    const { error } = await supabase
+      .from('invitations')
+      .update({ webhook_url: url })
+      .eq('id', id);
+
+    if (error) throw error;
+    setWebhookUrl(url);
+  };
+
+  const handlePasswordSave = async () => {
+    if (!id) return;
+    
+    const { error } = await supabase
+      .from('invitations')
+      .update({ password: password || null })
+      .eq('id', id);
+
+    if (error) {
+      toast.error("Σφάλμα αποθήκευσης κωδικού");
+      return;
+    }
+    
+    toast.success("Ο κωδικός αποθηκεύτηκε");
+  };
+
   const handlePublish = async () => {
     if (!validateData()) return;
     
@@ -195,6 +229,17 @@ export default function AddWedding() {
       console.log('🎯 Starting publish process:', { invitationId, isEditMode, title: data.title });
       
       await publishInvitation(invitationId, data, 'wedding', data.title);
+
+      // Update webhook and password
+      if (webhookUrl || password) {
+        await supabase
+          .from('invitations')
+          .update({ 
+            webhook_url: webhookUrl || null,
+            password: password || null
+          })
+          .eq('id', invitationId);
+      }
       
       if (!isEditMode) {
         // Clear draft only for new invitations

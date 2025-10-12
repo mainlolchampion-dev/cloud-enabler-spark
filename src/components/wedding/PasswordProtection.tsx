@@ -7,17 +7,18 @@ import { useToast } from "@/hooks/use-toast";
 
 interface PasswordProtectionProps {
   correctPassword: string;
-  onSuccess: () => void;
+  children: React.ReactNode;
   title?: string;
 }
 
 export const PasswordProtection = ({ 
   correctPassword, 
-  onSuccess,
+  children,
   title = "Προστατευμένη Πρόσκληση"
 }: PasswordProtectionProps) => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -26,7 +27,7 @@ export const PasswordProtection = ({
 
     setTimeout(() => {
       if (password === correctPassword) {
-        onSuccess();
+        setIsAuthenticated(true);
         toast({
           title: "Επιτυχία!",
           description: "Καλώς ήρθατε!",
@@ -41,6 +42,10 @@ export const PasswordProtection = ({
       setLoading(false);
     }, 500);
   };
+
+  if (isAuthenticated) {
+    return <>{children}</>;
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-primary/5 p-4">
