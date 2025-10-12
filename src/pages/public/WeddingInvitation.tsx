@@ -198,6 +198,7 @@ export default function WeddingInvitation({ invitation }: WeddingInvitationProps
             
             <div className="h-[500px] rounded-2xl overflow-hidden shadow-2xl border border-border/50">
               <MapContainer
+                key={`church-${activeTab}`}
                 center={data.churchPosition}
                 zoom={15}
                 style={{ height: '100%', width: '100%' }}
@@ -234,6 +235,7 @@ export default function WeddingInvitation({ invitation }: WeddingInvitationProps
           
           <div className="h-[500px] rounded-2xl overflow-hidden shadow-2xl border border-border/50">
             <MapContainer
+              key="reception-map"
               center={data.receptionPosition}
               zoom={15}
               style={{ height: '100%', width: '100%' }}

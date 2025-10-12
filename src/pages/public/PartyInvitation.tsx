@@ -165,6 +165,7 @@ export default function PartyInvitation({ invitation }: PartyInvitationProps) {
           
           <div className="h-[500px] rounded-2xl overflow-hidden shadow-2xl border border-border/50">
             <MapContainer
+              key="venue-map"
               center={data.venuePosition}
               zoom={15}
               style={{ height: '100%', width: '100%' }}
