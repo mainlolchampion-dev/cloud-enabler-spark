@@ -17,7 +17,7 @@ import { ThemeProvider } from "@/components/wedding/ThemeProvider";
 import { MusicPlayer } from "@/components/wedding/MusicPlayer";
 import { FallingParticles } from "@/components/wedding/animations/FallingParticles";
 import { AnimatedSection } from "@/components/wedding/animations/AnimatedSection";
-import { getThemeById } from "@/config/invitationThemes";
+import { TemplateRouter } from "@/components/wedding/templates/TemplateRouter";
 import weddingHeroSample from "@/assets/wedding-hero-sample.jpg";
 
 interface WeddingInvitationProps {
@@ -77,15 +77,17 @@ export default function WeddingInvitation({ invitation }: WeddingInvitationProps
         />
       )}
       
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
-      {/* Hero Section */}
-      <AnimatedSection animation="fadeInUp">
-        <section className="relative hover-zoom">
-          <img
-            src={data.mainImage || weddingHeroSample}
-            alt="Wedding Invitation"
-            className="w-full rounded-lg shadow-xl object-cover aspect-video"
-          />
+      <TemplateRouter
+        invitation={invitation}
+        events={events}
+        giftItems={giftItems}
+        onOpenDirections={openDirections}
+      />
+    </>
+  );
+
+  return (
+    <ThemeProvider themeId={invitation.theme || 'romantic'}>
           <div className="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black/80 to-transparent text-white rounded-b-lg">
             <h1 className="text-3xl font-bold font-serif drop-shadow-md">{data.title}</h1>
           </div>
@@ -318,14 +320,6 @@ export default function WeddingInvitation({ invitation }: WeddingInvitationProps
         <Heart className="w-12 h-12 text-red-500 mx-auto mb-4" />
         <p className="text-lg">Με αγάπη και χαρά, σας περιμένουμε!</p>
       </section>
-
-      {/* Live Photo Wall */}
-      <section className="py-32">
-        <LivePhotoWall invitationId={invitation.id} isPublic />
-      </section>
-    </div>
-    </>
-  );
 
   return (
     <ThemeProvider themeId={invitation.theme || 'romantic'}>
