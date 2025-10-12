@@ -1,9 +1,13 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getInvitation } from "@/lib/invitationStorage";
+import { getEvents } from "@/lib/eventsStorage";
+import { getGiftItems } from "@/lib/giftRegistryStorage";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { Button } from "@/components/ui/button";
-import { Calendar, MapPin, Share2, Heart, Phone } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Calendar, MapPin, Share2, Heart, Phone, Clock, ExternalLink, Gift } from "lucide-react";
 import { format } from "date-fns";
 import { el } from "date-fns/locale";
 import { RSVPForm } from "@/components/wedding/RSVPForm";
@@ -16,6 +20,8 @@ import "leaflet/dist/leaflet.css";
 export default function WeddingInvitation() {
   const { id } = useParams();
   const [invitation, setInvitation] = useState<any>(null);
+  const [events, setEvents] = useState<any[]>([]);
+  const [giftItems, setGiftItems] = useState<any[]>([]);
   const [activeTab, setActiveTab] = useState<'map' | 'satellite'>('map');
 
   useEffect(() => {
@@ -27,6 +33,14 @@ export default function WeddingInvitation() {
         if (data && data.type === 'wedding') {
           console.log('Wedding data:', data.data);
           setInvitation(data);
+          
+          // Load events and gifts
+          const [eventsData, giftsData] = await Promise.all([
+            getEvents(id),
+            getGiftItems(id)
+          ]);
+          setEvents(eventsData);
+          setGiftItems(giftsData.filter(item => !item.purchased));
           
           // Set OpenGraph meta tags
           document.title = data.title;
@@ -380,6 +394,115 @@ export default function WeddingInvitation() {
                   loading="lazy"
                 />
               </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Events Timeline */}
+      {events.length > 0 && (
+        <section className="max-w-4xl mx-auto px-4 py-16 bg-gradient-to-br from-primary/5 via-background to-secondary/5">
+          <h2 className="font-serif text-4xl text-center mb-12 text-primary">Πρόγραμμα Εκδηλώσεων</h2>
+          <div className="space-y-6">
+            {events.map((event, index) => (
+              <Card key={event.id} className="p-6 hover:shadow-xl transition-shadow">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold flex-shrink-0">
+                    {index + 1}
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-2xl font-bold mb-2">{event.eventName}</h3>
+                    {event.eventDescription && (
+                      <p className="text-muted-foreground mb-3">{event.eventDescription}</p>
+                    )}
+                    <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
+                      <div className="flex items-center gap-2">
+                        <Calendar className="w-4 h-4" />
+                        <span>{format(new Date(event.eventDate), "EEEE, d MMMM yyyy", { locale: el })}</span>
+                      </div>
+                      {event.eventTime && (
+                        <div className="flex items-center gap-2">
+                          <Clock className="w-4 h-4" />
+                          <span>{event.eventTime}</span>
+                        </div>
+                      )}
+                      {event.locationName && (
+                        <div className="flex items-center gap-2">
+                          <MapPin className="w-4 h-4" />
+                          <span>{event.locationName}</span>
+                        </div>
+                      )}
+                    </div>
+                    {event.locationLat && event.locationLng && (
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="mt-4"
+                        onClick={() => window.open(`https://www.google.com/maps?q=${event.locationLat},${event.locationLng}`, '_blank')}
+                      >
+                        <MapPin className="w-4 h-4 mr-2" />
+                        Οδηγίες
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Gift Registry */}
+      {giftItems.length > 0 && (
+        <section className="max-w-6xl mx-auto px-4 py-16">
+          <div className="text-center mb-12">
+            <Gift className="w-16 h-16 mx-auto text-primary mb-4" />
+            <h2 className="font-serif text-4xl mb-4 text-primary">Λίστα Δώρων</h2>
+            <p className="text-lg text-muted-foreground">
+              Αν επιθυμείτε να μας προσφέρετε κάποιο δώρο, εδώ θα βρείτε μερικές ιδέες
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {giftItems.map((item) => (
+              <Card key={item.id} className="overflow-hidden hover:shadow-xl transition-shadow">
+                {item.imageUrl && (
+                  <div className="w-full h-48 bg-muted overflow-hidden">
+                    <img
+                      src={item.imageUrl}
+                      alt={item.itemName}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
+                <div className="p-6">
+                  <h3 className="font-semibold text-xl mb-2">{item.itemName}</h3>
+                  {item.itemDescription && (
+                    <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
+                      {item.itemDescription}
+                    </p>
+                  )}
+                  {item.price && (
+                    <p className="text-2xl font-bold text-primary mb-3">
+                      €{item.price.toFixed(2)}
+                    </p>
+                  )}
+                  {item.storeName && (
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-muted-foreground">{item.storeName}</span>
+                      {item.storeUrl && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => window.open(item.storeUrl, '_blank')}
+                        >
+                          <ExternalLink className="w-4 h-4 mr-2" />
+                          Δείτε
+                        </Button>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </Card>
             ))}
           </div>
         </section>

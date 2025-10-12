@@ -15,6 +15,8 @@ export default function Dashboard() {
     baptisms: 0,
     parties: 0,
     totalRSVPs: 0,
+    totalGuests: 0,
+    confirmedGuests: 0,
   });
   const [loading, setLoading] = useState(true);
 
@@ -37,14 +39,33 @@ export default function Dashboard() {
       // Get total RSVPs count
       const { data: { user } } = await supabase.auth.getUser();
       let totalRSVPs = 0;
+      let totalGuests = 0;
+      let confirmedGuests = 0;
       
       if (user) {
-        const { count } = await supabase
+        const { count: rsvpCount } = await supabase
           .from('rsvps')
           .select('*', { count: 'exact', head: true })
           .in('invitation_id', invitations.map(inv => inv.id));
         
-        totalRSVPs = count || 0;
+        totalRSVPs = rsvpCount || 0;
+        
+        // Get guests count
+        const { count: guestsCount } = await supabase
+          .from('guests')
+          .select('*', { count: 'exact', head: true })
+          .in('invitation_id', invitations.map(inv => inv.id));
+        
+        totalGuests = guestsCount || 0;
+        
+        // Get confirmed RSVPs
+        const { count: confirmedCount } = await supabase
+          .from('rsvps')
+          .select('*', { count: 'exact', head: true })
+          .eq('will_attend', 'yes')
+          .in('invitation_id', invitations.map(inv => inv.id));
+        
+        confirmedGuests = confirmedCount || 0;
       }
       
       setStats({
@@ -53,6 +74,8 @@ export default function Dashboard() {
         baptisms,
         parties,
         totalRSVPs,
+        totalGuests,
+        confirmedGuests,
       });
     } catch (error) {
       console.error('Error loading stats:', error);
@@ -122,7 +145,21 @@ export default function Dashboard() {
           </Card>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <Card>
+            <CardHeader>
+              <CardTitle>Συνολικοί Καλεσμένοι</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-4xl font-bold mb-2">
+                {loading ? "..." : stats.totalGuests}
+              </div>
+              <p className="text-muted-foreground">
+                Σύνολο καλεσμένων στη λίστα
+              </p>
+            </CardContent>
+          </Card>
+          
           <Card>
             <CardHeader>
               <CardTitle>Απαντήσεις RSVP</CardTitle>
@@ -132,7 +169,21 @@ export default function Dashboard() {
                 {loading ? "..." : stats.totalRSVPs}
               </div>
               <p className="text-muted-foreground">
-                Συνολικές απαντήσεις από καλεσμένους
+                Συνολικές απαντήσεις
+              </p>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader>
+              <CardTitle>Επιβεβαιώσεις</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-4xl font-bold mb-2 text-green-600">
+                {loading ? "..." : stats.confirmedGuests}
+              </div>
+              <p className="text-muted-foreground">
+                Θα παραστούν στην εκδήλωση
               </p>
             </CardContent>
           </Card>
@@ -163,161 +214,26 @@ export default function Dashboard() {
             <CardTitle>Καλώς ήρθατε!</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground mb-4">
               Καλώς ήρθατε στην πλατφόρμα δημιουργίας προσκλήσεων. Ξεκινήστε δημιουργώντας την πρώτη
-              σας πρόσκληση γάμου ή βάπτισης από το μενού στα αριστερά.
+              σας πρόσκληση γάμου, βάπτισης ή πάρτι από το μενού στα αριστερά.
             </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+              <Button onClick={() => navigate('/wedding/all')} variant="outline" className="justify-start">
+                <Heart className="w-4 h-4 mr-2" />
+                Δείτε όλους τους Γάμους
+              </Button>
+              <Button onClick={() => navigate('/baptism/all')} variant="outline" className="justify-start">
+                <Users className="w-4 h-4 mr-2" />
+                Δείτε όλες τις Βαπτίσεις
+              </Button>
+              <Button onClick={() => navigate('/party/all')} variant="outline" className="justify-start">
+                <PartyPopper className="w-4 h-4 mr-2" />
+                Δείτε όλα τα Πάρτι
+              </Button>
+            </div>
           </CardContent>
         </Card>
-
-        <div className="mt-12">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold mb-2">Επιλέξτε το πλάνο σας</h2>
-            <p className="text-muted-foreground">Εφάπαξ πληρωμή, χωρίς κρυφές χρεώσεις</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Basic Plan */}
-            <Card className="relative">
-              <CardHeader>
-                <CardTitle className="text-2xl">Basic</CardTitle>
-                <div className="mt-4">
-                  <span className="text-4xl font-bold">€39</span>
-                  <span className="text-muted-foreground ml-2">εφάπαξ</span>
-                </div>
-                <p className="text-sm text-muted-foreground mt-2">Ιδανικό για απλές εκδηλώσεις</p>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <Button className="w-full" size="lg">Ξεκινήστε</Button>
-                <div className="space-y-3">
-                  <div className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                    <span className="text-sm">5 επαγγελματικά θέματα</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                    <span className="text-sm">Διγλωσση σελίδα (EL/EN)</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                    <span className="text-sm">Φόρμα RSVP</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                    <span className="text-sm">Εξαγωγή CSV/Excel</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                    <span className="text-sm">Email επιβεβαιώσεις</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                    <span className="text-sm">Add-to-Calendar (.ics)</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                    <span className="text-sm">Anti-spam προστασία</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                    <span className="text-sm">GDPR εργαλεία</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Plus Plan */}
-            <Card className="relative border-primary shadow-lg">
-              <Badge className="absolute -top-3 left-1/2 -translate-x-1/2">Δημοφιλές</Badge>
-              <CardHeader>
-                <CardTitle className="text-2xl">Plus</CardTitle>
-                <div className="mt-4">
-                  <span className="text-4xl font-bold">€69</span>
-                  <span className="text-muted-foreground ml-2">εφάπαξ</span>
-                </div>
-                <p className="text-sm text-muted-foreground mt-2">Για ζευγάρια που θέλουν περισσότερα</p>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <Button className="w-full" size="lg">Ξεκινήστε</Button>
-                <div className="space-y-3">
-                  <div className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                    <span className="text-sm">Όλα από Basic</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                    <span className="text-sm">Προστασία με κωδικό</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                    <span className="text-sm">Γκαλερί φωτογραφιών</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                    <span className="text-sm">Gift Registry με IBAN & QR</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                    <span className="text-sm">Live Photo Wall</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                    <span className="text-sm">Zapier/Make webhooks</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Premium Plan */}
-            <Card className="relative">
-              <CardHeader>
-                <CardTitle className="text-2xl">Premium</CardTitle>
-                <div className="mt-4">
-                  <span className="text-4xl font-bold">€119</span>
-                  <span className="text-muted-foreground ml-2">εφάπαξ</span>
-                </div>
-                <p className="text-sm text-muted-foreground mt-2">Πλήρης έλεγχος & δυνατότητες</p>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <Button className="w-full" size="lg">Ξεκινήστε</Button>
-                <div className="space-y-3">
-                  <div className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                    <span className="text-sm">Όλα από Plus</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                    <span className="text-sm">Custom subdomain</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                    <span className="text-sm">Email υπενθυμίσεις</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                    <span className="text-sm">Seating planner</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                    <span className="text-sm">Custom fonts upload</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                    <span className="text-sm">A/B testing</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                    <span className="text-sm">SMS/WhatsApp reminders*</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                    <span className="text-sm">Metrics & Analytics</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
       </div>
     </div>
   );
