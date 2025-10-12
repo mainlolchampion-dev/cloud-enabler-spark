@@ -5,6 +5,7 @@ import { format } from "date-fns";
 import { el } from "date-fns/locale";
 import { RSVPForm } from "@/components/wedding/RSVPForm";
 import { CountdownTimer } from "@/components/CountdownTimer";
+import { AddToCalendar } from "@/components/wedding/AddToCalendar";
 import { LivePhotoWall } from "@/components/wedding/LivePhotoWall";
 import { MapDisplay } from "@/components/wedding/MapDisplay";
 import { SeatingDisplay } from "@/components/wedding/SeatingDisplay";
@@ -163,9 +164,18 @@ export function ClassicFormal({ invitation, events, giftItems, onOpenDirections 
       {/* Countdown */}
       {data.weddingDate && (
         <AnimatedSection animation="fadeInScale" delay={300}>
-          <section className="max-w-2xl mx-auto">
+          <section className="max-w-2xl mx-auto space-y-6">
             <div className="border-2 border-primary/20 rounded-lg p-8 shadow-lg bg-background">
               <CountdownTimer targetDate={data.weddingDate} targetTime={data.weddingTime} />
+            </div>
+            <div className="flex justify-center">
+              <AddToCalendar
+                title={data.title}
+                description={data.invitationText?.replace(/<[^>]*>/g, '') || ''}
+                location={data.churchLocation || ''}
+                startDate={new Date(`${data.weddingDate}T${data.weddingTime || '00:00'}`)}
+                endDate={new Date(new Date(`${data.weddingDate}T${data.weddingTime || '00:00'}`).getTime() + 4 * 60 * 60 * 1000)}
+              />
             </div>
           </section>
         </AnimatedSection>

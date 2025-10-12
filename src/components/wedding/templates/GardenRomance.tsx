@@ -5,6 +5,7 @@ import { format } from "date-fns";
 import { el } from "date-fns/locale";
 import { RSVPForm } from "@/components/wedding/RSVPForm";
 import { CountdownTimer } from "@/components/CountdownTimer";
+import { AddToCalendar } from "@/components/wedding/AddToCalendar";
 import { LivePhotoWall } from "@/components/wedding/LivePhotoWall";
 import { MapDisplay } from "@/components/wedding/MapDisplay";
 import { SeatingDisplay } from "@/components/wedding/SeatingDisplay";
@@ -213,9 +214,18 @@ export function GardenRomance({ invitation, events, giftItems, onOpenDirections 
       {/* Countdown Timer */}
       {data.weddingDate && (
         <AnimatedSection animation="fadeInScale" delay={300}>
-          <section className="max-w-3xl mx-auto">
+          <section className="max-w-3xl mx-auto space-y-6">
             <div className="bg-gradient-to-br from-primary/5 to-accent/5 rounded-2xl p-10 shadow-[var(--shadow-card)] border border-primary/10">
               <CountdownTimer targetDate={data.weddingDate} targetTime={data.weddingTime} />
+            </div>
+            <div className="flex justify-center">
+              <AddToCalendar
+                title={data.title}
+                description={data.invitationText?.replace(/<[^>]*>/g, '') || ''}
+                location={data.churchLocation || ''}
+                startDate={new Date(`${data.weddingDate}T${data.weddingTime || '00:00'}`)}
+                endDate={new Date(new Date(`${data.weddingDate}T${data.weddingTime || '00:00'}`).getTime() + 4 * 60 * 60 * 1000)}
+              />
             </div>
           </section>
         </AnimatedSection>
