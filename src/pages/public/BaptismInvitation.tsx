@@ -222,9 +222,9 @@ export default function BaptismInvitation({ invitation }: BaptismInvitationProps
       )}
 
       {/* Gift Registry Section */}
-      {giftItems.length > 0 && (
-        <section>
-          <h2 className="text-2xl font-semibold font-serif text-center mb-6">Λίστα Δώρων</h2>
+      <section>
+        <h2 className="text-2xl font-semibold font-serif text-center mb-6">Λίστα Δώρων</h2>
+        {giftItems.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {giftItems.map((gift) => (
               <div key={gift.id} className="bg-muted/5 rounded-lg p-4 shadow-sm">
@@ -242,8 +242,12 @@ export default function BaptismInvitation({ invitation }: BaptismInvitationProps
               </div>
             ))}
           </div>
-        </section>
-      )}
+        ) : (
+          <p className="text-center text-muted-foreground">
+            Η λίστα δώρων θα είναι διαθέσιμη σύντομα.
+          </p>
+        )}
+      </section>
 
       {/* Seating Display */}
       <SeatingDisplay invitationId={invitation.id} />

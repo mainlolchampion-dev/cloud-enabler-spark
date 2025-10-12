@@ -163,12 +163,12 @@ export default function PartyInvitation({ invitation }: PartyInvitationProps) {
       )}
 
       {/* Gift Registry */}
-      {giftItems.length > 0 && (
-        <section>
-          <h2 className="text-2xl font-bold font-serif text-center mb-4">
-            <Gift className="inline-block mr-2" size={30} />
-            Λίστα Δώρων
-          </h2>
+      <section>
+        <h2 className="text-2xl font-bold font-serif text-center mb-4">
+          <Gift className="inline-block mr-2" size={30} />
+          Λίστα Δώρων
+        </h2>
+        {giftItems.length > 0 ? (
           <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {giftItems.map((item) => (
               <li key={item.id} className="bg-white rounded-lg shadow-md p-4">
@@ -186,8 +186,12 @@ export default function PartyInvitation({ invitation }: PartyInvitationProps) {
               </li>
             ))}
           </ul>
-        </section>
-      )}
+        ) : (
+          <p className="text-center text-muted-foreground">
+            Η λίστα δώρων θα είναι διαθέσιμη σύντομα.
+          </p>
+        )}
+      </section>
 
       {/* Seating Display */}
       <SeatingDisplay invitationId={invitation.id} />

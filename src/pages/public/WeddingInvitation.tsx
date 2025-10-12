@@ -182,9 +182,9 @@ export default function WeddingInvitation({ invitation }: WeddingInvitationProps
       )}
 
       {/* Gift Registry Section */}
-      {giftItems.length > 0 && (
-        <section>
-          <h2 className="text-2xl font-semibold mb-4">Λίστα Δώρων</h2>
+      <section>
+        <h2 className="text-2xl font-semibold mb-4">Λίστα Δώρων</h2>
+        {giftItems.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {giftItems.map((gift) => (
               <div key={gift.id} className="border rounded-lg p-4">
@@ -201,8 +201,12 @@ export default function WeddingInvitation({ invitation }: WeddingInvitationProps
               </div>
             ))}
           </div>
-        </section>
-      )}
+        ) : (
+          <p className="text-center text-muted-foreground">
+            Η λίστα δώρων θα είναι διαθέσιμη σύντομα.
+          </p>
+        )}
+      </section>
 
       {/* Seating Display */}
       <SeatingDisplay invitationId={invitation.id} />

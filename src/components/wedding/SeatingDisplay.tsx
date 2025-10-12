@@ -31,16 +31,18 @@ export const SeatingDisplay = ({ invitationId }: SeatingDisplayProps) => {
     return null;
   }
 
-  if (tables.length === 0) {
-    return null;
-  }
-
+  // Always show the section, even if empty
   return (
     <section>
       <h2 className="text-2xl font-semibold font-serif text-center mb-6">
         Διάταξη Τραπεζιών
       </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {tables.length === 0 ? (
+        <p className="text-center text-muted-foreground">
+          Η διάταξη των τραπεζιών θα ανακοινωθεί σύντομα.
+        </p>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {tables.map((table) => (
           <Card key={table.id} className="overflow-hidden">
             <CardHeader className="bg-primary/5">
@@ -72,7 +74,8 @@ export const SeatingDisplay = ({ invitationId }: SeatingDisplayProps) => {
             </CardContent>
           </Card>
         ))}
-      </div>
+        </div>
+      )}
     </section>
   );
 };
