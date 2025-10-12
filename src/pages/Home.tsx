@@ -269,7 +269,7 @@ const Home = () => {
       </section>
 
       {/* Templates Gallery Section */}
-      <section className="py-24 bg-background">
+      <section id="templates" className="py-24 bg-background">
         <div className="container mx-auto px-6">
           <div className="text-center mb-20">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-6">
@@ -677,7 +677,7 @@ const Home = () => {
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li><a href="#features" className="hover:text-foreground transition-colors">Χαρακτηριστικά</a></li>
                 <li><a href="#pricing" className="hover:text-foreground transition-colors">Τιμές</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">Templates</a></li>
+                <li><a href="#templates" className="hover:text-foreground transition-colors">Templates</a></li>
               </ul>
             </div>
             <div>
