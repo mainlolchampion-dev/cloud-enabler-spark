@@ -133,14 +133,39 @@ export default function Dashboard() {
       return;
     }
 
+    // If no subscription found after loading, force a refresh
     if (!subscription) {
-      console.log("No subscription found, redirecting to pricing");
+      console.log("No subscription found, forcing refresh...");
       toast({
-        title: "Χρειάζεστε Πλάνο",
-        description: "Για να δημιουργήσετε προσκλήσεις χρειάζεστε να αγοράσετε ένα πλάνο.",
-        variant: "destructive",
+        title: "Ανανέωση...",
+        description: "Έλεγχος κατάστασης συνδρομής...",
       });
-      navigate("/pricing");
+      
+      // Force a subscription check
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+          await supabase.functions.invoke("check-subscription", {
+            headers: {
+              Authorization: `Bearer ${session.access_token}`,
+            },
+          });
+          
+          // Wait a bit for the database to update
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          
+          // Reload stats to trigger subscription refresh
+          await loadStats();
+          
+          toast({
+            title: "Ολοκληρώθηκε",
+            description: "Παρακαλώ δοκιμάστε ξανά.",
+          });
+        }
+      } catch (error) {
+        console.error("Error refreshing subscription:", error);
+        navigate("/pricing");
+      }
       return;
     }
 
