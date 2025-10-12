@@ -11,7 +11,7 @@ const plans = [
   {
     name: "Basic",
     price: "Δωρεάν",
-    priceId: "price_1SHQMBKs4zHW11KqB8gKpk3u",
+    priceId: "price_1SHSVmKs4zHW11Kq4sC36tyT",
     planType: "basic",
     subtitle: "Ιδανικό για απλές εκδηλώσεις",
     features: [
@@ -28,7 +28,7 @@ const plans = [
   {
     name: "Plus",
     price: "Δωρεάν",
-    priceId: "price_1SHQMgKs4zHW11KqBNWaHpMG",
+    priceId: "price_1SHSWTKs4zHW11KqQSrpFt2r",
     planType: "plus",
     subtitle: "Για ζευγάρια που θέλουν περισσότερα",
     features: [
@@ -49,7 +49,7 @@ const plans = [
   {
     name: "Premium",
     price: "Δωρεάν",
-    priceId: "price_1SHQN4Ks4zHW11KqTWZVuObJ",
+    priceId: "price_1SHSWgKs4zHW11Kq48weQSt8",
     planType: "premium",
     subtitle: "Πλήρης έλεγχος & δυνατότητες",
     features: [
