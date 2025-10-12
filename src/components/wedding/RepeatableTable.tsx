@@ -1,6 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Trash2, Plus } from "lucide-react";
+import { Trash2, Plus, Loader2, Image as ImageIcon } from "lucide-react";
+import { useState } from "react";
+import { uploadImage } from "@/lib/imageUpload";
+import { toast } from "sonner";
 
 interface Row {
   id: string;
@@ -27,6 +30,8 @@ export function RepeatableTable({
   col2Type = "text",
   onImageChange,
 }: RepeatableTableProps) {
+  const [uploadingId, setUploadingId] = useState<string | null>(null);
+
   const addRow = () => {
     const newRow: Row = {
       id: Date.now().toString(),
@@ -46,15 +51,24 @@ export function RepeatableTable({
     );
   };
 
-  const handleImageUpload = (id: string, e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (id: string, e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file && onImageChange) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        onImageChange(id, reader.result as string);
-        updateRow(id, "col2", reader.result as string);
-      };
-      reader.readAsDataURL(file);
+    if (!file) return;
+
+    try {
+      setUploadingId(id);
+      const url = await uploadImage(file, 'invitations');
+      updateRow(id, "col2", url);
+      if (onImageChange) {
+        onImageChange(id, url);
+      }
+      toast.success("Η φωτογραφία ανέβηκε επιτυχώς!");
+    } catch (error: any) {
+      console.error('Error uploading image:', error);
+      toast.error(error.message || "Σφάλμα κατά το ανέβασμα της φωτογραφίας");
+    } finally {
+      setUploadingId(null);
+      e.target.value = '';
     }
   };
 
@@ -99,11 +113,44 @@ export function RepeatableTable({
                       />
                     ) : (
                       <div className="flex items-center gap-2">
+                        {row.col2 ? (
+                          <div className="flex items-center gap-2">
+                            <img 
+                              src={row.col2} 
+                              alt="Preview" 
+                              className="w-12 h-12 object-cover rounded"
+                            />
+                            <span className="text-sm text-muted-foreground truncate max-w-[150px]">
+                              {row.col2.split('/').pop()}
+                            </span>
+                          </div>
+                        ) : (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            disabled={uploadingId === row.id}
+                            onClick={() => document.getElementById(`file-${row.id}`)?.click()}
+                          >
+                            {uploadingId === row.id ? (
+                              <>
+                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                Ανέβασμα...
+                              </>
+                            ) : (
+                              <>
+                                <ImageIcon className="w-4 h-4 mr-2" />
+                                Επιλογή αρχείου
+                              </>
+                            )}
+                          </Button>
+                        )}
                         <input
+                          id={`file-${row.id}`}
                           type="file"
                           accept="image/*"
-                          className="text-sm"
+                          className="hidden"
                           onChange={(e) => handleImageUpload(row.id, e)}
+                          disabled={uploadingId === row.id}
                         />
                       </div>
                     )}
