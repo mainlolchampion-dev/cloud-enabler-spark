@@ -2,10 +2,19 @@ import { Navigate } from "react-router-dom";
 import { useAdminStatus } from "@/hooks/useAdminStatus";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
+import { useEffect, useRef } from "react";
 
 export function AdminProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
   const { isAdmin, loading } = useAdminStatus();
+  const hasShownToast = useRef(false);
+
+  useEffect(() => {
+    if (!loading && !isAdmin && user && !hasShownToast.current) {
+      toast.error("Δεν έχετε δικαιώματα πρόσβασης στο Admin Dashboard");
+      hasShownToast.current = true;
+    }
+  }, [loading, isAdmin, user]);
 
   if (loading) {
     return (
@@ -20,7 +29,6 @@ export function AdminProtectedRoute({ children }: { children: React.ReactNode })
   }
 
   if (!isAdmin) {
-    toast.error("Δεν έχετε δικαιώματα πρόσβασης στο Admin Dashboard");
     return <Navigate to="/dashboard" replace />;
   }
 
