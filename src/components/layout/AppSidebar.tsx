@@ -55,7 +55,7 @@ export function AppSidebar() {
     };
 
     checkAdminStatus();
-  }, [user]);
+  }, [user?.id]);
 
   const isActive = (path: string) => location.pathname === path;
 

@@ -17,6 +17,9 @@ export function AdminProtectedRoute({ children }: { children: React.ReactNode })
         return;
       }
 
+      // Reset check status when user changes
+      setCheckComplete(false);
+
       try {
         const { data, error } = await supabase
           .from('user_roles')
@@ -41,7 +44,7 @@ export function AdminProtectedRoute({ children }: { children: React.ReactNode })
     };
 
     checkAdminStatus();
-  }, [user]);
+  }, [user?.id]);
 
   // Show loading only if auth is loading or we haven't completed the admin check
   if (authLoading || !checkComplete) {
