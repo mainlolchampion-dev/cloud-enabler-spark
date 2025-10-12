@@ -98,18 +98,20 @@ export const useSubscription = () => {
   const [state, setState] = useState<{
     subscription: Subscription | null;
     loading: boolean;
+    initialized: boolean;
   }>({
     subscription: null,
     loading: true,
+    initialized: false,
   });
 
   const fetchSubscription = useCallback(async () => {
     if (!user) {
-      setState({ subscription: null, loading: false });
+      setState({ subscription: null, loading: false, initialized: true });
       return;
     }
  
-    setState(prev => ({ ...prev, loading: true }));
+    setState(prev => ({ ...prev, loading: true, initialized: false }));
     
     try {
       // Call check-subscription to sync with Stripe FIRST
@@ -150,22 +152,23 @@ export const useSubscription = () => {
             status: dbData.status,
             expires_at: dbData.expires_at
           }, 
-          loading: false 
+          loading: false,
+          initialized: true
         });
         return;
       }
 
       console.log("No subscription found in database");
-      setState({ subscription: null, loading: false });
+      setState({ subscription: null, loading: false, initialized: true });
     } catch (error) {
       console.error("Error fetching subscription:", error);
-      setState({ subscription: null, loading: false });
+      setState({ subscription: null, loading: false, initialized: true });
     }
   }, [user]);
 
   useEffect(() => {
     if (!user) {
-      setState({ subscription: null, loading: false });
+      setState({ subscription: null, loading: false, initialized: true });
       return;
     }
 
@@ -247,7 +250,7 @@ export const useSubscription = () => {
 
   return {
     subscription: state.subscription,
-    loading: state.loading,
+    loading: state.loading || !state.initialized,
     canCreateInvitation,
     canAddGuests,
     hasFeature,
