@@ -249,26 +249,6 @@ export default function WeddingInvitation({ invitation }: WeddingInvitationProps
         </section>
       )}
 
-      {/* Wedding Details - Premium Card */}
-      <section className="max-w-5xl mx-auto px-6 py-32">
-        <div className="bg-card border border-border/50 rounded-2xl shadow-xl p-16 text-center space-y-10">
-          <div className="w-16 h-16 mx-auto bg-primary/10 rounded-full flex items-center justify-center">
-            <Heart className="w-8 h-8 text-primary" />
-          </div>
-          <h2 className="font-serif text-5xl text-foreground">Λεπτομέρειες Γάμου</h2>
-          <div className="h-px bg-border/50 w-32 mx-auto" />
-          <p className="text-3xl capitalize text-muted-foreground font-light">{formattedDate}</p>
-          <div className="flex items-center justify-center gap-3 text-2xl text-foreground/80">
-            <Clock className="w-6 h-6" />
-            <span className="font-light">{data.weddingTime}</span>
-          </div>
-          <Button onClick={addToCalendar} size="lg" className="mt-8 h-14 px-10 text-base">
-            <Calendar className="w-5 h-5 mr-2" />
-            Προσθήκη στο Ημερολόγιο
-          </Button>
-        </div>
-      </section>
-
       {/* Church Location - Elegant Map Section */}
       {data.churchPosition && (
         <section className="max-w-7xl mx-auto px-6 py-32 bg-muted/20">
