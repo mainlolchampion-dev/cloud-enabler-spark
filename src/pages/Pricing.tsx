@@ -10,7 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 const plans = [
   {
     name: "Basic",
-    price: "€9",
+    price: "Δωρεάν",
     priceId: "price_1SHQMBKs4zHW11KqB8gKpk3u",
     planType: "basic",
     subtitle: "Ιδανικό για απλές εκδηλώσεις",
@@ -27,7 +27,7 @@ const plans = [
   },
   {
     name: "Plus",
-    price: "€19",
+    price: "Δωρεάν",
     priceId: "price_1SHQMgKs4zHW11KqBNWaHpMG",
     planType: "plus",
     subtitle: "Για ζευγάρια που θέλουν περισσότερα",
@@ -48,7 +48,7 @@ const plans = [
   },
   {
     name: "Premium",
-    price: "€39",
+    price: "Δωρεάν",
     priceId: "price_1SHQN4Ks4zHW11KqTWZVuObJ",
     planType: "premium",
     subtitle: "Πλήρης έλεγχος & δυνατότητες",
