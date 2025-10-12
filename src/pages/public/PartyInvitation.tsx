@@ -9,8 +9,6 @@ import { Calendar, MapPin, Share2, PartyPopper } from "lucide-react";
 import { format } from "date-fns";
 import { el } from "date-fns/locale";
 import { RSVPForm } from "@/components/wedding/RSVPForm";
-import MusicPlayer from "@/components/wedding/MusicPlayer";
-import ConfettiAnimation from "@/components/party/ConfettiAnimation";
 import { CountdownTimer } from "@/components/CountdownTimer";
 import partyHeroSample from "@/assets/party-hero-sample.jpg";
 import "leaflet/dist/leaflet.css";
@@ -109,13 +107,7 @@ export default function PartyInvitation() {
 
   return (
     <>
-      <ConfettiAnimation colors={['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E2']} />
-      <MusicPlayer 
-        youtubeVideoId="zeip_QOwnAw"
-        primaryColor="#BB8FCE"
-        secondaryColor="#85C1E2"
-      />
-      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-pink-900 to-orange-900 relative" style={{ zIndex: 10 }}>
+      <div className="min-h-screen bg-background relative">
       {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <div 
