@@ -59,7 +59,7 @@ serve(async (req) => {
       .eq("status", "active")
       .single();
 
-    if (dbSub && dbSub.stripe_subscription_id) {
+    if (dbSub) {
       logStep("Found active subscription in database", { planType: dbSub.plan_type });
       return new Response(JSON.stringify({
         subscribed: true,
