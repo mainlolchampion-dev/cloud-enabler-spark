@@ -56,7 +56,7 @@ export default function Pricing() {
 
   const handleSelectPlan = async (priceId: string, planType: string) => {
     if (!user) {
-      navigate("/auth");
+      navigate("/login");
       return;
     }
 
@@ -70,7 +70,7 @@ export default function Pricing() {
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
-        navigate("/auth");
+        navigate("/login");
         return;
       }
 

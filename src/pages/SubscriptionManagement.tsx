@@ -27,7 +27,7 @@ export default function SubscriptionManagement() {
 
   useEffect(() => {
     if (!user) {
-      navigate("/auth");
+      navigate("/login");
       return;
     }
 
@@ -63,7 +63,7 @@ export default function SubscriptionManagement() {
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
-        navigate("/auth");
+        navigate("/login");
         return;
       }
 
