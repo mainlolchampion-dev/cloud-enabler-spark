@@ -307,6 +307,89 @@ export type Database = {
           },
         ]
       }
+      notification_history: {
+        Row: {
+          created_at: string
+          error_message: string | null
+          id: string
+          invitation_id: string | null
+          recipient: string
+          sent_at: string
+          status: string
+          subject: string | null
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          invitation_id?: string | null
+          recipient: string
+          sent_at?: string
+          status: string
+          subject?: string | null
+          type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          invitation_id?: string | null
+          recipient?: string
+          sent_at?: string
+          status?: string
+          subject?: string | null
+          type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_history_invitation_id_fkey"
+            columns: ["invitation_id"]
+            isOneToOne: false
+            referencedRelation: "invitations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notification_preferences: {
+        Row: {
+          created_at: string
+          email_reminders: boolean
+          email_rsvp_confirmations: boolean
+          email_updates: boolean
+          id: string
+          reminder_days_before: number
+          sms_reminders: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email_reminders?: boolean
+          email_rsvp_confirmations?: boolean
+          email_updates?: boolean
+          id?: string
+          reminder_days_before?: number
+          sms_reminders?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email_reminders?: boolean
+          email_rsvp_confirmations?: boolean
+          email_updates?: boolean
+          id?: string
+          reminder_days_before?: number
+          sms_reminders?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       rsvps: {
         Row: {
           created_at: string

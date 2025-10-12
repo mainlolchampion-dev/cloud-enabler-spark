@@ -1,4 +1,4 @@
-import { ChevronDown, Heart, LayoutDashboard, LogOut, User, PartyPopper, Baby, CreditCard, Shield } from "lucide-react";
+import { ChevronDown, Heart, LayoutDashboard, LogOut, User, PartyPopper, Baby, CreditCard, Shield, Bell, History } from "lucide-react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
@@ -209,6 +209,24 @@ export function AppSidebar() {
                 <NavLink to="/profile" className="flex items-center gap-2">
                   <User className="w-5 h-5" />
                   {state === "expanded" && <span>Προφίλ</span>}
+                </NavLink>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild isActive={isActive("/notifications")}>
+                <NavLink to="/notifications" className="flex items-center gap-2">
+                  <Bell className="w-5 h-5" />
+                  {state === "expanded" && <span>Ειδοποιήσεις</span>}
+                </NavLink>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild isActive={isActive("/notification-history")}>
+                <NavLink to="/notification-history" className="flex items-center gap-2">
+                  <History className="w-5 h-5" />
+                  {state === "expanded" && <span>Ιστορικό</span>}
                 </NavLink>
               </SidebarMenuButton>
             </SidebarMenuItem>

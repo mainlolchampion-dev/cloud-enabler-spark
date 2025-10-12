@@ -35,6 +35,8 @@ import EventsTimelineManagement from "./pages/EventsTimelineManagement";
 import Pricing from "./pages/Pricing";
 import SubscriptionManagement from "./pages/SubscriptionManagement";
 import AdvancedAnalytics from "./pages/AdvancedAnalytics";
+import NotificationPreferences from "./pages/NotificationPreferences";
+import NotificationHistory from "./pages/NotificationHistory";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import ScrollToTop from "./components/ScrollToTop";
 
@@ -120,6 +122,8 @@ const App = () => (
                         } 
                       />
                       <Route path="profile" element={<Profile />} />
+                      <Route path="notifications" element={<NotificationPreferences />} />
+                      <Route path="notification-history" element={<NotificationHistory />} />
                       <Route 
                         path="admin" 
                         element={
