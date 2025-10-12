@@ -102,8 +102,14 @@ export const useSubscription = () => {
     if (!user) return;
  
     try {
+      // CRITICAL: Always get fresh session before calling edge function
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
+      if (!session) {
+        console.log("No active session, clearing subscription");
+        setSubscription(null);
+        setLoading(false);
+        return;
+      }
  
       // Call check-subscription edge function
       const { data, error } = await supabase.functions.invoke("check-subscription", {
@@ -134,7 +140,8 @@ export const useSubscription = () => {
       }
     } catch (error) {
       console.error("Error fetching subscription:", error);
-      // Fallback to database
+      // Fallback to database - this is critical for reliability
+      console.log("Attempting database fallback...");
       try {
         const { data, error: dbError } = await supabase
           .from("user_subscriptions")
@@ -143,9 +150,13 @@ export const useSubscription = () => {
           .eq("status", "active")
           .maybeSingle();
  
+        console.log("Database fallback result:", { data, error: dbError });
+ 
         if (!dbError && data) {
+          console.log("Using database subscription:", data);
           setSubscription(data);
         } else {
+          console.log("No subscription found in database");
           setSubscription(null);
         }
       } catch (dbError) {
