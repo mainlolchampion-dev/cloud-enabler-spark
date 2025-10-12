@@ -218,7 +218,7 @@ export default function AddWedding() {
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-lg">Φόρτωση πρόσκλησης...</div>
+        <div className="text-lg text-muted-foreground">Φόρτωση πρόσκλησης...</div>
       </div>
     );
   }
@@ -226,18 +226,34 @@ export default function AddWedding() {
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
-          <div className="space-y-6">
-            <Input
-              value={data.title}
-              onChange={(e) => updateData("title", e.target.value)}
-              className="text-3xl font-semibold border-0 border-b rounded-none px-0 focus-visible:ring-0"
-              placeholder="Προσθήκη τίτλου"
-            />
+        {/* Page Header */}
+        <div className="mb-8">
+          <h1 className="font-serif text-4xl font-bold text-foreground mb-2">
+            {isEditMode ? 'Επεξεργασία' : 'Δημιουργία'} Πρόσκλησης Γάμου
+          </h1>
+          <p className="text-muted-foreground text-lg">Συμπληρώστε τα στοιχεία για την πρόσκλησή σας</p>
+        </div>
 
-            <Card>
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8">
+          <div className="space-y-8">
+            {/* Title Field */}
+            <div>
+              <label className="text-sm font-medium text-muted-foreground mb-2 block">Τίτλος Πρόσκλησης</label>
+              <Input
+                value={data.title}
+                onChange={(e) => updateData("title", e.target.value)}
+                className="text-2xl font-serif border-2 h-16 px-4"
+                placeholder="π.χ. Ο Γάμος μας"
+              />
+
+            </div>
+
+            {/* Main Image */}
+            <Card className="border-2">
               <CardHeader>
-                <CardTitle>Κύρια Φωτογραφία</CardTitle>
+                <CardTitle className="flex items-center gap-2 text-xl">
+                  Κύρια Φωτογραφία
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <ImagePicker
@@ -249,9 +265,12 @@ export default function AddWedding() {
               </CardContent>
             </Card>
 
-            <Card>
+            {/* Invitation Text */}
+            <Card className="border-2">
               <CardHeader>
-                <CardTitle>Κείμενο Προσκλητηρίου</CardTitle>
+                <CardTitle className="flex items-center gap-2 text-xl">
+                  Κείμενο Προσκλητηρίου
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <RichTextEditor
@@ -262,29 +281,40 @@ export default function AddWedding() {
               </CardContent>
             </Card>
 
-            <Card>
+            {/* Couple Details */}
+            <Card className="border-2">
               <CardHeader>
-                <CardTitle>Στοιχεία Ζευγαριού</CardTitle>
+                <CardTitle className="flex items-center gap-2 text-xl">
+                  Στοιχεία Ζευγαριού
+                </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <Input
-                  value={data.groomName}
-                  onChange={(e) => updateData("groomName", e.target.value)}
-                  placeholder="Όνομα Γαμπρού"
-                />
+              <CardContent className="space-y-6">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Όνομα Γαμπρού</label>
+                  <Input
+                    value={data.groomName}
+                    onChange={(e) => updateData("groomName", e.target.value)}
+                    placeholder="π.χ. Γιώργος Παπαδόπουλος"
+                    className="h-12"
+                  />
+                </div>
                 <ImagePicker
-                  label="Φωτογραφία Γαμπρού"
+                  label="Φωτογραφία Γαμπρού (Προαιρετικό)"
                   value={data.groomPhoto}
                   onChange={(url) => updateData("groomPhoto", url)}
                   onRemove={() => updateData("groomPhoto", "")}
                 />
-                <Input
-                  value={data.brideName}
-                  onChange={(e) => updateData("brideName", e.target.value)}
-                  placeholder="Όνομα Νύφης"
-                />
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Όνομα Νύφης</label>
+                  <Input
+                    value={data.brideName}
+                    onChange={(e) => updateData("brideName", e.target.value)}
+                    placeholder="π.χ. Μαρία Ιωάννου"
+                    className="h-12"
+                  />
+                </div>
                 <ImagePicker
-                  label="Φωτογραφία Νύφης"
+                  label="Φωτογραφία Νύφης (Προαιρετικό)"
                   value={data.bridePhoto}
                   onChange={(url) => updateData("bridePhoto", url)}
                   onRemove={() => updateData("bridePhoto", "")}
@@ -292,9 +322,12 @@ export default function AddWedding() {
               </CardContent>
             </Card>
 
-            <Card>
+            {/* Koumbaroi */}
+            <Card className="border-2">
               <CardHeader>
-                <CardTitle>Κουμπάροι</CardTitle>
+                <CardTitle className="flex items-center gap-2 text-xl">
+                  Κουμπάροι (Προαιρετικό)
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <RepeatableTable
@@ -308,33 +341,41 @@ export default function AddWedding() {
               </CardContent>
             </Card>
 
-            <Card>
+            {/* Date & Time */}
+            <Card className="border-2">
               <CardHeader>
-                <CardTitle>Ημερομηνία & Ώρα</CardTitle>
+                <CardTitle className="flex items-center gap-2 text-xl">
+                  Ημερομηνία & Ώρα
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div>
-                  <label className="text-sm font-medium mb-2 block">Ημερομηνία Γάμου</label>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Ημερομηνία Γάμου</label>
                   <Input
                     type="date"
                     value={data.weddingDate}
                     onChange={(e) => updateData("weddingDate", e.target.value)}
+                    className="h-12"
                   />
                 </div>
-                <div>
-                  <label className="text-sm font-medium mb-2 block">Ώρα Γάμου</label>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Ώρα Γάμου</label>
                   <Input
                     type="time"
                     value={data.weddingTime}
                     onChange={(e) => updateData("weddingTime", e.target.value)}
+                    className="h-12"
                   />
                 </div>
               </CardContent>
             </Card>
 
-            <Card>
+            {/* Church Location */}
+            <Card className="border-2">
               <CardHeader>
-                <CardTitle>Τοποθεσία Μυστηρίου (Εκκλησία)</CardTitle>
+                <CardTitle className="flex items-center gap-2 text-xl">
+                  Τοποθεσία Μυστηρίου (Εκκλησία)
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <MapPicker
@@ -347,13 +388,16 @@ export default function AddWedding() {
               </CardContent>
             </Card>
 
-            <Card>
+            {/* Reception */}
+            <Card className="border-2">
               <CardHeader>
-                <CardTitle>Δεξίωση (προαιρετικό)</CardTitle>
+                <CardTitle className="flex items-center gap-2 text-xl">
+                  Δεξίωση (Προαιρετικό)
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <MapPicker
-                  label="Τοποθεσία που θα γίνει το Τραπέζι (προαιρετικό)"
+                  label=""
                   locationName={data.receptionLocation}
                   onLocationNameChange={(name) => updateData("receptionLocation", name)}
                   position={data.receptionPosition}
@@ -362,9 +406,12 @@ export default function AddWedding() {
               </CardContent>
             </Card>
 
-            <Card>
+            {/* Bank Accounts */}
+            <Card className="border-2">
               <CardHeader>
-                <CardTitle>Αριθμοί Κατάθεσης</CardTitle>
+                <CardTitle className="flex items-center gap-2 text-xl">
+                  Αριθμοί Κατάθεσης (Προαιρετικό)
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <RepeatableTable
@@ -377,9 +424,12 @@ export default function AddWedding() {
               </CardContent>
             </Card>
 
-            <Card>
+            {/* Contact Info */}
+            <Card className="border-2">
               <CardHeader>
-                <CardTitle>Στοιχεία Επικοινωνίας</CardTitle>
+                <CardTitle className="flex items-center gap-2 text-xl">
+                  Στοιχεία Επικοινωνίας (Προαιρετικό)
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <RichTextEditor
@@ -390,21 +440,25 @@ export default function AddWedding() {
               </CardContent>
             </Card>
 
-            <Card>
+            {/* Families */}
+            <Card className="border-2">
               <CardHeader>
-                <CardTitle>Οικογένειες</CardTitle>
+                <CardTitle className="flex items-center gap-2 text-xl">
+                  Οικογένειες (Προαιρετικό)
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div>
-                  <h4 className="font-medium mb-2">Οικογένεια Γαμπρού</h4>
-                  <div className="flex gap-2 mb-2">
+                <div className="space-y-3">
+                  <h4 className="font-medium text-base">Οικογένεια Γαμπρού</h4>
+                  <div className="flex gap-2">
                     <Input
                       value={newGroomFamily}
                       onChange={(e) => setNewGroomFamily(e.target.value)}
                       placeholder="Όνομα μέλους οικογένειας"
                       onKeyDown={(e) => e.key === "Enter" && addGroomFamily()}
+                      className="h-11"
                     />
-                    <Button onClick={addGroomFamily}>
+                    <Button onClick={addGroomFamily} size="lg">
                       <Plus className="w-4 h-4" />
                     </Button>
                   </div>
@@ -412,12 +466,12 @@ export default function AddWedding() {
                     {data.groomFamily.map((name, index) => (
                       <div
                         key={index}
-                        className="bg-secondary px-3 py-1 rounded-full flex items-center gap-2"
+                        className="bg-primary/10 border border-primary/20 px-4 py-2 rounded-full flex items-center gap-2 text-sm"
                       >
                         <span>{name}</span>
                         <button
                           onClick={() => removeGroomFamily(index)}
-                          className="text-destructive hover:text-destructive/80"
+                          className="text-destructive hover:text-destructive/80 font-bold text-lg leading-none"
                         >
                           ×
                         </button>
@@ -426,16 +480,17 @@ export default function AddWedding() {
                   </div>
                 </div>
 
-                <div>
-                  <h4 className="font-medium mb-2">Οικογένεια Νύφης</h4>
-                  <div className="flex gap-2 mb-2">
+                <div className="space-y-3">
+                  <h4 className="font-medium text-base">Οικογένεια Νύφης</h4>
+                  <div className="flex gap-2">
                     <Input
                       value={newBrideFamily}
                       onChange={(e) => setNewBrideFamily(e.target.value)}
                       placeholder="Όνομα μέλους οικογένειας"
                       onKeyDown={(e) => e.key === "Enter" && addBrideFamily()}
+                      className="h-11"
                     />
-                    <Button onClick={addBrideFamily}>
+                    <Button onClick={addBrideFamily} size="lg">
                       <Plus className="w-4 h-4" />
                     </Button>
                   </div>
@@ -443,12 +498,12 @@ export default function AddWedding() {
                     {data.brideFamily.map((name, index) => (
                       <div
                         key={index}
-                        className="bg-secondary px-3 py-1 rounded-full flex items-center gap-2"
+                        className="bg-primary/10 border border-primary/20 px-4 py-2 rounded-full flex items-center gap-2 text-sm"
                       >
                         <span>{name}</span>
                         <button
                           onClick={() => removeBrideFamily(index)}
-                          className="text-destructive hover:text-destructive/80"
+                          className="text-destructive hover:text-destructive/80 font-bold text-lg leading-none"
                         >
                           ×
                         </button>
@@ -459,9 +514,12 @@ export default function AddWedding() {
               </CardContent>
             </Card>
 
-            <Card>
+            {/* Gallery */}
+            <Card className="border-2">
               <CardHeader>
-                <CardTitle>Gallery Φωτογραφιών</CardTitle>
+                <CardTitle className="flex items-center gap-2 text-xl">
+                  Gallery Φωτογραφιών (Προαιρετικό)
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <GalleryManager

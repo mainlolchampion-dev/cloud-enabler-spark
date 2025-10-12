@@ -168,7 +168,6 @@ export default function AddBaptism() {
     
     try {
       const invitationId = isEditMode ? id! : generateUUID();
-      console.log('🎯 Starting publish process:', { invitationId, isEditMode, title: data.title });
       
       await publishInvitation(invitationId, data, 'baptism', data.title);
       
@@ -193,7 +192,7 @@ export default function AddBaptism() {
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-lg">Φόρτωση πρόσκλησης...</div>
+        <div className="text-lg text-muted-foreground">Φόρτωση πρόσκλησης...</div>
       </div>
     );
   }
@@ -201,18 +200,28 @@ export default function AddBaptism() {
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
-          <div className="space-y-6">
-            <Input
-              value={data.title}
-              onChange={(e) => updateData("title", e.target.value)}
-              className="text-3xl font-semibold border-0 border-b rounded-none px-0 focus-visible:ring-0"
-              placeholder="Προσθήκη τίτλου"
-            />
+        <div className="mb-8">
+          <h1 className="font-serif text-4xl font-bold text-foreground mb-2">
+            {isEditMode ? 'Επεξεργασία' : 'Δημιουργία'} Πρόσκλησης Βάπτισης
+          </h1>
+          <p className="text-muted-foreground text-lg">Συμπληρώστε τα στοιχεία για την πρόσκλησή σας</p>
+        </div>
 
-            <Card>
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8">
+          <div className="space-y-8">
+            <div>
+              <label className="text-sm font-medium text-muted-foreground mb-2 block">Τίτλος Πρόσκλησης</label>
+              <Input
+                value={data.title}
+                onChange={(e) => updateData("title", e.target.value)}
+                className="text-2xl font-serif border-2 h-16 px-4"
+                placeholder="π.χ. Η Βάπτιση μας"
+              />
+            </div>
+
+            <Card className="border-2">
               <CardHeader>
-                <CardTitle>Κύρια Φωτογραφία</CardTitle>
+                <CardTitle className="text-xl">Κύρια Φωτογραφία</CardTitle>
               </CardHeader>
               <CardContent>
                 <ImagePicker
@@ -224,9 +233,9 @@ export default function AddBaptism() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="border-2">
               <CardHeader>
-                <CardTitle>Κείμενο Προσκλητηρίου</CardTitle>
+                <CardTitle className="text-xl">Κείμενο Προσκλητηρίου</CardTitle>
               </CardHeader>
               <CardContent>
                 <RichTextEditor
@@ -237,18 +246,22 @@ export default function AddBaptism() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="border-2">
               <CardHeader>
-                <CardTitle>Στοιχεία Παιδιού</CardTitle>
+                <CardTitle className="text-xl">Στοιχεία Παιδιού</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <Input
-                  value={data.childName}
-                  onChange={(e) => updateData("childName", e.target.value)}
-                  placeholder="Όνομα Παιδιού"
-                />
+              <CardContent className="space-y-6">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Όνομα Παιδιού</label>
+                  <Input
+                    value={data.childName}
+                    onChange={(e) => updateData("childName", e.target.value)}
+                    placeholder="π.χ. Μαρία Παπαδοπούλου"
+                    className="h-12"
+                  />
+                </div>
                 <ImagePicker
-                  label="Φωτογραφία Παιδιού"
+                  label="Φωτογραφία Παιδιού (Προαιρετικό)"
                   value={data.childPhoto}
                   onChange={(url) => updateData("childPhoto", url)}
                   onRemove={() => updateData("childPhoto", "")}
@@ -256,9 +269,9 @@ export default function AddBaptism() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="border-2">
               <CardHeader>
-                <CardTitle>Ανάδοχοι</CardTitle>
+                <CardTitle className="text-xl">Ανάδοχοι (Προαιρετικό)</CardTitle>
               </CardHeader>
               <CardContent>
                 <RepeatableTable
@@ -272,33 +285,35 @@ export default function AddBaptism() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="border-2">
               <CardHeader>
-                <CardTitle>Ημερομηνία & Ώρα</CardTitle>
+                <CardTitle className="text-xl">Ημερομηνία & Ώρα</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div>
-                  <label className="text-sm font-medium mb-2 block">Ημερομηνία Βάπτισης</label>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Ημερομηνία Βάπτισης</label>
                   <Input
                     type="date"
                     value={data.baptismDate}
                     onChange={(e) => updateData("baptismDate", e.target.value)}
+                    className="h-12"
                   />
                 </div>
-                <div>
-                  <label className="text-sm font-medium mb-2 block">Ώρα Βάπτισης</label>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Ώρα Βάπτισης</label>
                   <Input
                     type="time"
                     value={data.baptismTime}
                     onChange={(e) => updateData("baptismTime", e.target.value)}
+                    className="h-12"
                   />
                 </div>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="border-2">
               <CardHeader>
-                <CardTitle>Τοποθεσία Μυστηρίου (Εκκλησία)</CardTitle>
+                <CardTitle className="text-xl">Τοποθεσία Μυστηρίου (Εκκλησία)</CardTitle>
               </CardHeader>
               <CardContent>
                 <MapPicker
@@ -311,13 +326,13 @@ export default function AddBaptism() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="border-2">
               <CardHeader>
-                <CardTitle>Δεξίωση (προαιρετικό)</CardTitle>
+                <CardTitle className="text-xl">Δεξίωση (Προαιρετικό)</CardTitle>
               </CardHeader>
               <CardContent>
                 <MapPicker
-                  label="Τοποθεσία που θα γίνει το Τραπέζι (προαιρετικό)"
+                  label=""
                   locationName={data.receptionLocation}
                   onLocationNameChange={(name) => updateData("receptionLocation", name)}
                   position={data.receptionPosition}
@@ -326,9 +341,9 @@ export default function AddBaptism() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="border-2">
               <CardHeader>
-                <CardTitle>Αριθμοί Κατάθεσης</CardTitle>
+                <CardTitle className="text-xl">Αριθμοί Κατάθεσης (Προαιρετικό)</CardTitle>
               </CardHeader>
               <CardContent>
                 <RepeatableTable
@@ -341,9 +356,9 @@ export default function AddBaptism() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="border-2">
               <CardHeader>
-                <CardTitle>Στοιχεία Επικοινωνίας</CardTitle>
+                <CardTitle className="text-xl">Στοιχεία Επικοινωνίας (Προαιρετικό)</CardTitle>
               </CardHeader>
               <CardContent>
                 <RichTextEditor
@@ -354,19 +369,20 @@ export default function AddBaptism() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="border-2">
               <CardHeader>
-                <CardTitle>Οικογένεια Γονέων</CardTitle>
+                <CardTitle className="text-xl">Οικογένεια Γονέων (Προαιρετικό)</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex gap-2 mb-2">
+              <CardContent className="space-y-3">
+                <div className="flex gap-2">
                   <Input
                     value={newParent}
                     onChange={(e) => setNewParent(e.target.value)}
                     placeholder="Όνομα μέλους οικογένειας"
                     onKeyDown={(e) => e.key === "Enter" && addParent()}
+                    className="h-11"
                   />
-                  <Button onClick={addParent}>
+                  <Button onClick={addParent} size="lg">
                     <Plus className="w-4 h-4" />
                   </Button>
                 </div>
@@ -374,12 +390,12 @@ export default function AddBaptism() {
                   {data.parentsFamily.map((name, index) => (
                     <div
                       key={index}
-                      className="bg-secondary px-3 py-1 rounded-full flex items-center gap-2"
+                      className="bg-primary/10 border border-primary/20 px-4 py-2 rounded-full flex items-center gap-2 text-sm"
                     >
                       <span>{name}</span>
                       <button
                         onClick={() => removeParent(index)}
-                        className="text-destructive hover:text-destructive/80"
+                        className="text-destructive hover:text-destructive/80 font-bold text-lg leading-none"
                       >
                         ×
                       </button>
@@ -389,9 +405,9 @@ export default function AddBaptism() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="border-2">
               <CardHeader>
-                <CardTitle>Gallery Φωτογραφιών</CardTitle>
+                <CardTitle className="text-xl">Gallery Φωτογραφιών (Προαιρετικό)</CardTitle>
               </CardHeader>
               <CardContent>
                 <GalleryManager

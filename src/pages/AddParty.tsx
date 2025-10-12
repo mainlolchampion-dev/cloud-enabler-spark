@@ -130,7 +130,6 @@ export default function AddParty() {
     
     try {
       const invitationId = isEditMode ? id! : generateUUID();
-      console.log('🎯 Starting publish process:', { invitationId, isEditMode, title: data.title });
       
       await publishInvitation(invitationId, data, 'party', data.title);
       
@@ -155,7 +154,7 @@ export default function AddParty() {
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-lg">Φόρτωση πρόσκλησης...</div>
+        <div className="text-lg text-muted-foreground">Φόρτωση πρόσκλησης...</div>
       </div>
     );
   }
@@ -163,18 +162,28 @@ export default function AddParty() {
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
-          <div className="space-y-6">
-            <Input
-              value={data.title}
-              onChange={(e) => updateData("title", e.target.value)}
-              className="text-3xl font-semibold border-0 border-b rounded-none px-0 focus-visible:ring-0"
-              placeholder="Προσθήκη τίτλου"
-            />
+        <div className="mb-8">
+          <h1 className="font-serif text-4xl font-bold text-foreground mb-2">
+            {isEditMode ? 'Επεξεργασία' : 'Δημιουργία'} Πρόσκλησης Πάρτυ
+          </h1>
+          <p className="text-muted-foreground text-lg">Συμπληρώστε τα στοιχεία για την πρόσκλησή σας</p>
+        </div>
 
-            <Card>
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8">
+          <div className="space-y-8">
+            <div>
+              <label className="text-sm font-medium text-muted-foreground mb-2 block">Τίτλος Πρόσκλησης</label>
+              <Input
+                value={data.title}
+                onChange={(e) => updateData("title", e.target.value)}
+                className="text-2xl font-serif border-2 h-16 px-4"
+                placeholder="π.χ. Το Party μας"
+              />
+            </div>
+
+            <Card className="border-2">
               <CardHeader>
-                <CardTitle>Κύρια Φωτογραφία</CardTitle>
+                <CardTitle className="text-xl">Κύρια Φωτογραφία</CardTitle>
               </CardHeader>
               <CardContent>
                 <ImagePicker
@@ -186,9 +195,9 @@ export default function AddParty() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="border-2">
               <CardHeader>
-                <CardTitle>Κείμενο Προσκλητηρίου</CardTitle>
+                <CardTitle className="text-xl">Κείμενο Προσκλητηρίου</CardTitle>
               </CardHeader>
               <CardContent>
                 <RichTextEditor
@@ -199,9 +208,9 @@ export default function AddParty() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="border-2">
               <CardHeader>
-                <CardTitle>Οργανωτές</CardTitle>
+                <CardTitle className="text-xl">Οργανωτές (Προαιρετικό)</CardTitle>
               </CardHeader>
               <CardContent>
                 <RepeatableTable
@@ -215,33 +224,35 @@ export default function AddParty() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="border-2">
               <CardHeader>
-                <CardTitle>Ημερομηνία & Ώρα</CardTitle>
+                <CardTitle className="text-xl">Ημερομηνία & Ώρα</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div>
-                  <label className="text-sm font-medium mb-2 block">Ημερομηνία Party</label>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Ημερομηνία Party</label>
                   <Input
                     type="date"
                     value={data.partyDate}
                     onChange={(e) => updateData("partyDate", e.target.value)}
+                    className="h-12"
                   />
                 </div>
-                <div>
-                  <label className="text-sm font-medium mb-2 block">Ώρα Party</label>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Ώρα Party</label>
                   <Input
                     type="time"
                     value={data.partyTime}
                     onChange={(e) => updateData("partyTime", e.target.value)}
+                    className="h-12"
                   />
                 </div>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="border-2">
               <CardHeader>
-                <CardTitle>Τοποθεσία Party</CardTitle>
+                <CardTitle className="text-xl">Τοποθεσία Party</CardTitle>
               </CardHeader>
               <CardContent>
                 <MapPicker
@@ -254,9 +265,9 @@ export default function AddParty() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="border-2">
               <CardHeader>
-                <CardTitle>Στοιχεία Επικοινωνίας</CardTitle>
+                <CardTitle className="text-xl">Στοιχεία Επικοινωνίας (Προαιρετικό)</CardTitle>
               </CardHeader>
               <CardContent>
                 <RichTextEditor
@@ -267,9 +278,9 @@ export default function AddParty() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="border-2">
               <CardHeader>
-                <CardTitle>Gallery Φωτογραφιών</CardTitle>
+                <CardTitle className="text-xl">Gallery Φωτογραφιών (Προαιρετικό)</CardTitle>
               </CardHeader>
               <CardContent>
                 <GalleryManager
