@@ -95,25 +95,28 @@ const PLAN_LIMITS = {
 
 export const useSubscription = () => {
   const { user } = useAuth();
-  const [subscription, setSubscription] = useState<Subscription | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [state, setState] = useState<{
+    subscription: Subscription | null;
+    loading: boolean;
+  }>({
+    subscription: null,
+    loading: true,
+  });
 
   const fetchSubscription = useCallback(async () => {
     if (!user) {
-      setSubscription(null);
-      setLoading(false);
+      setState({ subscription: null, loading: false });
       return;
     }
  
-    setLoading(true);
+    setState(prev => ({ ...prev, loading: true }));
     
     try {
       // CRITICAL: Always get fresh session before calling edge function
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
         console.log("No active session, clearing subscription");
-        setSubscription(null);
-        setLoading(false);
+        setState({ subscription: null, loading: false });
         return;
       }
  
@@ -129,23 +132,18 @@ export const useSubscription = () => {
       if (error) throw error;
  
       if (data && data.subscribed) {
-        console.log("Setting subscription:", {
+        const newSubscription = {
           plan_type: data.plan_type,
           status: data.status,
           expires_at: data.subscription_end,
-        });
+        };
+        console.log("Setting subscription:", newSubscription);
         
-        // CRITICAL: Set subscription and loading together to prevent race conditions
-        setSubscription({
-          plan_type: data.plan_type,
-          status: data.status,
-          expires_at: data.subscription_end,
-        });
-        setLoading(false);
+        // CRITICAL: Set subscription and loading together in one atomic update
+        setState({ subscription: newSubscription, loading: false });
       } else {
         console.log("No active subscription found");
-        setSubscription(null);
-        setLoading(false);
+        setState({ subscription: null, loading: false });
       }
     } catch (error) {
       console.error("Error fetching subscription:", error);
@@ -163,22 +161,21 @@ export const useSubscription = () => {
  
         if (!dbError && data) {
           console.log("Using database subscription:", data);
-          setSubscription(data);
+          setState({ subscription: data, loading: false });
         } else {
           console.log("No subscription found in database");
-          setSubscription(null);
+          setState({ subscription: null, loading: false });
         }
       } catch (dbError) {
         console.error("Error fetching from database:", dbError);
-        setSubscription(null);
+        setState({ subscription: null, loading: false });
       }
-      setLoading(false);
     }
   }, [user]);
 
   useEffect(() => {
     if (!user) {
-      setLoading(false);
+      setState({ subscription: null, loading: false });
       return;
     }
 
@@ -210,15 +207,15 @@ export const useSubscription = () => {
   }, [user, fetchSubscription]);
 
   const canCreateInvitation = async () => {
-    console.log("canCreateInvitation called:", { hasUser: !!user, hasSubscription: !!subscription, planType: subscription?.plan_type });
+    console.log("canCreateInvitation called:", { hasUser: !!user, hasSubscription: !!state.subscription, planType: state.subscription?.plan_type });
     
-    if (!user || !subscription) {
+    if (!user || !state.subscription) {
       console.log("canCreateInvitation: No user or subscription");
       return false;
     }
 
-    const limits = PLAN_LIMITS[subscription.plan_type];
-    console.log("canCreateInvitation: Plan limits:", { planType: subscription.plan_type, maxInvitations: limits.maxInvitations });
+    const limits = PLAN_LIMITS[state.subscription.plan_type];
+    console.log("canCreateInvitation: Plan limits:", { planType: state.subscription.plan_type, maxInvitations: limits.maxInvitations });
     
     if (limits.maxInvitations === Infinity) {
       console.log("canCreateInvitation: Unlimited invitations (Infinity)");
@@ -235,9 +232,9 @@ export const useSubscription = () => {
   };
 
   const canAddGuests = async (invitationId: string) => {
-    if (!subscription) return false;
+    if (!state.subscription) return false;
 
-    const limits = PLAN_LIMITS[subscription.plan_type];
+    const limits = PLAN_LIMITS[state.subscription.plan_type];
     if (limits.maxGuests === Infinity) return true;
 
     const { count } = await supabase
@@ -249,22 +246,22 @@ export const useSubscription = () => {
   };
 
   const hasFeature = (feature: keyof typeof PLAN_LIMITS.basic) => {
-    if (!subscription) return false;
-    const featureValue = PLAN_LIMITS[subscription.plan_type][feature];
+    if (!state.subscription) return false;
+    const featureValue = PLAN_LIMITS[state.subscription.plan_type][feature];
     return featureValue === true || (typeof featureValue === 'number' && featureValue > 0);
   };
 
   const getPlanType = () => {
-    return subscription?.plan_type || 'basic';
+    return state.subscription?.plan_type || 'basic';
   };
 
   return {
-    subscription,
-    loading,
+    subscription: state.subscription,
+    loading: state.loading,
     canCreateInvitation,
     canAddGuests,
     hasFeature,
     getPlanType,
-    limits: subscription ? PLAN_LIMITS[subscription.plan_type] : PLAN_LIMITS.basic,
+    limits: state.subscription ? PLAN_LIMITS[state.subscription.plan_type] : PLAN_LIMITS.basic,
   };
 };
