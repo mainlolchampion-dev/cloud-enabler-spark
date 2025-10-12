@@ -533,7 +533,7 @@ const Home = () => {
                   <span className="font-serif text-5xl font-bold text-card-foreground">€9</span>
                   <span className="text-muted-foreground">/μήνα</span>
                 </div>
-                <Link to="/pricing">
+                <Link to="/">
                   <Button className="w-full" size="lg">Ξεκινήστε</Button>
                 </Link>
                 <ul className="space-y-3 pt-6">
@@ -570,7 +570,7 @@ const Home = () => {
                   <span className="font-serif text-5xl font-bold text-primary">€19</span>
                   <span className="text-muted-foreground">/μήνα</span>
                 </div>
-                <Link to="/pricing">
+                <Link to="/">
                   <Button className="w-full bg-gradient-to-r from-primary to-secondary" size="lg">Ξεκινήστε</Button>
                 </Link>
                 <ul className="space-y-3 pt-6">
@@ -611,7 +611,7 @@ const Home = () => {
                   <span className="font-serif text-5xl font-bold text-card-foreground">€39</span>
                   <span className="text-muted-foreground">/μήνα</span>
                 </div>
-                <Link to="/pricing">
+                <Link to="/">
                   <Button className="w-full" size="lg" variant="outline">Ξεκινήστε</Button>
                 </Link>
                 <ul className="space-y-3 pt-6">
