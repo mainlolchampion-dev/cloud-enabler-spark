@@ -41,8 +41,7 @@ export function AppSidebar() {
         .from('user_roles')
         .select('role')
         .eq('user_id', user.id)
-        .eq('role', 'admin')
-        .maybeSingle();
+        .eq('role', 'admin');
 
       if (error) {
         console.error('Error checking admin status:', error);
@@ -50,9 +49,9 @@ export function AppSidebar() {
         return;
       }
 
-      const isAdminUser = !!data;
-      console.log('Admin check:', { userId: user.id, isAdmin: isAdminUser, data });
-      setIsAdmin(isAdminUser);
+      const hasAdminRole = data && data.length > 0;
+      console.log('Sidebar Admin check:', { userId: user.id, hasAdminRole, data });
+      setIsAdmin(hasAdminRole);
     };
 
     checkAdminStatus();

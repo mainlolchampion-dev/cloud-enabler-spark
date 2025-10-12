@@ -22,15 +22,15 @@ export function AdminProtectedRoute({ children }: { children: React.ReactNode })
           .from('user_roles')
           .select('role')
           .eq('user_id', user.id)
-          .eq('role', 'admin')
-          .maybeSingle();
+          .eq('role', 'admin');
 
         if (error) {
           console.error('AdminProtectedRoute: Error checking admin status:', error);
           setIsAdmin(false);
         } else {
-          console.log('AdminProtectedRoute: Admin check result:', { data, isAdmin: !!data });
-          setIsAdmin(!!data);
+          const hasAdminRole = data && data.length > 0;
+          console.log('AdminProtectedRoute: Admin check result:', { data, hasAdminRole });
+          setIsAdmin(hasAdminRole);
         }
       } catch (error) {
         console.error('AdminProtectedRoute: Exception:', error);
