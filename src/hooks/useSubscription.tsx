@@ -112,64 +112,34 @@ export const useSubscription = () => {
     setState(prev => ({ ...prev, loading: true }));
     
     try {
-      // CRITICAL: Always get fresh session before calling edge function
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        console.log("No active session, clearing subscription");
-        setState({ subscription: null, loading: false });
+      // Try database first for faster response
+      const { data: dbData, error: dbError } = await supabase
+        .from("user_subscriptions")
+        .select("plan_type, status, expires_at")
+        .eq("user_id", user.id)
+        .eq("status", "active")
+        .maybeSingle();
+
+      console.log("Database subscription check:", { data: dbData, error: dbError });
+
+      if (!dbError && dbData) {
+        console.log("Found active subscription in database:", dbData);
+        setState({ 
+          subscription: {
+            plan_type: dbData.plan_type,
+            status: dbData.status,
+            expires_at: dbData.expires_at
+          }, 
+          loading: false 
+        });
         return;
       }
- 
-      // Call check-subscription edge function
-      const { data, error } = await supabase.functions.invoke("check-subscription", {
-        headers: {
-          Authorization: `Bearer ${session.access_token}`,
-        },
-      });
- 
-      console.log("check-subscription response:", { data, error });
- 
-      if (error) throw error;
- 
-      if (data && data.subscribed) {
-        const newSubscription = {
-          plan_type: data.plan_type,
-          status: data.status,
-          expires_at: data.subscription_end,
-        };
-        console.log("Setting subscription:", newSubscription);
-        
-        // CRITICAL: Set subscription and loading together in one atomic update
-        setState({ subscription: newSubscription, loading: false });
-      } else {
-        console.log("No active subscription found");
-        setState({ subscription: null, loading: false });
-      }
+
+      console.log("No subscription found in database");
+      setState({ subscription: null, loading: false });
     } catch (error) {
       console.error("Error fetching subscription:", error);
-      // Fallback to database - this is critical for reliability
-      console.log("Attempting database fallback...");
-      try {
-        const { data, error: dbError } = await supabase
-          .from("user_subscriptions")
-          .select("plan_type, status, expires_at")
-          .eq("user_id", user?.id)
-          .eq("status", "active")
-          .maybeSingle();
- 
-        console.log("Database fallback result:", { data, error: dbError });
- 
-        if (!dbError && data) {
-          console.log("Using database subscription:", data);
-          setState({ subscription: data, loading: false });
-        } else {
-          console.log("No subscription found in database");
-          setState({ subscription: null, loading: false });
-        }
-      } catch (dbError) {
-        console.error("Error fetching from database:", dbError);
-        setState({ subscription: null, loading: false });
-      }
+      setState({ subscription: null, loading: false });
     }
   }, [user]);
 
