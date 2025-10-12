@@ -191,8 +191,7 @@ export const useSubscription = () => {
     const { count } = await supabase
       .from("invitations")
       .select("*", { count: "exact", head: true })
-      .eq("user_id", user.id)
-      .eq("status", "published");
+      .eq("user_id", user.id);
 
     return (count || 0) < limits.maxInvitations;
   };
