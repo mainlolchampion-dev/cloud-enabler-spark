@@ -7,6 +7,7 @@ import { RSVPForm } from "@/components/wedding/RSVPForm";
 import { CountdownTimer } from "@/components/CountdownTimer";
 import { LivePhotoWall } from "@/components/wedding/LivePhotoWall";
 import { MapDisplay } from "@/components/wedding/MapDisplay";
+import { SeatingDisplay } from "@/components/wedding/SeatingDisplay";
 import { AnimatedSection } from "@/components/wedding/animations/AnimatedSection";
 import weddingHeroSample from "@/assets/wedding-hero-sample.jpg";
 
@@ -305,6 +306,56 @@ export function ModernMinimalist({ invitation, events, giftItems, onOpenDirectio
           </section>
         </AnimatedSection>
       )}
+
+      {/* Gift Registry - Minimal */}
+      {giftItems && giftItems.length > 0 && (
+        <AnimatedSection animation="fadeInUp" delay={700}>
+          <section className="space-y-16">
+            <h2 className="text-4xl font-light tracking-wide text-center">Λίστα Δώρων</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1">
+              {giftItems.map((item) => (
+                <div key={item.id} className="group border border-foreground/10 hover:bg-foreground/5 transition-colors overflow-hidden flex flex-col">
+                  {item.image_url && (
+                    <div className="aspect-square overflow-hidden">
+                      <img 
+                        src={item.image_url} 
+                        alt={item.item_name} 
+                        className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" 
+                      />
+                    </div>
+                  )}
+                  <div className="p-6 flex-1 flex flex-col">
+                    <h3 className="text-xl font-light mb-2">{item.item_name}</h3>
+                    {item.item_description && (
+                      <p className="text-muted-foreground font-light text-sm mb-4">{item.item_description}</p>
+                    )}
+                    <div className="mt-auto space-y-3">
+                      {item.price && (
+                        <p className="text-lg font-light">{item.price}€</p>
+                      )}
+                      {item.store_url && (
+                        <a 
+                          href={item.store_url} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="block w-full text-center border border-foreground py-2 px-4 font-light hover:bg-foreground hover:text-background transition-colors"
+                        >
+                          {item.store_name || 'Κατάστημα'}
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        </AnimatedSection>
+      )}
+
+      {/* Seating Arrangement - Minimal */}
+      <AnimatedSection animation="fadeInUp" delay={750}>
+        <SeatingDisplay invitationId={invitation.id} />
+      </AnimatedSection>
 
       {/* Gallery - Grid Layout */}
       {data.gallery && data.gallery.length > 0 && (

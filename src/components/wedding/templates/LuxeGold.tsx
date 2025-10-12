@@ -7,6 +7,7 @@ import { RSVPForm } from "@/components/wedding/RSVPForm";
 import { CountdownTimer } from "@/components/CountdownTimer";
 import { LivePhotoWall } from "@/components/wedding/LivePhotoWall";
 import { MapDisplay } from "@/components/wedding/MapDisplay";
+import { SeatingDisplay } from "@/components/wedding/SeatingDisplay";
 import { AnimatedSection } from "@/components/wedding/animations/AnimatedSection";
 import { OrnamentalCorner } from "@/components/wedding/decorative/OrnamentalCorner";
 import weddingHeroSample from "@/assets/wedding-hero-sample.jpg";
@@ -382,6 +383,63 @@ export function LuxeGold({ invitation, events, giftItems, onOpenDirections }: Te
           </section>
         </AnimatedSection>
       )}
+
+      {/* Gift Registry - Opulent */}
+      {giftItems && giftItems.length > 0 && (
+        <AnimatedSection animation="fadeInUp" delay={700}>
+          <section className="space-y-12">
+            <div className="text-center">
+              <Crown className="w-12 h-12 text-accent mx-auto mb-4" />
+              <h2 className="text-5xl font-accent text-accent tracking-wider">Λίστα Δώρων</h2>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {giftItems.map((item) => (
+                <div key={item.id} className="group hover-lift">
+                  <div className="relative bg-primary/95 border-2 border-accent/40 shadow-[var(--shadow-elegant)] overflow-hidden h-full flex flex-col">
+                    {item.image_url && (
+                      <div className="aspect-square overflow-hidden relative">
+                        <img 
+                          src={item.image_url} 
+                          alt={item.item_name} 
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                      </div>
+                    )}
+                    <div className="p-6 flex-1 flex flex-col relative">
+                      <div className="absolute inset-0 bg-gradient-to-br from-accent/10 to-transparent" />
+                      <h3 className="relative text-2xl font-heading text-accent mb-2">{item.item_name}</h3>
+                      {item.item_description && (
+                        <p className="relative text-primary-foreground/80 font-body text-sm mb-4">{item.item_description}</p>
+                      )}
+                      <div className="relative mt-auto space-y-3">
+                        {item.price && (
+                          <p className="text-2xl font-accent text-accent">{item.price}€</p>
+                        )}
+                        {item.store_url && (
+                          <a 
+                            href={item.store_url} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="block w-full text-center bg-accent text-primary py-3 px-4 font-heading hover:bg-accent/90 transition-colors"
+                          >
+                            {item.store_name || 'Κατάστημα'}
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        </AnimatedSection>
+      )}
+
+      {/* Seating Arrangement - Luxury */}
+      <AnimatedSection animation="fadeInUp" delay={750}>
+        <SeatingDisplay invitationId={invitation.id} />
+      </AnimatedSection>
 
       {/* Gallery - Luxury Grid */}
       {data.gallery && data.gallery.length > 0 && (

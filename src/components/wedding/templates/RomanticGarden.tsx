@@ -7,6 +7,7 @@ import { RSVPForm } from "@/components/wedding/RSVPForm";
 import { CountdownTimer } from "@/components/CountdownTimer";
 import { LivePhotoWall } from "@/components/wedding/LivePhotoWall";
 import { MapDisplay } from "@/components/wedding/MapDisplay";
+import { SeatingDisplay } from "@/components/wedding/SeatingDisplay";
 import { AnimatedSection } from "@/components/wedding/animations/AnimatedSection";
 import { FloralBorder } from "@/components/wedding/decorative/FloralBorder";
 import { GeometricDivider } from "@/components/wedding/decorative/GeometricDivider";
@@ -331,6 +332,54 @@ export function RomanticGarden({ invitation, events, giftItems, onOpenDirections
           </section>
         </AnimatedSection>
       )}
+
+      {/* Gift Registry */}
+      {giftItems && giftItems.length > 0 && (
+        <AnimatedSection animation="fadeInUp" delay={700}>
+          <section>
+            <h2 className="text-3xl font-script text-primary text-center mb-12">Λίστα Δώρων</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+              {giftItems.map((item) => (
+                <div key={item.id} className="hover-lift">
+                  <div className="bg-background rounded-xl overflow-hidden shadow-lg border border-primary/10 h-full flex flex-col">
+                    {item.image_url && (
+                      <div className="aspect-square overflow-hidden">
+                        <img src={item.image_url} alt={item.item_name} className="w-full h-full object-cover" />
+                      </div>
+                    )}
+                    <div className="p-6 flex-1 flex flex-col">
+                      <h3 className="text-xl font-semibold mb-2">{item.item_name}</h3>
+                      {item.item_description && (
+                        <p className="text-muted-foreground text-sm mb-4">{item.item_description}</p>
+                      )}
+                      <div className="mt-auto space-y-3">
+                        {item.price && (
+                          <p className="text-lg font-semibold text-primary">{item.price}€</p>
+                        )}
+                        {item.store_url && (
+                          <a 
+                            href={item.store_url} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="block w-full text-center bg-primary text-primary-foreground py-2 px-4 rounded-lg hover:opacity-90 transition-opacity"
+                          >
+                            Προβολή στο {item.store_name || 'Κατάστημα'}
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        </AnimatedSection>
+      )}
+
+      {/* Seating Arrangement */}
+      <AnimatedSection animation="fadeInUp" delay={750}>
+        <SeatingDisplay invitationId={invitation.id} />
+      </AnimatedSection>
 
       {/* Gallery */}
       {data.gallery && data.gallery.length > 0 && (

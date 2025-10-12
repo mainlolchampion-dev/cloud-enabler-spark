@@ -7,6 +7,7 @@ import { RSVPForm } from "@/components/wedding/RSVPForm";
 import { CountdownTimer } from "@/components/CountdownTimer";
 import { LivePhotoWall } from "@/components/wedding/LivePhotoWall";
 import { MapDisplay } from "@/components/wedding/MapDisplay";
+import { SeatingDisplay } from "@/components/wedding/SeatingDisplay";
 import { AnimatedSection } from "@/components/wedding/animations/AnimatedSection";
 import { OrnamentalCorner } from "@/components/wedding/decorative/OrnamentalCorner";
 import weddingHeroSample from "@/assets/wedding-hero-sample.jpg";
@@ -358,6 +359,59 @@ export function VintageRomance({ invitation, events, giftItems, onOpenDirections
           </section>
         </AnimatedSection>
       )}
+
+      {/* Gift Registry - Vintage Cards */}
+      {giftItems && giftItems.length > 0 && (
+        <AnimatedSection animation="fadeInUp" delay={700}>
+          <section className="space-y-12">
+            <h2 className="text-4xl font-serif italic text-primary text-center">Λίστα Δώρων</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {giftItems.map((item) => (
+                <div key={item.id} className="hover-lift">
+                  <div className="bg-background/90 rounded-lg overflow-hidden shadow-xl border-4 border-primary/20 h-full flex flex-col">
+                    {item.image_url && (
+                      <div className="aspect-square overflow-hidden">
+                        <img 
+                          src={item.image_url} 
+                          alt={item.item_name} 
+                          className="w-full h-full object-cover"
+                          style={{ filter: 'sepia(0.2) brightness(1.1)' }}
+                        />
+                      </div>
+                    )}
+                    <div className="p-6 flex-1 flex flex-col">
+                      <h3 className="text-2xl font-serif italic text-primary mb-2">{item.item_name}</h3>
+                      {item.item_description && (
+                        <p className="text-muted-foreground font-serif text-sm mb-4">{item.item_description}</p>
+                      )}
+                      <div className="mt-auto space-y-3">
+                        {item.price && (
+                          <p className="text-xl font-serif text-primary">{item.price}€</p>
+                        )}
+                        {item.store_url && (
+                          <a 
+                            href={item.store_url} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="block w-full text-center bg-primary/90 text-primary-foreground py-3 px-4 font-serif hover:bg-primary transition-colors"
+                          >
+                            {item.store_name || 'Κατάστημα'}
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        </AnimatedSection>
+      )}
+
+      {/* Seating Arrangement - Vintage */}
+      <AnimatedSection animation="fadeInUp" delay={750}>
+        <SeatingDisplay invitationId={invitation.id} />
+      </AnimatedSection>
 
       {/* Gallery - Vintage Photo Album */}
       {data.gallery && data.gallery.length > 0 && (

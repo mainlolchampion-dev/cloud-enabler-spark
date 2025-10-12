@@ -7,6 +7,7 @@ import { RSVPForm } from "@/components/wedding/RSVPForm";
 import { CountdownTimer } from "@/components/CountdownTimer";
 import { LivePhotoWall } from "@/components/wedding/LivePhotoWall";
 import { MapDisplay } from "@/components/wedding/MapDisplay";
+import { SeatingDisplay } from "@/components/wedding/SeatingDisplay";
 import { AnimatedSection } from "@/components/wedding/animations/AnimatedSection";
 import { FloralBorder } from "@/components/wedding/decorative/FloralBorder";
 import weddingHeroSample from "@/assets/wedding-hero-sample.jpg";
@@ -371,6 +372,55 @@ export function GardenRomance({ invitation, events, giftItems, onOpenDirections 
           </section>
         </AnimatedSection>
       )}
+
+      {/* Gift Registry - Botanical Style */}
+      {giftItems && giftItems.length > 0 && (
+        <AnimatedSection animation="fadeInUp" delay={700}>
+          <section className="space-y-12">
+            <h2 className="text-4xl font-accent text-primary text-center">Λίστα Δώρων</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {giftItems.map((item) => (
+                <div key={item.id} className="hover-lift">
+                  <div className="bg-background/80 backdrop-blur-sm rounded-2xl overflow-hidden shadow-[var(--shadow-card)] border border-primary/20 h-full flex flex-col">
+                    {item.image_url && (
+                      <div className="aspect-square overflow-hidden relative">
+                        <img src={item.image_url} alt={item.item_name} className="w-full h-full object-cover" />
+                        <Leaf className="absolute bottom-4 right-4 w-8 h-8 text-white/50" />
+                      </div>
+                    )}
+                    <div className="p-6 flex-1 flex flex-col relative">
+                      <h3 className="text-2xl font-heading text-primary mb-2">{item.item_name}</h3>
+                      {item.item_description && (
+                        <p className="text-muted-foreground font-body text-sm mb-4">{item.item_description}</p>
+                      )}
+                      <div className="mt-auto space-y-3">
+                        {item.price && (
+                          <p className="text-xl font-semibold text-primary">{item.price}€</p>
+                        )}
+                        {item.store_url && (
+                          <a 
+                            href={item.store_url} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="block w-full text-center bg-primary text-primary-foreground py-2 px-4 rounded-lg hover:opacity-90 transition-opacity font-heading"
+                          >
+                            {item.store_name || 'Κατάστημα'}
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        </AnimatedSection>
+      )}
+
+      {/* Seating Arrangement - Botanical */}
+      <AnimatedSection animation="fadeInUp" delay={750}>
+        <SeatingDisplay invitationId={invitation.id} />
+      </AnimatedSection>
 
       {/* Gallery */}
       {data.gallery && data.gallery.length > 0 && (
