@@ -18,6 +18,7 @@ import { WebhookIntegration } from "@/components/wedding/WebhookIntegration";
 import { InvitationSettings } from "@/components/settings/InvitationSettings";
 import { supabase } from "@/integrations/supabase/client";
 import { Label } from "@/components/ui/label";
+import { ThemeSelector } from "@/components/wedding/ThemeSelector";
 
 interface WeddingData {
   title: string;
@@ -78,6 +79,7 @@ export default function AddWedding() {
   const [publishedId, setPublishedId] = useState<string | null>(null);
   const [webhookUrl, setWebhookUrl] = useState("");
   const [password, setPassword] = useState("");
+  const [selectedTheme, setSelectedTheme] = useState("romantic");
 
   useEffect(() => {
     if (isEditMode && id) {
@@ -112,6 +114,7 @@ export default function AddWedding() {
         setData(invitation.data as unknown as WeddingData);
         setWebhookUrl(invitation.webhook_url || "");
         setPassword(invitation.password || "");
+        setSelectedTheme(invitation.theme || "romantic");
       }
       
       toast.success("Η πρόσκληση φορτώθηκε επιτυχώς");
@@ -231,13 +234,14 @@ export default function AddWedding() {
       
       await publishInvitation(invitationId, data, 'wedding', data.title);
 
-      // Update webhook and password
-      if (webhookUrl || password) {
+      // Update webhook, password, and theme
+      if (webhookUrl || password || selectedTheme !== 'romantic') {
         await supabase
           .from('invitations')
           .update({ 
             webhook_url: webhookUrl || null,
-            password: password || null
+            password: password || null,
+            theme: selectedTheme
           })
           .eq('id', invitationId);
       }
@@ -293,6 +297,25 @@ export default function AddWedding() {
               />
 
             </div>
+
+            {/* Theme Selector */}
+            <Card className="border-2 bg-gradient-to-br from-primary/5 to-secondary/5">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-xl">
+                  🎨 Επιλογή Θέματος
+                </CardTitle>
+                <p className="text-sm text-muted-foreground mt-2">
+                  Επιλέξτε ένα από τα premium θέματα μας για να δώσετε μοναδικό στυλ στην πρόσκλησή σας
+                </p>
+              </CardHeader>
+              <CardContent>
+                <ThemeSelector
+                  selectedTheme={selectedTheme}
+                  onThemeChange={setSelectedTheme}
+                  category="all"
+                />
+              </CardContent>
+            </Card>
 
             {/* Main Image */}
             <Card className="border-2">

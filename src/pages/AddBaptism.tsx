@@ -17,6 +17,7 @@ import { PreviewModal } from "@/components/wedding/PreviewModal";
 import { WebhookIntegration } from "@/components/wedding/WebhookIntegration";
 import { supabase } from "@/integrations/supabase/client";
 import { Label } from "@/components/ui/label";
+import { ThemeSelector } from "@/components/wedding/ThemeSelector";
 
 interface BaptismData {
   title: string;
@@ -70,6 +71,7 @@ export default function AddBaptism() {
   const [publishedId, setPublishedId] = useState<string | null>(null);
   const [webhookUrl, setWebhookUrl] = useState("");
   const [password, setPassword] = useState("");
+  const [selectedTheme, setSelectedTheme] = useState("romantic");
 
   useEffect(() => {
     if (isEditMode && id) {
@@ -103,6 +105,7 @@ export default function AddBaptism() {
         setData(invitation.data as unknown as BaptismData);
         setWebhookUrl(invitation.webhook_url || "");
         setPassword(invitation.password || "");
+        setSelectedTheme(invitation.theme || "romantic");
       }
       
       toast.success("Η πρόσκληση φορτώθηκε επιτυχώς");
@@ -205,13 +208,14 @@ export default function AddBaptism() {
       
       await publishInvitation(invitationId, data, 'baptism', data.title);
 
-      // Update webhook and password
-      if (webhookUrl || password) {
+      // Update webhook, password, and theme
+      if (webhookUrl || password || selectedTheme !== 'romantic') {
         await supabase
           .from('invitations')
           .update({ 
             webhook_url: webhookUrl || null,
-            password: password || null
+            password: password || null,
+            theme: selectedTheme
           })
           .eq('id', invitationId);
       }
@@ -263,6 +267,23 @@ export default function AddBaptism() {
                 placeholder="π.χ. Η Βάπτιση μας"
               />
             </div>
+
+            {/* Theme Selector */}
+            <Card className="border-2 bg-gradient-to-br from-primary/5 to-secondary/5">
+              <CardHeader>
+                <CardTitle className="text-xl">🎨 Επιλογή Θέματος</CardTitle>
+                <p className="text-sm text-muted-foreground mt-2">
+                  Επιλέξτε ένα από τα premium θέματα μας για να δώσετε μοναδικό στυλ στην πρόσκλησή σας
+                </p>
+              </CardHeader>
+              <CardContent>
+                <ThemeSelector
+                  selectedTheme={selectedTheme}
+                  onThemeChange={setSelectedTheme}
+                  category="all"
+                />
+              </CardContent>
+            </Card>
 
             <Card className="border-2">
               <CardHeader>

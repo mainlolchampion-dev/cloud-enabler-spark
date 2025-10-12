@@ -236,6 +236,7 @@ export type Database = {
           password: string | null
           published_at: string | null
           status: string
+          theme: string | null
           title: string
           type: string
           updated_at: string
@@ -250,6 +251,7 @@ export type Database = {
           password?: string | null
           published_at?: string | null
           status?: string
+          theme?: string | null
           title: string
           type: string
           updated_at?: string
@@ -264,6 +266,7 @@ export type Database = {
           password?: string | null
           published_at?: string | null
           status?: string
+          theme?: string | null
           title?: string
           type?: string
           updated_at?: string

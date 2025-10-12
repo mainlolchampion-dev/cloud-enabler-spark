@@ -13,6 +13,7 @@ import { AddToCalendar } from "@/components/wedding/AddToCalendar";
 import { LivePhotoWall } from "@/components/wedding/LivePhotoWall";
 import { PasswordProtection } from "@/components/wedding/PasswordProtection";
 import { SeatingDisplay } from "@/components/wedding/SeatingDisplay";
+import { ThemeProvider } from "@/components/wedding/ThemeProvider";
 import weddingHeroSample from "@/assets/wedding-hero-sample.jpg";
 
 interface WeddingInvitationProps {
@@ -294,14 +295,16 @@ export default function WeddingInvitation({ invitation }: WeddingInvitationProps
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-secondary-light to-background">
-      {invitation.password ? (
-        <PasswordProtection correctPassword={invitation.password}>
-          {invitationContent}
-        </PasswordProtection>
-      ) : (
-        invitationContent
-      )}
-    </div>
+    <ThemeProvider themeId={invitation.theme || 'romantic'}>
+      <div className="min-h-screen bg-gradient-to-b from-background via-secondary-light to-background">
+        {invitation.password ? (
+          <PasswordProtection correctPassword={invitation.password}>
+            {invitationContent}
+          </PasswordProtection>
+        ) : (
+          invitationContent
+        )}
+      </div>
+    </ThemeProvider>
   );
 }

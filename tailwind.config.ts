@@ -17,6 +17,11 @@ export default {
         sans: ['Montserrat', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         serif: ['Playfair Display', 'Georgia', 'serif'],
         script: ['Cormorant Garamond', 'Georgia', 'serif'],
+        elegant: ['Cinzel', 'serif'],
+        cursive: ['Great Vibes', 'cursive'],
+        dancing: ['Dancing Script', 'cursive'],
+        classic: ['Libre Baskerville', 'serif'],
+        modern: ['Raleway', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",

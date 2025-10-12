@@ -13,6 +13,7 @@ export interface BaseInvitation {
   publishedAt?: string;
   password?: string;
   webhookUrl?: string;
+  theme?: string;
   data: any;
 }
 
@@ -50,6 +51,7 @@ export async function getInvitationsIndex(): Promise<BaseInvitation[]> {
     publishedAt: inv.published_at || undefined,
     password: inv.password || undefined,
     webhookUrl: inv.webhook_url || undefined,
+    theme: inv.theme || undefined,
     data: inv.data,
   }));
 }
@@ -176,6 +178,7 @@ export async function getInvitation(id: string): Promise<BaseInvitation | null> 
     publishedAt: data.published_at || undefined,
     password: data.password || undefined,
     webhookUrl: data.webhook_url || undefined,
+    theme: data.theme || undefined,
     data: data.data,
   };
 }
