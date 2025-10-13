@@ -1,10 +1,23 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
+import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts';
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
+
+// Input validation schema
+const rsvpConfirmationSchema = z.object({
+  rsvpId: z.string().uuid(),
+  invitationId: z.string().uuid(),
+  name: z.string().trim().min(1).max(100),
+  email: z.string().email().max(255),
+  willAttend: z.enum(['yes', 'no', 'maybe']),
+  numberOfGuests: z.number().int().min(1).max(20).optional(),
+  invitationTitle: z.string().max(200).optional(),
+  invitationType: z.string().max(50).optional(),
+});
 
 interface RSVPConfirmationRequest {
   rsvpId: string;
@@ -24,10 +37,17 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const supabaseClient = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
-    );
+    // Parse and validate input
+    const body = await req.json();
+    const validation = rsvpConfirmationSchema.safeParse(body);
+    
+    if (!validation.success) {
+      console.error('❌ Invalid input:', validation.error);
+      return new Response(
+        JSON.stringify({ error: 'Invalid input', details: validation.error.errors }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
 
     const { 
       rsvpId,
@@ -38,7 +58,12 @@ const handler = async (req: Request): Promise<Response> => {
       numberOfGuests,
       invitationTitle,
       invitationType
-    }: RSVPConfirmationRequest = await req.json();
+    }: RSVPConfirmationRequest = validation.data;
+
+    const supabaseClient = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+    );
 
     console.log(`📧 Sending RSVP confirmation to ${email} for ${name}`);
 
@@ -70,15 +95,19 @@ const handler = async (req: Request): Promise<Response> => {
     let subject = '';
     let message = '';
     
+    // Sanitize user-provided text for email
+    const sanitizedName = name.replace(/[<>"']/g, '');
+    const sanitizedTitle = title.replace(/[<>"']/g, '');
+    
     if (willAttend === 'yes') {
-      subject = `✓ Επιβεβαίωση Παρουσίας - ${title}`;
+      subject = `✓ Επιβεβαίωση Παρουσίας - ${sanitizedTitle}`;
       message = `
-        <h1 style="color: #4F46E5; font-family: Arial, sans-serif;">Ευχαριστούμε ${name}!</h1>
+        <h1 style="color: #4F46E5; font-family: Arial, sans-serif;">Ευχαριστούμε ${sanitizedName}!</h1>
         <p style="font-size: 16px; color: #333; font-family: Arial, sans-serif;">
           Είμαστε πολύ χαρούμενοι που θα μας τιμήσετε με την παρουσία σας ${numberOfGuests && numberOfGuests > 1 ? `μαζί με ${numberOfGuests - 1} επιπλέον ${numberOfGuests === 2 ? 'άτομο' : 'άτομα'}` : ''}.
         </p>
         <p style="font-size: 16px; color: #333; font-family: Arial, sans-serif;">
-          Λάβαμε την επιβεβαίωσή σας για <strong>${title}</strong>.
+          Λάβαμε την επιβεβαίωσή σας για <strong>${sanitizedTitle}</strong>.
         </p>
         <div style="margin: 30px 0;">
           <a href="${invitationUrl}" 
@@ -91,11 +120,11 @@ const handler = async (req: Request): Promise<Response> => {
         </p>
       `;
     } else if (willAttend === 'no') {
-      subject = `Επιβεβαίωση Απάντησης - ${title}`;
+      subject = `Επιβεβαίωση Απάντησης - ${sanitizedTitle}`;
       message = `
-        <h1 style="color: #4F46E5; font-family: Arial, sans-serif;">Ευχαριστούμε ${name}</h1>
+        <h1 style="color: #4F46E5; font-family: Arial, sans-serif;">Ευχαριστούμε ${sanitizedName}</h1>
         <p style="font-size: 16px; color: #333; font-family: Arial, sans-serif;">
-          Λυπούμαστε που δεν θα μπορέσετε να είστε μαζί μας στο <strong>${title}</strong>.
+          Λυπούμαστε που δεν θα μπορέσετε να είστε μαζί μας στο <strong>${sanitizedTitle}</strong>.
         </p>
         <p style="font-size: 16px; color: #333; font-family: Arial, sans-serif;">
           Λάβαμε την απάντησή σας και την κατανοούμε.
@@ -105,11 +134,11 @@ const handler = async (req: Request): Promise<Response> => {
         </p>
       `;
     } else {
-      subject = `Επιβεβαίωση Απάντησης - ${title}`;
+      subject = `Επιβεβαίωση Απάντησης - ${sanitizedTitle}`;
       message = `
-        <h1 style="color: #4F46E5; font-family: Arial, sans-serif;">Ευχαριστούμε ${name}</h1>
+        <h1 style="color: #4F46E5; font-family: Arial, sans-serif;">Ευχαριστούμε ${sanitizedName}</h1>
         <p style="font-size: 16px; color: #333; font-family: Arial, sans-serif;">
-          Λάβαμε την απάντησή σας για το <strong>${title}</strong>.
+          Λάβαμε την απάντησή σας για το <strong>${sanitizedTitle}</strong>.
         </p>
         <p style="font-size: 16px; color: #333; font-family: Arial, sans-serif;">
           Ελπίζουμε να μπορέσετε να παρευρεθείτε!

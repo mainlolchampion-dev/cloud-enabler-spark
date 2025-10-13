@@ -152,9 +152,10 @@ export async function publishInvitation(
 
 // Get invitation by ID (public - anyone can access published invitations)
 export async function getInvitation(id: string): Promise<BaseInvitation | null> {
+  // Explicitly exclude sensitive fields from public queries
   const { data, error } = await supabase
     .from('invitations')
-    .select('*')
+    .select('id, type, title, status, created_at, updated_at, published_at, theme, data')
     .eq('id', id)
     .eq('status', 'published')
     .maybeSingle();
@@ -176,8 +177,9 @@ export async function getInvitation(id: string): Promise<BaseInvitation | null> 
     createdAt: data.created_at,
     updatedAt: data.updated_at,
     publishedAt: data.published_at || undefined,
-    password: data.password || undefined,
-    webhookUrl: data.webhook_url || undefined,
+    // Password and webhook_url are intentionally excluded from public queries for security
+    password: undefined,
+    webhookUrl: undefined,
     theme: data.theme || undefined,
     data: data.data,
   };

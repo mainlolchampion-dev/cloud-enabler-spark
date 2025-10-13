@@ -1,10 +1,20 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts';
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
     "authorization, x-client-info, apikey, content-type",
 };
+
+// Input validation schema
+const contactEmailSchema = z.object({
+  name: z.string().trim().min(1).max(100),
+  email: z.string().email().max(255),
+  phone: z.string().max(20).optional(),
+  subject: z.string().trim().min(1).max(200),
+  message: z.string().trim().min(1).max(2000),
+});
 
 interface ContactEmailRequest {
   name: string;
@@ -21,16 +31,30 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { name, email, phone, subject, message }: ContactEmailRequest = await req.json();
+    // Parse and validate input
+    const body = await req.json();
+    const validation = contactEmailSchema.safeParse(body);
+    
+    if (!validation.success) {
+      console.error('❌ Invalid input:', validation.error);
+      return new Response(
+        JSON.stringify({ error: 'Invalid input', details: validation.error.errors }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    const { name, email, phone, subject, message }: ContactEmailRequest = validation.data;
 
     console.log("Received contact form submission:", { name, email, subject });
 
-    // Validate required fields
-    if (!name || !email || !subject || !message) {
-      throw new Error("Missing required fields");
-    }
-
     const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+
+    // Sanitize user inputs for email
+    const sanitizedName = name.replace(/[<>"']/g, '');
+    const sanitizedEmail = email.replace(/[<>"']/g, '');
+    const sanitizedPhone = phone?.replace(/[<>"']/g, '') || '';
+    const sanitizedSubject = subject.replace(/[<>"']/g, '');
+    const sanitizedMessage = message.replace(/[<>"']/g, '');
 
     // Send email to company
     const companyEmailResponse = await fetch('https://api.resend.com/emails', {
@@ -42,8 +66,8 @@ const handler = async (req: Request): Promise<Response> => {
       body: JSON.stringify({
         from: 'WediLink Contact <onboarding@resend.dev>',
         to: ['wedilink@gmail.com'],
-        reply_to: email,
-        subject: `Νέο μήνυμα επικοινωνίας: ${subject}`,
+        reply_to: sanitizedEmail,
+        subject: `Νέο μήνυμα επικοινωνίας: ${sanitizedSubject}`,
         html: `
           <!DOCTYPE html>
           <html>
@@ -111,29 +135,29 @@ const handler = async (req: Request): Promise<Response> => {
               <div class="content">
                 <div class="info-row">
                   <div class="label">Όνομα</div>
-                  <div class="value">${name}</div>
+                  <div class="value">${sanitizedName}</div>
                 </div>
                 
                 <div class="info-row">
                   <div class="label">Email</div>
-                  <div class="value"><a href="mailto:${email}" style="color: #ff6b9d; text-decoration: none;">${email}</a></div>
+                  <div class="value"><a href="mailto:${sanitizedEmail}" style="color: #ff6b9d; text-decoration: none;">${sanitizedEmail}</a></div>
                 </div>
                 
-                ${phone ? `
+                ${sanitizedPhone ? `
                 <div class="info-row">
                   <div class="label">Τηλέφωνο</div>
-                  <div class="value">${phone}</div>
+                  <div class="value">${sanitizedPhone}</div>
                 </div>
                 ` : ''}
                 
                 <div class="info-row">
                   <div class="label">Θέμα</div>
-                  <div class="value">${subject}</div>
+                  <div class="value">${sanitizedSubject}</div>
                 </div>
                 
                 <div style="margin-top: 25px;">
                   <div class="label" style="margin-bottom: 10px;">Μήνυμα</div>
-                  <div class="message-box">${message}</div>
+                  <div class="message-box">${sanitizedMessage}</div>
                 </div>
                 
                 <div class="footer">
@@ -164,7 +188,7 @@ const handler = async (req: Request): Promise<Response> => {
       },
       body: JSON.stringify({
         from: 'WediLink <onboarding@resend.dev>',
-        to: [email],
+        to: [sanitizedEmail],
         subject: 'Λάβαμε το μήνυμά σας - WediLink',
         html: `
           <!DOCTYPE html>
@@ -224,14 +248,14 @@ const handler = async (req: Request): Promise<Response> => {
                 <h1 style="margin: 0; font-size: 28px;">✉️ Λάβαμε το μήνυμά σας!</h1>
               </div>
               <div class="content">
-                <p style="font-size: 18px; margin-bottom: 20px;">Γεια σας ${name},</p>
+                <p style="font-size: 18px; margin-bottom: 20px;">Γεια σας ${sanitizedName},</p>
                 
                 <p>Σας ευχαριστούμε που επικοινωνήσατε με το WediLink! Λάβαμε το μήνυμά σας και θα επικοινωνήσουμε μαζί σας το συντομότερο δυνατό.</p>
                 
                 <div class="message-preview">
                   <p style="margin: 0; color: #666; font-size: 13px; font-weight: bold;">ΤΟ ΜΗΝΥΜΑ ΣΑΣ:</p>
-                  <p style="margin: 10px 0 0 0;"><strong>Θέμα:</strong> ${subject}</p>
-                  <p style="margin: 10px 0 0 0; white-space: pre-wrap;">${message}</p>
+                  <p style="margin: 10px 0 0 0;"><strong>Θέμα:</strong> ${sanitizedSubject}</p>
+                  <p style="margin: 10px 0 0 0; white-space: pre-wrap;">${sanitizedMessage}</p>
                 </div>
                 
                 <p>Η ομάδα υποστήριξής μας θα εξετάσει το αίτημά σας και θα επικοινωνήσει μαζί σας εντός 24 ωρών.</p>

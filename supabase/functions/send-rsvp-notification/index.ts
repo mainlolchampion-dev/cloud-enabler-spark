@@ -1,10 +1,25 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
+import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts';
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
+
+// Input validation schema
+const rsvpNotificationSchema = z.object({
+  invitationId: z.string().uuid(),
+  guestName: z.string().trim().min(1).max(100),
+  guestEmail: z.string().email().max(255),
+  guestPhone: z.string().max(20).optional(),
+  willAttend: z.enum(['yes', 'no', 'maybe']),
+  numberOfGuests: z.number().int().min(1).max(20),
+  dietaryRestrictions: z.string().max(500).optional(),
+  message: z.string().max(2000).optional(),
+  invitationTitle: z.string().max(200).optional(),
+  invitationType: z.enum(['wedding', 'baptism', 'party']),
+});
 
 interface RSVPNotificationRequest {
   invitationId: string;
@@ -26,6 +41,18 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
+    // Parse and validate input
+    const body = await req.json();
+    const validation = rsvpNotificationSchema.safeParse(body);
+    
+    if (!validation.success) {
+      console.error('❌ Invalid input:', validation.error);
+      return new Response(
+        JSON.stringify({ error: 'Invalid input', details: validation.error.errors }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     const {
       invitationId,
       guestName,
@@ -37,7 +64,7 @@ const handler = async (req: Request): Promise<Response> => {
       message,
       invitationTitle,
       invitationType,
-    }: RSVPNotificationRequest = await req.json();
+    }: RSVPNotificationRequest = validation.data;
 
     console.log(`📩 Sending RSVP notification for invitation ${invitationId}`);
 
@@ -82,7 +109,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     const ownerEmail = ownerUser.email;
 
-    // Format attendance status in Greek
+    // Format attendance status in Greek - sanitized
     const attendanceStatus = willAttend === 'yes' 
       ? '✅ Ναι, θα έρθω' 
       : willAttend === 'no' 
@@ -95,6 +122,14 @@ const handler = async (req: Request): Promise<Response> => {
       : invitationType === 'baptism' 
       ? 'Βάπτιση' 
       : 'Πάρτι';
+
+    // Sanitize user-provided strings for email
+    const sanitizedGuestName = guestName.replace(/[<>"']/g, '');
+    const sanitizedGuestEmail = guestEmail.replace(/[<>"']/g, '');
+    const sanitizedGuestPhone = guestPhone?.replace(/[<>"']/g, '') || '';
+    const sanitizedTitle = invitationTitle?.replace(/[<>"']/g, '') || 'Εκδήλωση';
+    const sanitizedDietaryRestrictions = dietaryRestrictions?.replace(/[<>"']/g, '') || '';
+    const sanitizedMessage = message?.replace(/[<>"']/g, '') || '';
 
     // Build email HTML
     let emailHtml = `
@@ -109,24 +144,24 @@ const handler = async (req: Request): Promise<Response> => {
         
         <div style="background-color: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
           <h2 style="color: #f97316; margin-top: 0;">Στοιχεία Εκδήλωσης</h2>
-          <p><strong>Τίτλος:</strong> ${invitationTitle || 'Εκδήλωση'}</p>
+          <p><strong>Τίτλος:</strong> ${sanitizedTitle}</p>
           <p><strong>Τύπος:</strong> ${eventTypeGreek}</p>
         </div>
         
         <div style="background-color: #fff; border: 1px solid #ddd; padding: 20px; border-radius: 8px; margin: 20px 0;">
           <h2 style="color: #f97316; margin-top: 0;">Στοιχεία Καλεσμένου</h2>
-          <p><strong>Όνομα:</strong> ${guestName}</p>
-          <p><strong>Email:</strong> ${guestEmail}</p>
-          ${guestPhone ? `<p><strong>Τηλέφωνο:</strong> ${guestPhone}</p>` : ''}
+          <p><strong>Όνομα:</strong> ${sanitizedGuestName}</p>
+          <p><strong>Email:</strong> ${sanitizedGuestEmail}</p>
+          ${sanitizedGuestPhone ? `<p><strong>Τηλέφωνο:</strong> ${sanitizedGuestPhone}</p>` : ''}
           <p><strong>Θα παραβρεθεί:</strong> ${attendanceStatus}</p>
           ${willAttend === 'yes' ? `<p><strong>Αριθμός ατόμων:</strong> ${numberOfGuests}</p>` : ''}
-          ${dietaryRestrictions ? `<p><strong>Διατροφικοί περιορισμοί:</strong> ${dietaryRestrictions}</p>` : ''}
+          ${sanitizedDietaryRestrictions ? `<p><strong>Διατροφικοί περιορισμοί:</strong> ${sanitizedDietaryRestrictions}</p>` : ''}
         </div>
         
-        ${message ? `
+        ${sanitizedMessage ? `
         <div style="background-color: #fff8e6; border-left: 4px solid #f97316; padding: 15px; margin: 20px 0;">
           <h3 style="color: #f97316; margin-top: 0;">Μήνυμα από τον καλεσμένο:</h3>
-          <p style="font-style: italic;">"${message}"</p>
+          <p style="font-style: italic;">"${sanitizedMessage}"</p>
         </div>
         ` : ''}
         
@@ -148,7 +183,7 @@ const handler = async (req: Request): Promise<Response> => {
       body: JSON.stringify({
         from: 'WediLink RSVP <onboarding@resend.dev>',
         to: [ownerEmail],
-        subject: `Νέα απάντηση RSVP: ${guestName} - ${invitationTitle || 'Εκδήλωση'}`,
+        subject: `Νέα απάντηση RSVP: ${sanitizedGuestName} - ${sanitizedTitle}`,
         html: emailHtml,
       }),
     });
@@ -164,7 +199,7 @@ const handler = async (req: Request): Promise<Response> => {
       user_id: invitation.user_id,
       invitation_id: invitationId,
       type: 'email',
-      subject: `Νέα απάντηση RSVP: ${guestName}`,
+      subject: `Νέα απάντηση RSVP: ${sanitizedGuestName}`,
       recipient: ownerEmail,
       status,
       error_message: errorMessage,
