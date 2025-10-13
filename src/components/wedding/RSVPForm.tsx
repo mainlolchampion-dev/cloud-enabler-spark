@@ -105,28 +105,26 @@ export function RSVPForm({ invitationId, invitationType, invitationTitle }: RSVP
           .single();
 
         if (invitation?.user_id) {
-          // Send webhook if configured (Plus/Premium feature)
+          // Send webhook if configured (Plus/Premium feature) - now server-side for security
           if (invitation.webhook_url) {
             try {
-              await fetch(invitation.webhook_url, {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
+              await supabase.functions.invoke('trigger-webhook', {
+                body: {
+                  url: invitation.webhook_url,
+                  data: {
+                    event: "rsvp_created",
+                    invitation_id: invitationId,
+                    rsvp: {
+                      name: formData.name,
+                      email: formData.email,
+                      will_attend: formData.willAttend,
+                      number_of_guests: parseInt(formData.numberOfGuests),
+                    },
+                    timestamp: new Date().toISOString(),
+                  }
                 },
-                mode: "no-cors",
-                body: JSON.stringify({
-                  event: "rsvp_created",
-                  invitation_id: invitationId,
-                  rsvp: {
-                    name: formData.name,
-                    email: formData.email,
-                    will_attend: formData.willAttend,
-                    number_of_guests: parseInt(formData.numberOfGuests),
-                  },
-                  timestamp: new Date().toISOString(),
-                }),
               });
-              console.log('✅ Webhook triggered');
+              console.log('✅ Webhook triggered via server');
             } catch (webhookError) {
               console.error('⚠️ Webhook failed:', webhookError);
             }

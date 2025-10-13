@@ -11,6 +11,7 @@ import { MapDisplay } from "@/components/wedding/MapDisplay";
 import { SeatingDisplay } from "@/components/wedding/SeatingDisplay";
 import { AnimatedSection } from "@/components/wedding/animations/AnimatedSection";
 import { FloralBorder } from "@/components/wedding/decorative/FloralBorder";
+import { SanitizedHtml } from "@/components/wedding/SanitizedHtml";
 import weddingHeroSample from "@/assets/wedding-hero-sample.jpg";
 
 interface TemplateProps {
@@ -95,9 +96,9 @@ export function GardenRomance({ invitation, events, giftItems, onOpenDirections 
               <Leaf className="absolute -bottom-2 -left-2 w-8 h-8 text-primary/40 -rotate-135" />
               <Leaf className="absolute -bottom-2 -right-2 w-8 h-8 text-primary/40 rotate-135" />
               
-              <div 
+              <SanitizedHtml 
+                html={data.invitationText}
                 className="text-lg font-heading text-foreground leading-relaxed text-center"
-                dangerouslySetInnerHTML={{ __html: data.invitationText }}
               />
             </div>
           </section>
@@ -374,9 +375,9 @@ export function GardenRomance({ invitation, events, giftItems, onOpenDirections 
           <section className="max-w-2xl mx-auto">
             <div className="bg-background rounded-2xl p-8 shadow-[var(--shadow-card)] border border-primary/10">
               <h2 className="text-4xl font-accent text-primary text-center mb-6">Στοιχεία Επικοινωνίας</h2>
-              <div 
+              <SanitizedHtml 
+                html={data.contactInfo}
                 className="text-center text-muted-foreground font-body prose prose-sm max-w-none"
-                dangerouslySetInnerHTML={{ __html: data.contactInfo }}
               />
             </div>
           </section>

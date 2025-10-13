@@ -14,6 +14,7 @@ import { LivePhotoWall } from "@/components/wedding/LivePhotoWall";
 import { PasswordProtection } from "@/components/wedding/PasswordProtection";
 import { SeatingDisplay } from "@/components/wedding/SeatingDisplay";
 import { ThemeProvider } from "@/components/wedding/ThemeProvider";
+import { SanitizedHtml } from "@/components/wedding/SanitizedHtml";
 import baptismHeroSample from "@/assets/baptism-hero-sample.jpg";
 
 interface BaptismInvitationProps {
@@ -68,7 +69,7 @@ export default function BaptismInvitation({ invitation }: BaptismInvitationProps
       {/* Invitation Text */}
       {data.invitationText && (
         <section className="prose max-w-none text-center">
-          <div dangerouslySetInnerHTML={{ __html: data.invitationText }} />
+          <SanitizedHtml html={data.invitationText} />
         </section>
       )}
 
@@ -299,7 +300,7 @@ export default function BaptismInvitation({ invitation }: BaptismInvitationProps
         <section>
           <h2 className="text-2xl font-semibold font-serif text-center mb-6">Επικοινωνία</h2>
           <div className="prose max-w-none text-center">
-            <div dangerouslySetInnerHTML={{ __html: data.contactInfo }} />
+            <SanitizedHtml html={data.contactInfo} />
           </div>
         </section>
       )}
@@ -309,7 +310,7 @@ export default function BaptismInvitation({ invitation }: BaptismInvitationProps
         <section>
           <h2 className="text-2xl font-semibold font-serif text-center mb-6">Ευχές</h2>
           <div className="prose max-w-none text-center">
-            <div dangerouslySetInnerHTML={{ __html: data.wishesText }} />
+            <SanitizedHtml html={data.wishesText} />
           </div>
         </section>
       )}

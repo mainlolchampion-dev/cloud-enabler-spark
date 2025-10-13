@@ -11,6 +11,7 @@ import { MapDisplay } from "@/components/wedding/MapDisplay";
 import { SeatingDisplay } from "@/components/wedding/SeatingDisplay";
 import { AnimatedSection } from "@/components/wedding/animations/AnimatedSection";
 import { OrnamentalCorner } from "@/components/wedding/decorative/OrnamentalCorner";
+import { SanitizedHtml } from "@/components/wedding/SanitizedHtml";
 import weddingHeroSample from "@/assets/wedding-hero-sample.jpg";
 
 interface TemplateProps {
@@ -86,9 +87,9 @@ export function LuxeGold({ invitation, events, giftItems, onOpenDirections }: Te
               <OrnamentalCorner corner="top-left" pattern="geometric" color="hsl(var(--accent))" size={80} />
               <OrnamentalCorner corner="bottom-right" pattern="geometric" color="hsl(var(--accent))" size={80} />
               
-              <div 
+              <SanitizedHtml 
+                html={data.invitationText}
                 className="relative text-xl font-heading text-primary-foreground leading-relaxed text-center"
-                dangerouslySetInnerHTML={{ __html: data.invitationText }}
               />
             </div>
           </section>
@@ -385,9 +386,9 @@ export function LuxeGold({ invitation, events, giftItems, onOpenDirections }: Te
               <div className="text-center mb-8">
                 <h2 className="text-5xl font-accent text-accent tracking-wider">Στοιχεία Επικοινωνίας</h2>
               </div>
-              <div 
+              <SanitizedHtml 
+                html={data.contactInfo}
                 className="text-center text-primary-foreground/90 font-heading prose prose-sm max-w-none"
-                dangerouslySetInnerHTML={{ __html: data.contactInfo }}
               />
             </div>
           </section>

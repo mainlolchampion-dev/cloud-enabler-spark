@@ -12,6 +12,7 @@ import { SeatingDisplay } from "@/components/wedding/SeatingDisplay";
 import { AnimatedSection } from "@/components/wedding/animations/AnimatedSection";
 import { GeometricDivider } from "@/components/wedding/decorative/GeometricDivider";
 import { OrnamentalCorner } from "@/components/wedding/decorative/OrnamentalCorner";
+import { SanitizedHtml } from "@/components/wedding/SanitizedHtml";
 import weddingHeroSample from "@/assets/wedding-hero-sample.jpg";
 
 interface TemplateProps {
@@ -71,9 +72,9 @@ export function ClassicFormal({ invitation, events, giftItems, onOpenDirections 
               <div className="absolute -bottom-1 -left-1 w-8 h-8 border-b-4 border-l-4 border-accent" />
               <div className="absolute -bottom-1 -right-1 w-8 h-8 border-b-4 border-r-4 border-accent" />
               
-              <div 
+              <SanitizedHtml 
+                html={data.invitationText}
                 className="text-center text-lg font-classic leading-loose text-foreground"
-                dangerouslySetInnerHTML={{ __html: data.invitationText }}
               />
             </div>
           </section>
@@ -310,9 +311,9 @@ export function ClassicFormal({ invitation, events, giftItems, onOpenDirections 
             <div className="border-2 border-primary/20 rounded-lg p-8 shadow-xl bg-background">
               <h2 className="text-4xl font-elegant text-primary text-center mb-8 tracking-wide">Στοιχεία Επικοινωνίας</h2>
               <GeometricDivider style="classic" color="#d4af37" className="mb-8" />
-              <div 
+              <SanitizedHtml 
+                html={data.contactInfo}
                 className="text-center text-muted-foreground font-classic prose prose-sm max-w-none"
-                dangerouslySetInnerHTML={{ __html: data.contactInfo }}
               />
             </div>
           </section>

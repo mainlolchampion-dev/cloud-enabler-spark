@@ -13,6 +13,7 @@ import { AnimatedSection } from "@/components/wedding/animations/AnimatedSection
 import { FloralBorder } from "@/components/wedding/decorative/FloralBorder";
 import { GeometricDivider } from "@/components/wedding/decorative/GeometricDivider";
 import { OrnamentalCorner } from "@/components/wedding/decorative/OrnamentalCorner";
+import { SanitizedHtml } from "@/components/wedding/SanitizedHtml";
 import weddingHeroSample from "@/assets/wedding-hero-sample.jpg";
 
 interface TemplateProps {
@@ -65,9 +66,9 @@ export function RomanticGarden({ invitation, events, giftItems, onOpenDirections
                 <OrnamentalCorner corner="top-left" pattern="floral" color="#f4a7b9" size={80} />
                 <OrnamentalCorner corner="bottom-right" pattern="floral" color="#f4a7b9" size={80} />
                 
-                <div 
+                <SanitizedHtml 
+                  html={data.invitationText}
                   className="text-lg font-serif text-foreground leading-relaxed"
-                  dangerouslySetInnerHTML={{ __html: data.invitationText }}
                 />
               </div>
             </div>
@@ -334,9 +335,9 @@ export function RomanticGarden({ invitation, events, giftItems, onOpenDirections
           <section className="max-w-2xl mx-auto">
             <div className="bg-background rounded-xl p-8 shadow-lg border border-primary/10">
               <h2 className="text-3xl font-script text-primary text-center mb-6">Στοιχεία Επικοινωνίας</h2>
-              <div 
+              <SanitizedHtml 
+                html={data.contactInfo}
                 className="text-center text-muted-foreground prose prose-sm max-w-none"
-                dangerouslySetInnerHTML={{ __html: data.contactInfo }}
               />
             </div>
           </section>

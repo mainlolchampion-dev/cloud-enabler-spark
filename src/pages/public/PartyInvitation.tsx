@@ -14,6 +14,7 @@ import { LivePhotoWall } from "@/components/wedding/LivePhotoWall";
 import { PasswordProtection } from "@/components/wedding/PasswordProtection";
 import { SeatingDisplay } from "@/components/wedding/SeatingDisplay";
 import { ThemeProvider } from "@/components/wedding/ThemeProvider";
+import { SanitizedHtml } from "@/components/wedding/SanitizedHtml";
 import partyHeroSample from "@/assets/party-hero-sample.jpg";
 
 interface PartyInvitationProps {
@@ -67,9 +68,9 @@ export default function PartyInvitation({ invitation }: PartyInvitationProps) {
 
       {/* Invitation Text */}
       <section className="text-center">
-        <div
+        <SanitizedHtml 
+          html={data.invitationText}
           className="text-gray-700 text-lg"
-          dangerouslySetInnerHTML={{ __html: data.invitationText }}
         />
       </section>
 
@@ -211,9 +212,9 @@ export default function PartyInvitation({ invitation }: PartyInvitationProps) {
           <h2 className="text-2xl font-bold font-serif text-center mb-4">
             Επικοινωνία
           </h2>
-          <div
+          <SanitizedHtml 
+            html={data.contactInfo}
             className="text-gray-700 text-center"
-            dangerouslySetInnerHTML={{ __html: data.contactInfo }}
           />
         </section>
       )}

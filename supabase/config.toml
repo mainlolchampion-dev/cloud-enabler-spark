@@ -1,5 +1,8 @@
 project_id = "gcaelrgcmjpkibugcbva"
 
+[functions.trigger-webhook]
+verify_jwt = false
+
 [functions.send-rsvp-confirmation]
 verify_jwt = false
 

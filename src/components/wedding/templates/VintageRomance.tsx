@@ -11,6 +11,7 @@ import { MapDisplay } from "@/components/wedding/MapDisplay";
 import { SeatingDisplay } from "@/components/wedding/SeatingDisplay";
 import { AnimatedSection } from "@/components/wedding/animations/AnimatedSection";
 import { OrnamentalCorner } from "@/components/wedding/decorative/OrnamentalCorner";
+import { SanitizedHtml } from "@/components/wedding/SanitizedHtml";
 import weddingHeroSample from "@/assets/wedding-hero-sample.jpg";
 
 interface TemplateProps {
@@ -88,9 +89,9 @@ export function VintageRomance({ invitation, events, giftItems, onOpenDirections
               <OrnamentalCorner corner="top-left" pattern="vintage" color="#d4a574" size={60} />
               <OrnamentalCorner corner="bottom-right" pattern="vintage" color="#d4a574" size={60} />
               
-              <div 
+              <SanitizedHtml 
+                html={data.invitationText}
                 className="text-lg font-serif text-foreground/90 leading-relaxed text-center italic"
-                dangerouslySetInnerHTML={{ __html: data.invitationText }}
               />
             </div>
           </section>
@@ -361,9 +362,9 @@ export function VintageRomance({ invitation, events, giftItems, onOpenDirections
           <section className="max-w-2xl mx-auto">
             <div className="bg-background/90 rounded-lg p-10 shadow-xl border-4 border-primary/20">
               <h2 className="text-4xl font-serif italic text-primary text-center mb-8">Στοιχεία Επικοινωνίας</h2>
-              <div 
+              <SanitizedHtml 
+                html={data.contactInfo}
                 className="text-center text-muted-foreground font-serif prose prose-sm max-w-none"
-                dangerouslySetInnerHTML={{ __html: data.contactInfo }}
               />
             </div>
           </section>

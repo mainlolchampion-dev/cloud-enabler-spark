@@ -10,6 +10,7 @@ import { LivePhotoWall } from "@/components/wedding/LivePhotoWall";
 import { MapDisplay } from "@/components/wedding/MapDisplay";
 import { SeatingDisplay } from "@/components/wedding/SeatingDisplay";
 import { AnimatedSection } from "@/components/wedding/animations/AnimatedSection";
+import { SanitizedHtml } from "@/components/wedding/SanitizedHtml";
 import weddingHeroSample from "@/assets/wedding-hero-sample.jpg";
 
 interface TemplateProps {
@@ -60,9 +61,9 @@ export function ModernMinimalist({ invitation, events, giftItems, onOpenDirectio
       {data.invitationText && (
         <AnimatedSection animation="fadeInScale" delay={100}>
           <section className="max-w-3xl mx-auto text-center">
-            <div 
+            <SanitizedHtml 
+              html={data.invitationText}
               className="text-lg md:text-xl font-light leading-relaxed text-foreground/80 space-y-4"
-              dangerouslySetInnerHTML={{ __html: data.invitationText }}
             />
           </section>
         </AnimatedSection>
@@ -308,9 +309,9 @@ export function ModernMinimalist({ invitation, events, giftItems, onOpenDirectio
           <section className="max-w-2xl mx-auto">
             <div className="border border-foreground/10 p-12">
               <h2 className="text-4xl font-light tracking-wide text-center mb-12">Στοιχεία Επικοινωνίας</h2>
-              <div 
+              <SanitizedHtml 
+                html={data.contactInfo}
                 className="text-center text-muted-foreground font-light prose prose-sm max-w-none"
-                dangerouslySetInnerHTML={{ __html: data.contactInfo }}
               />
             </div>
           </section>
