@@ -41,8 +41,14 @@ export function SafariAdventure({ invitation, events }: TemplateProps) {
 
       <AnimatedSection animation="fadeInScale" delay={200}>
         <section className="py-16 px-4">
-          <CountdownTimer targetDate={baptismDate} />
-          <AddToCalendar title={invitation.title} startDate={baptismDate.toISOString()} endDate={new Date(baptismDate.getTime() + 3 * 60 * 60 * 1000).toISOString()} location={data.ceremonyLocation || ''} description={data.invitationText || ''} />
+          <CountdownTimer targetDate={baptismDate.toISOString()} />
+          <AddToCalendar 
+            title={invitation.title} 
+            startDate={baptismDate} 
+            endDate={new Date(baptismDate.getTime() + 3 * 60 * 60 * 1000)} 
+            location={data.ceremonyLocation || ''} 
+            description={data.invitationText || ''} 
+          />
         </section>
       </AnimatedSection>
 

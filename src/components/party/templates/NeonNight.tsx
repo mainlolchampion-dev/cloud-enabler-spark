@@ -33,8 +33,14 @@ export function NeonNight({ invitation }: TemplateProps) {
 
       <AnimatedSection animation="fadeInScale" delay={200}>
         <section className="py-16 px-4">
-          <CountdownTimer targetDate={partyDate} />
-          <AddToCalendar title={invitation.title} startDate={partyDate.toISOString()} endDate={new Date(partyDate.getTime() + 5 * 60 * 60 * 1000).toISOString()} location={data.ceremonyLocation || ''} description={data.invitationText || ''} />
+          <CountdownTimer targetDate={partyDate.toISOString()} />
+          <AddToCalendar 
+            title={invitation.title} 
+            startDate={partyDate} 
+            endDate={new Date(partyDate.getTime() + 5 * 60 * 60 * 1000)} 
+            location={data.ceremonyLocation || ''} 
+            description={data.invitationText || ''} 
+          />
         </section>
       </AnimatedSection>
 

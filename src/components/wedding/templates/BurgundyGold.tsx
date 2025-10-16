@@ -145,11 +145,11 @@ export function BurgundyGold({ invitation, events, giftItems, onOpenDirections }
         <section className="py-16 px-4 bg-primary text-primary-foreground">
           <div className="max-w-4xl mx-auto text-center space-y-8">
             <h2 className="text-4xl font-elegant">Μέτρημα Αντίστροφης</h2>
-            <CountdownTimer targetDate={weddingDate} />
+            <CountdownTimer targetDate={weddingDate.toISOString()} />
             <AddToCalendar
               title={invitation.title}
-              startDate={weddingDate.toISOString()}
-              endDate={new Date(weddingDate.getTime() + 4 * 60 * 60 * 1000).toISOString()}
+              startDate={weddingDate}
+              endDate={new Date(weddingDate.getTime() + 4 * 60 * 60 * 1000)}
               location={data.ceremonyLocation || ''}
               description={data.invitationText || ''}
             />
