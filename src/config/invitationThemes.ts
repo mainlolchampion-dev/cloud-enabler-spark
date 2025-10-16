@@ -354,6 +354,153 @@ export const invitationThemes: InvitationTheme[] = [
       particleColor: '#ffd700',
     },
   },
+
+  // BURGUNDY GOLD - Wedding Premium
+  {
+    id: 'burgundy_gold',
+    name: 'Burgundy & Gold',
+    nameEl: 'Μπορντό & Χρυσό',
+    description: 'Rich burgundy wine with luxurious gold accents',
+    preview: '/themes/burgundy-preview.jpg',
+    category: 'wedding',
+    fonts: {
+      heading: 'font-elegant',
+      body: 'font-serif',
+      accent: 'font-cursive',
+    },
+    colors: {
+      background: '0 25% 98%',
+      foreground: '345 70% 15%',
+      primary: '345 65% 40%',
+      primaryForeground: '0 25% 98%',
+      secondary: '45 90% 55%',
+      secondaryForeground: '345 70% 15%',
+      accent: '345 55% 55%',
+      accentForeground: '0 25% 98%',
+      muted: '345 20% 92%',
+      mutedForeground: '345 40% 35%',
+      border: '345 15% 88%',
+    },
+    gradients: {
+      hero: 'linear-gradient(135deg, hsl(345 65% 40%) 0%, hsl(345 60% 30%) 100%)',
+      section: 'linear-gradient(180deg, hsl(0 25% 98%) 0%, hsl(345 20% 95%) 100%)',
+      overlay: 'linear-gradient(to bottom, rgba(114,28,36,0.7), transparent)',
+    },
+    shadows: {
+      card: '0 4px 8px -2px hsl(345 65% 40% / 0.2)',
+      image: '0 12px 20px -4px hsl(345 65% 40% / 0.25)',
+      elegant: '0 15px 50px -12px hsl(45 90% 55% / 0.35)',
+    },
+    layout: {
+      sectionSpacing: 'space-y-20',
+      cardRadius: 'rounded-xl',
+      cardPadding: 'p-10',
+    },
+    animations: {
+      enabled: true,
+      particleType: 'flowers',
+      particleDensity: 'medium',
+      particleColor: '#8B2635',
+    },
+  },
+
+  // SAFARI ADVENTURE - Baptism Premium
+  {
+    id: 'safari_adventure',
+    name: 'Safari Adventure',
+    nameEl: 'Σαφάρι Περιπέτεια',
+    description: 'Wild safari animals with warm earthy tones',
+    preview: '/themes/safari-preview.jpg',
+    category: 'baptism',
+    fonts: {
+      heading: 'font-sans',
+      body: 'font-sans',
+      accent: 'font-sans',
+    },
+    colors: {
+      background: '40 45% 98%',
+      foreground: '30 50% 20%',
+      primary: '30 65% 45%',
+      primaryForeground: '40 45% 98%',
+      secondary: '85 40% 55%',
+      secondaryForeground: '30 50% 20%',
+      accent: '35 70% 60%',
+      accentForeground: '30 50% 20%',
+      muted: '40 30% 92%',
+      mutedForeground: '30 35% 35%',
+      border: '40 25% 88%',
+    },
+    gradients: {
+      hero: 'linear-gradient(135deg, hsl(30 65% 65%) 0%, hsl(85 50% 70%) 100%)',
+      section: 'linear-gradient(180deg, hsl(40 45% 98%) 0%, hsl(40 35% 95%) 100%)',
+      overlay: 'linear-gradient(to bottom, rgba(139,90,43,0.5), transparent)',
+    },
+    shadows: {
+      card: '0 4px 8px -2px hsl(30 65% 45% / 0.15)',
+      image: '0 12px 20px -4px hsl(30 65% 45% / 0.2)',
+      elegant: '0 15px 50px -12px hsl(30 65% 45% / 0.25)',
+    },
+    layout: {
+      sectionSpacing: 'space-y-16',
+      cardRadius: 'rounded-2xl',
+      cardPadding: 'p-8',
+    },
+    animations: {
+      enabled: true,
+      particleType: 'leaves',
+      particleDensity: 'subtle',
+      particleColor: '#8B5A2B',
+    },
+  },
+
+  // NEON NIGHT - Party Premium
+  {
+    id: 'neon_night',
+    name: 'Neon Night',
+    nameEl: 'Νέον Βραδιά',
+    description: 'Electric neon lights with cyberpunk vibes',
+    preview: '/themes/neon-preview.jpg',
+    category: 'party',
+    fonts: {
+      heading: 'font-sans',
+      body: 'font-modern',
+      accent: 'font-sans',
+    },
+    colors: {
+      background: '240 15% 10%',
+      foreground: '0 0% 98%',
+      primary: '280 100% 60%',
+      primaryForeground: '0 0% 100%',
+      secondary: '330 100% 50%',
+      secondaryForeground: '0 0% 100%',
+      accent: '180 100% 50%',
+      accentForeground: '240 15% 10%',
+      muted: '240 10% 20%',
+      mutedForeground: '0 0% 70%',
+      border: '240 10% 30%',
+    },
+    gradients: {
+      hero: 'linear-gradient(135deg, hsl(280 100% 60%) 0%, hsl(330 100% 50%) 50%, hsl(180 100% 50%) 100%)',
+      section: 'linear-gradient(180deg, hsl(240 15% 10%) 0%, hsl(240 12% 15%) 100%)',
+      overlay: 'linear-gradient(to bottom, rgba(139,92,246,0.6), transparent)',
+    },
+    shadows: {
+      card: '0 4px 20px -2px hsl(280 100% 60% / 0.4)',
+      image: '0 12px 30px -4px hsl(330 100% 50% / 0.5)',
+      elegant: '0 15px 60px -12px hsl(180 100% 50% / 0.6)',
+    },
+    layout: {
+      sectionSpacing: 'space-y-16',
+      cardRadius: 'rounded-xl',
+      cardPadding: 'p-8',
+    },
+    animations: {
+      enabled: true,
+      particleType: 'sparkles',
+      particleDensity: 'dramatic',
+      particleColor: '#EC4899',
+    },
+  },
 ];
 
 export const getThemeById = (id: string): InvitationTheme | undefined => {

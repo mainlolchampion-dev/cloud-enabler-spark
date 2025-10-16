@@ -5,6 +5,9 @@ import { ModernMinimalist } from "./ModernMinimalist";
 import { GardenRomance } from "./GardenRomance";
 import { VintageRomance } from "./VintageRomance";
 import { LuxeGold } from "./LuxeGold";
+import { BurgundyGold } from "./BurgundyGold";
+import { SafariAdventure } from "@/components/baptism/templates/SafariAdventure";
+import { NeonNight } from "@/components/party/templates/NeonNight";
 
 interface TemplateRouterProps {
   invitation: BaseInvitation;
@@ -23,6 +26,9 @@ export function TemplateRouter({ invitation, events, giftItems, onOpenDirections
     garden: GardenRomance,
     vintage: VintageRomance,
     luxe: LuxeGold,
+    burgundy_gold: BurgundyGold,
+    safari_adventure: SafariAdventure,
+    neon_night: NeonNight,
   };
 
   const TemplateComponent = templates[theme as keyof typeof templates] || RomanticGarden;
