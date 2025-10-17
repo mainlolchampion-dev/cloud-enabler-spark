@@ -25,6 +25,16 @@ export function LiebeRomantic({ invitation, events }: TemplateProps) {
   const ceremonyLocation = data.ceremonyLocation || "";
   const coordinates = data.coordinates as [number, number] | undefined;
 
+  console.log("LiebeRomantic - invitation data:", {
+    heroImage: data.heroImage,
+    bridePhoto: data.bridePhoto,
+    groomPhoto: data.groomPhoto,
+    ceremonyImage: data.ceremonyImage,
+    rsvpImage: data.rsvpImage,
+    weddingDate: data.weddingDate,
+    ceremonyTime: data.ceremonyTime
+  });
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-pink-50 via-white to-purple-50 font-serif">
       {/* Navigation */}
@@ -112,7 +122,10 @@ export function LiebeRomantic({ invitation, events }: TemplateProps) {
             )}
 
             <div className="py-8">
-              <CountdownTimer targetDate={weddingDate.toISOString()} />
+              <CountdownTimer 
+                targetDate={format(weddingDate, "yyyy-MM-dd")}
+                targetTime={data.ceremonyTime || "18:00"}
+              />
             </div>
 
             <AddToCalendar
