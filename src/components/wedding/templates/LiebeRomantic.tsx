@@ -5,7 +5,6 @@ import { CountdownTimer } from "@/components/CountdownTimer";
 import { AddToCalendar } from "@/components/wedding/AddToCalendar";
 import { MapDisplay } from "@/components/wedding/MapDisplay";
 import { RSVPForm } from "@/components/wedding/RSVPForm";
-import { AnimatedSection } from "@/components/wedding/animations/AnimatedSection";
 import { LivePhotoWall } from "@/components/wedding/LivePhotoWall";
 import { Heart } from "lucide-react";
 
@@ -25,8 +24,7 @@ export function LiebeRomantic({ invitation, events }: TemplateProps) {
   return (
     <div className="min-h-screen bg-gradient-to-b from-pink-50 via-purple-50 to-pink-50 font-serif">
       {/* Hero Section - Intro */}
-      <AnimatedSection animation="fadeInScale">
-        <section className="relative min-h-screen flex items-center justify-center overflow-hidden py-20 px-4">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden py-20 px-4 animate-fade-in">
           {/* Decorative Background Images */}
           <div className="absolute inset-0 opacity-20">
             <div className="absolute top-20 left-10 w-64 h-80 rounded-lg transform -rotate-6 bg-gradient-to-br from-pink-200 to-purple-200"></div>
@@ -71,11 +69,9 @@ export function LiebeRomantic({ invitation, events }: TemplateProps) {
             <Heart className="w-12 h-12" fill="currentColor" />
           </div>
         </section>
-      </AnimatedSection>
 
       {/* Save the Date Section */}
-      <AnimatedSection animation="fadeInUp" delay={100}>
-        <section className="py-20 px-4 bg-white/80 backdrop-blur-sm">
+      <section className="py-20 px-4 bg-white/80 backdrop-blur-sm animate-fade-in">
           <div className="max-w-4xl mx-auto">
             <div className="bg-gradient-to-br from-pink-50 to-purple-50 rounded-3xl shadow-xl p-12 text-center space-y-8">
               <div className="space-y-4">
@@ -105,11 +101,9 @@ export function LiebeRomantic({ invitation, events }: TemplateProps) {
             </div>
           </div>
         </section>
-      </AnimatedSection>
 
       {/* About the Couple Section */}
-      <AnimatedSection animation="fadeInUp" delay={200}>
-        <section className="py-20 px-4 bg-gradient-to-br from-purple-50 via-pink-50 to-purple-50">
+      <section className="py-20 px-4 bg-gradient-to-br from-purple-50 via-pink-50 to-purple-50 animate-fade-in">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16 space-y-4">
               <h2 className="text-5xl font-light text-gray-800">Για το Ζευγάρι</h2>
@@ -167,12 +161,10 @@ export function LiebeRomantic({ invitation, events }: TemplateProps) {
             </div>
           </div>
         </section>
-      </AnimatedSection>
 
       {/* Our Story Section */}
       {data.storyText && (
-        <AnimatedSection animation="fadeInUp" delay={100}>
-          <section className="py-20 px-4 bg-white/80 backdrop-blur-sm">
+        <section className="py-20 px-4 bg-white/80 backdrop-blur-sm animate-fade-in">
             <div className="max-w-6xl mx-auto">
               <div className="text-center mb-16 space-y-4">
                 <h2 className="text-5xl font-light text-gray-800">Η Ιστορία Μας</h2>
@@ -184,12 +176,10 @@ export function LiebeRomantic({ invitation, events }: TemplateProps) {
               </div>
             </div>
           </section>
-        </AnimatedSection>
       )}
 
       {/* The Event Section */}
-      <AnimatedSection animation="fadeInUp" delay={200}>
-        <section className="py-20 px-4 bg-gradient-to-br from-pink-50 via-purple-50 to-pink-50">
+      <section className="py-20 px-4 bg-gradient-to-br from-pink-50 via-purple-50 to-pink-50 animate-fade-in">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16 space-y-4">
               <h2 className="text-5xl font-light text-gray-800">Η Εκδήλωση</h2>
@@ -261,12 +251,10 @@ export function LiebeRomantic({ invitation, events }: TemplateProps) {
             )}
           </div>
         </section>
-      </AnimatedSection>
 
       {/* Quote Section */}
       {data.quoteText && (
-        <AnimatedSection animation="fadeInScale" delay={100}>
-          <section className="py-20 px-4 bg-gradient-to-r from-pink-100 via-purple-100 to-pink-100">
+        <section className="py-20 px-4 bg-gradient-to-r from-pink-100 via-purple-100 to-pink-100 animate-fade-in">
             <div className="max-w-4xl mx-auto text-center">
               <blockquote className="space-y-6">
                 <div className="text-6xl text-pink-300">"</div>
@@ -277,12 +265,10 @@ export function LiebeRomantic({ invitation, events }: TemplateProps) {
               </blockquote>
             </div>
           </section>
-        </AnimatedSection>
       )}
 
       {/* Live Photo Wall */}
-      <AnimatedSection animation="fadeInUp" delay={100}>
-        <section className="py-20 px-4 bg-white/80 backdrop-blur-sm">
+      <section className="py-20 px-4 bg-white/80 backdrop-blur-sm animate-fade-in">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16 space-y-4">
               <h2 className="text-5xl font-light text-gray-800">Οι Φωτογραφίες Μας</h2>
@@ -291,11 +277,9 @@ export function LiebeRomantic({ invitation, events }: TemplateProps) {
             <LivePhotoWall invitationId={invitation.id} isPublic />
           </div>
         </section>
-      </AnimatedSection>
 
       {/* RSVP Section */}
-      <AnimatedSection animation="fadeInUp" delay={200}>
-        <section className="py-20 px-4 bg-gradient-to-br from-purple-50 via-pink-50 to-purple-50">
+      <section className="py-20 px-4 bg-gradient-to-br from-purple-50 via-pink-50 to-purple-50 animate-fade-in">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16 space-y-4">
               <h2 className="text-5xl font-light text-gray-800">RSVP</h2>
@@ -326,7 +310,6 @@ export function LiebeRomantic({ invitation, events }: TemplateProps) {
             </div>
           </div>
         </section>
-      </AnimatedSection>
 
       {/* Footer */}
       <footer className="py-12 px-4 bg-gradient-to-r from-pink-900 via-purple-900 to-pink-900 text-white">
