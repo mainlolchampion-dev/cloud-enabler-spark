@@ -11,19 +11,19 @@ export function WatercolorBackground({ variant = 'mixed', opacity = 0.3 }: Water
   };
 
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
       {/* Watercolor splash effects */}
       <div 
         className={`absolute top-0 left-0 w-full h-full bg-gradient-radial ${variants[variant]} blur-3xl`}
         style={{ opacity }}
       ></div>
       <div 
-        className="absolute top-20 right-10 w-96 h-96 bg-gradient-radial from-pink-300/30 via-transparent to-transparent rounded-full blur-3xl"
-        style={{ opacity }}
+        className="absolute top-20 right-10 w-96 h-96 bg-gradient-radial from-pink-300/20 via-transparent to-transparent rounded-full blur-3xl"
+        style={{ opacity: opacity * 0.7 }}
       ></div>
       <div 
-        className="absolute bottom-20 left-20 w-80 h-80 bg-gradient-radial from-purple-300/30 via-transparent to-transparent rounded-full blur-3xl"
-        style={{ opacity }}
+        className="absolute bottom-20 left-20 w-80 h-80 bg-gradient-radial from-purple-300/20 via-transparent to-transparent rounded-full blur-3xl"
+        style={{ opacity: opacity * 0.7 }}
       ></div>
     </div>
   );

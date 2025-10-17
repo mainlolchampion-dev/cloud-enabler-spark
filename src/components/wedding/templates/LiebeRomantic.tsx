@@ -32,22 +32,22 @@ export function LiebeRomantic({ invitation, events }: TemplateProps) {
 
       {/* Hero Section */}
       <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-24 pb-20 px-4">
-        <WatercolorBackground variant="mixed" opacity={0.4} />
+        <WatercolorBackground variant="mixed" opacity={0.2} />
         
         {/* Scattered Polaroid Photos */}
-        <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute inset-0 z-0">
           {data.heroImage && (
             <>
-              <div className="absolute top-32 left-[10%] w-48">
+              <div className="absolute top-32 left-[10%] w-48 opacity-100">
                 <PolaroidPhoto src={data.heroImage} alt="Photo 1" rotation={-8} />
               </div>
-              <div className="absolute top-48 right-[15%] w-44">
+              <div className="absolute top-48 right-[15%] w-44 opacity-100">
                 <PolaroidPhoto src={data.heroImage} alt="Photo 2" rotation={12} />
               </div>
-              <div className="absolute bottom-32 left-[15%] w-40">
+              <div className="absolute bottom-32 left-[15%] w-40 opacity-100">
                 <PolaroidPhoto src={data.heroImage} alt="Photo 3" rotation={-5} />
               </div>
-              <div className="absolute bottom-48 right-[12%] w-44">
+              <div className="absolute bottom-48 right-[12%] w-44 opacity-100">
                 <PolaroidPhoto src={data.heroImage} alt="Photo 4" rotation={8} />
               </div>
             </>
@@ -55,7 +55,7 @@ export function LiebeRomantic({ invitation, events }: TemplateProps) {
         </div>
 
         {/* Main Content */}
-        <div className="relative z-10 text-center space-y-12 max-w-4xl mx-auto">
+        <div className="relative z-20 text-center space-y-12 max-w-4xl mx-auto">
           {/* Main Photo */}
           {data.heroImage && (
             <div className="relative inline-block">
@@ -63,7 +63,7 @@ export function LiebeRomantic({ invitation, events }: TemplateProps) {
                 <img
                   src={data.heroImage}
                   alt="Couple"
-                  className="w-96 h-[480px] object-cover"
+                  className="w-96 h-[480px] object-cover opacity-100"
                 />
               </div>
             </div>
@@ -93,7 +93,7 @@ export function LiebeRomantic({ invitation, events }: TemplateProps) {
 
       {/* Save the Date Section */}
       <section className="relative py-24 px-4 bg-white/80 backdrop-blur-sm">
-        <WatercolorBackground variant="pink" opacity={0.2} />
+        <WatercolorBackground variant="pink" opacity={0.15} />
         
         <div className="relative z-10 max-w-4xl mx-auto">
           <div className="text-center space-y-12">
@@ -128,7 +128,7 @@ export function LiebeRomantic({ invitation, events }: TemplateProps) {
 
       {/* About the Couple Section */}
       <section id="couple" className="relative py-24 px-4 bg-gradient-to-br from-purple-50 via-pink-50 to-purple-50">
-        <WatercolorBackground variant="purple" opacity={0.3} />
+        <WatercolorBackground variant="purple" opacity={0.15} />
         
         <div className="relative z-10 max-w-6xl mx-auto">
           <div className="text-center mb-20 space-y-6">
@@ -141,12 +141,12 @@ export function LiebeRomantic({ invitation, events }: TemplateProps) {
             {/* Bride */}
             <div className="text-center space-y-8 group">
               {data.bridePhoto && (
-                <div className="relative inline-block">
+                <div className="relative inline-block z-10">
                   <div className="bg-white p-6 shadow-2xl transform rotate-2 group-hover:rotate-0 transition-transform duration-500">
                     <img
                       src={data.bridePhoto}
                       alt={data.brideName}
-                      className="w-72 h-96 object-cover"
+                      className="w-72 h-96 object-cover opacity-100"
                     />
                   </div>
                 </div>
@@ -165,12 +165,12 @@ export function LiebeRomantic({ invitation, events }: TemplateProps) {
             {/* Groom */}
             <div className="text-center space-y-8 group">
               {data.groomPhoto && (
-                <div className="relative inline-block">
+                <div className="relative inline-block z-10">
                   <div className="bg-white p-6 shadow-2xl transform -rotate-2 group-hover:rotate-0 transition-transform duration-500">
                     <img
                       src={data.groomPhoto}
                       alt={data.groomName}
-                      className="w-72 h-96 object-cover"
+                      className="w-72 h-96 object-cover opacity-100"
                     />
                   </div>
                 </div>
@@ -227,12 +227,12 @@ export function LiebeRomantic({ invitation, events }: TemplateProps) {
 
           <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
             {data.ceremonyImage && (
-              <div className="transform -rotate-3 hover:rotate-0 transition-transform duration-500">
+              <div className="transform -rotate-3 hover:rotate-0 transition-transform duration-500 relative z-10">
                 <div className="bg-white p-6 shadow-2xl">
                   <img
                     src={data.ceremonyImage}
                     alt="Ceremony"
-                    className="w-full h-[480px] object-cover"
+                    className="w-full h-[480px] object-cover opacity-100"
                   />
                 </div>
               </div>
@@ -344,12 +344,12 @@ export function LiebeRomantic({ invitation, events }: TemplateProps) {
 
           <div className="grid md:grid-cols-2 gap-12 items-center">
             {data.rsvpImage && (
-              <div className="transform rotate-3 hover:rotate-0 transition-transform duration-500">
+              <div className="transform rotate-3 hover:rotate-0 transition-transform duration-500 relative z-10">
                 <div className="bg-white p-6 shadow-2xl">
                   <img
                     src={data.rsvpImage}
                     alt="RSVP"
-                    className="w-full h-[480px] object-cover"
+                    className="w-full h-[480px] object-cover opacity-100"
                   />
                 </div>
               </div>
