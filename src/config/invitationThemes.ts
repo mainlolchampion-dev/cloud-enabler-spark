@@ -501,6 +501,55 @@ export const invitationThemes: InvitationTheme[] = [
       particleColor: '#EC4899',
     },
   },
+
+  // LIEBE ROMANTIC - European Elegance
+  {
+    id: 'liebe_romantic',
+    name: 'Liebe Romantic',
+    nameEl: 'Λίμπε Ρομαντικό',
+    description: 'European elegance with soft lavender and pink tones',
+    preview: '/themes/liebe-preview.jpg',
+    category: 'wedding',
+    fonts: {
+      heading: 'font-serif',     // Playfair Display
+      body: 'font-sans',         // Montserrat
+      accent: 'font-elegant',    // Cinzel
+    },
+    colors: {
+      background: '300 40% 98%',
+      foreground: '300 30% 20%',
+      primary: '280 60% 60%',
+      primaryForeground: '300 40% 98%',
+      secondary: '320 50% 75%',
+      secondaryForeground: '300 30% 20%',
+      accent: '280 55% 55%',
+      accentForeground: '300 40% 98%',
+      muted: '300 25% 95%',
+      mutedForeground: '300 20% 40%',
+      border: '300 20% 90%',
+    },
+    gradients: {
+      hero: 'linear-gradient(135deg, hsl(320 50% 95%) 0%, hsl(280 60% 92%) 100%)',
+      section: 'linear-gradient(180deg, hsl(300 40% 98%) 0%, hsl(320 45% 96%) 50%, hsl(280 50% 95%) 100%)',
+      overlay: 'linear-gradient(to bottom, rgba(147,51,234,0.3), transparent)',
+    },
+    shadows: {
+      card: '0 4px 8px -2px hsl(280 60% 60% / 0.15)',
+      image: '0 12px 20px -4px hsl(280 60% 60% / 0.2)',
+      elegant: '0 15px 50px -12px hsl(320 50% 75% / 0.25)',
+    },
+    layout: {
+      sectionSpacing: 'space-y-20',
+      cardRadius: 'rounded-3xl',
+      cardPadding: 'p-10',
+    },
+    animations: {
+      enabled: true,
+      particleType: 'hearts',
+      particleDensity: 'medium',
+      particleColor: '#D8B4FE',
+    },
+  },
 ];
 
 export const getThemeById = (id: string): InvitationTheme | undefined => {

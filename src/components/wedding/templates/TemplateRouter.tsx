@@ -6,6 +6,7 @@ import { GardenRomance } from "./GardenRomance";
 import { VintageRomance } from "./VintageRomance";
 import { LuxeGold } from "./LuxeGold";
 import { BurgundyGold } from "./BurgundyGold";
+import { LiebeRomantic } from "./LiebeRomantic";
 import { SafariAdventure } from "@/components/baptism/templates/SafariAdventure";
 import { NeonNight } from "@/components/party/templates/NeonNight";
 
@@ -27,6 +28,7 @@ export function TemplateRouter({ invitation, events, giftItems, onOpenDirections
     vintage: VintageRomance,
     luxe: LuxeGold,
     burgundy_gold: BurgundyGold,
+    liebe_romantic: LiebeRomantic,
     safari_adventure: SafariAdventure,
     neon_night: NeonNight,
   };
