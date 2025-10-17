@@ -22,6 +22,9 @@ export default {
         dancing: ['Dancing Script', 'cursive'],
         classic: ['Libre Baskerville', 'serif'],
         modern: ['Raleway', 'sans-serif'],
+        romantic: ['Alex Brush', 'cursive'],
+        signature: ['Allura', 'cursive'],
+        handwritten: ['Sacramento', 'cursive'],
       },
       colors: {
         border: "hsl(var(--border))",
