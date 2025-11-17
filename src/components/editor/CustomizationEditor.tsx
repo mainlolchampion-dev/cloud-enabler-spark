@@ -1,4 +1,5 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { X, Undo, Redo, Eye, Save, Download, Monitor, Tablet, Smartphone } from 'lucide-react';
 import { toast } from 'sonner';
@@ -91,10 +92,10 @@ export function CustomizationEditor({ template, onClose, onSave }: Customization
   }, [handleUndo, handleRedo]);
 
   // Add keyboard event listener
-  useState(() => {
+  useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  });
+  }, [handleKeyDown]);
 
   const handleSave = () => {
     onSave(currentTemplate);
@@ -126,9 +127,21 @@ export function CustomizationEditor({ template, onClose, onSave }: Customization
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-background">
-      {/* Top Toolbar */}
-      <header className="h-16 border-b bg-white/80 backdrop-blur-xl flex items-center justify-between px-6 sticky top-0 z-10">
+    <AnimatePresence>
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.2 }}
+        className="fixed inset-0 z-50 bg-background"
+      >
+        {/* Top Toolbar */}
+        <motion.header 
+          initial={{ y: -100 }}
+          animate={{ y: 0 }}
+          transition={{ duration: 0.3, type: "spring" }}
+          className="h-16 border-b bg-white/80 backdrop-blur-xl flex items-center justify-between px-6 sticky top-0 z-10"
+        >
         <div className="flex items-center gap-4">
           <div>
             <h2 className="font-semibold text-lg">{currentTemplate.name}</h2>
@@ -221,36 +234,66 @@ export function CustomizationEditor({ template, onClose, onSave }: Customization
             <X className="h-4 w-4" />
           </Button>
         </div>
-      </header>
+      </motion.header>
 
       {/* Main Editor Layout */}
       <div className="flex h-[calc(100vh-4rem)]">
         {/* Left Sidebar */}
-        {!previewMode && (
-          <EditorSidebar
-            template={currentTemplate}
-            onUpdate={updateTemplate}
-          />
-        )}
+        <AnimatePresence>
+          {!previewMode && (
+            <motion.div
+              initial={{ x: -400, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: -400, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <EditorSidebar
+                template={currentTemplate}
+                onUpdate={updateTemplate}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Center Canvas - Preview */}
-        <div className="flex-1 overflow-auto bg-muted/30 p-8">
-          <div className={`mx-auto transition-all duration-300 ${getViewModeWidth()}`}>
+        <motion.div 
+          className="flex-1 overflow-auto bg-muted/30 p-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4, delay: 0.2 }}
+        >
+          <motion.div 
+            className={`mx-auto transition-all duration-300 ${getViewModeWidth()}`}
+            animate={{ 
+              maxWidth: viewMode === 'mobile' ? '375px' : 
+                       viewMode === 'tablet' ? '768px' : '100%' 
+            }}
+            transition={{ duration: 0.3 }}
+          >
             <EditablePreview
               template={currentTemplate}
               onUpdate={updateTemplate}
               previewMode={previewMode}
             />
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
 
       {/* Toast hint */}
-      {!previewMode && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 text-xs text-muted-foreground bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full border shadow-sm">
-          💡 Click any text to edit • Ctrl+Z to undo • Ctrl+S to save
-        </div>
-      )}
-    </div>
+      <AnimatePresence>
+        {!previewMode && (
+          <motion.div 
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 100, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed bottom-6 left-1/2 -translate-x-1/2 text-xs text-muted-foreground bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full border shadow-sm"
+          >
+            💡 Click any text to edit • Ctrl+Z to undo • Ctrl+S to save
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+    </AnimatePresence>
   );
 }

@@ -58,6 +58,10 @@ export function EditorSidebar({ template, onUpdate }: EditorSidebarProps) {
             <Palette className="h-4 w-4" />
             Colors
           </TabsTrigger>
+          <TabsTrigger value="typography" className="gap-2">
+            <Type className="h-4 w-4" />
+            Fonts
+          </TabsTrigger>
           <TabsTrigger value="advanced" className="gap-2">
             <Settings className="h-4 w-4" />
             Advanced
@@ -283,6 +287,89 @@ export function EditorSidebar({ template, onUpdate }: EditorSidebarProps) {
               step={5}
               className="py-4"
             />
+          </div>
+        </TabsContent>
+
+        {/* TYPOGRAPHY TAB */}
+        <TabsContent value="typography" className="p-6 space-y-6">
+          <div className="space-y-2">
+            <Label htmlFor="primary-font">Primary Font</Label>
+            <Select defaultValue="playfair">
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="playfair">Playfair Display (Elegant)</SelectItem>
+                <SelectItem value="montserrat">Montserrat (Modern)</SelectItem>
+                <SelectItem value="great-vibes">Great Vibes (Script)</SelectItem>
+                <SelectItem value="cinzel">Cinzel (Luxury)</SelectItem>
+                <SelectItem value="cormorant">Cormorant Garamond (Serif)</SelectItem>
+                <SelectItem value="dancing">Dancing Script (Playful)</SelectItem>
+                <SelectItem value="libre">Libre Baskerville (Classic)</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="secondary-font">Secondary Font</Label>
+            <Select defaultValue="montserrat">
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="montserrat">Montserrat</SelectItem>
+                <SelectItem value="raleway">Raleway</SelectItem>
+                <SelectItem value="libre">Libre Baskerville</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Title Font Size</Label>
+            <Slider
+              defaultValue={[48]}
+              min={32}
+              max={72}
+              step={4}
+              className="py-4"
+            />
+            <p className="text-xs text-muted-foreground text-center">48px</p>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Body Font Size</Label>
+            <Slider
+              defaultValue={[16]}
+              min={12}
+              max={24}
+              step={1}
+              className="py-4"
+            />
+            <p className="text-xs text-muted-foreground text-center">16px</p>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Line Height</Label>
+            <Slider
+              defaultValue={[150]}
+              min={100}
+              max={200}
+              step={10}
+              className="py-4"
+            />
+            <p className="text-xs text-muted-foreground text-center">150%</p>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Letter Spacing</Label>
+            <Slider
+              defaultValue={[0]}
+              min={-2}
+              max={4}
+              step={0.5}
+              className="py-4"
+            />
+            <p className="text-xs text-muted-foreground text-center">0px</p>
           </div>
         </TabsContent>
 

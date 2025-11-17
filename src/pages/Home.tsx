@@ -18,12 +18,20 @@ import baptismHero from "@/assets/baptism-hero-sample.jpg";
 import partyHero from "@/assets/party-hero-sample.jpg";
 import { TemplateGallery } from "@/components/editor/TemplateGallery";
 import { CustomizationEditor } from "@/components/editor/CustomizationEditor";
+import { ShareSuccessModal } from "@/components/editor/ShareSuccessModal";
+import { LoadingSpinner } from "@/components/editor/LoadingSpinner";
 import { PremiumTemplateConfig } from "@/config/premiumTemplates";
 import { toast } from "sonner";
 
 const Home = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<PremiumTemplateConfig | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [createdInvitation, setCreatedInvitation] = useState<{
+    url: string;
+    name: string;
+  } | null>(null);
   const navigate = useNavigate();
 
   const handleSelectTemplate = (template: PremiumTemplateConfig) => {
@@ -35,24 +43,41 @@ const Home = () => {
   };
 
   const handleSaveTemplate = async (customizedTemplate: PremiumTemplateConfig) => {
+    setSaving(true);
     try {
-      // For now, just show success message
-      // Backend integration will be added next
-      toast.success('🎉 Template saved!', {
-        description: 'Your customized invitation is ready to share'
+      // Create invitation via API
+      const { createInvitation } = await import('@/utils/invitationApi');
+      
+      const response = await createInvitation({
+        templateData: customizedTemplate,
+        hostName: customizedTemplate.names,
+        eventDate: customizedTemplate.date || new Date().toISOString(),
+        eventType: customizedTemplate.type
       });
       
       // Close editor
       setSelectedTemplate(null);
       
-      // Scroll to templates section
-      const templatesSection = document.getElementById('templates');
-      templatesSection?.scrollIntoView({ behavior: 'smooth' });
+      // Show success modal with share options
+      setCreatedInvitation({
+        url: response.shareUrl,
+        name: customizedTemplate.names
+      });
+      setShareModalOpen(true);
+      
     } catch (error) {
-      toast.error('Failed to save template');
+      toast.error('Failed to save template', {
+        description: error instanceof Error ? error.message : 'Please try again'
+      });
       console.error(error);
+    } finally {
+      setSaving(false);
     }
   };
+
+  if (saving) {
+    return <LoadingSpinner message="Creating your beautiful invitation..." />;
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -273,8 +298,17 @@ const Home = () => {
                   Ξεκινήστε Δωρεάν →
                 </Button>
               </Link>
-              <Button size="lg" variant="outline" className="text-base px-10 py-7 border-2 hover:bg-muted/50 transition-all">
-                Δείτε Demo
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="text-base px-10 py-7 border-2 hover:bg-muted/50 transition-all"
+                onClick={() => {
+                  const templatesSection = document.getElementById('templates');
+                  templatesSection?.scrollIntoView({ behavior: 'smooth' });
+                }}
+              >
+                <Sparkles className="h-5 w-5 mr-2" />
+                Browse 60 Templates
               </Button>
             </div>
             
@@ -700,6 +734,16 @@ const Home = () => {
           template={selectedTemplate}
           onClose={handleCloseEditor}
           onSave={handleSaveTemplate}
+        />
+      )}
+
+      {/* Share Success Modal */}
+      {createdInvitation && (
+        <ShareSuccessModal
+          open={shareModalOpen}
+          onOpenChange={setShareModalOpen}
+          shareUrl={createdInvitation.url}
+          invitationName={createdInvitation.name}
         />
       )}
 
