@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -99,12 +100,22 @@ export function TemplateGallery({ onSelectTemplate }: TemplateGalleryProps) {
         </p>
 
         {/* Template Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredTemplates.map((template) => (
-            <Card 
-              key={template.id} 
-              className="group overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-1"
+        <motion.div 
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          {filteredTemplates.map((template, index) => (
+            <motion.div
+              key={template.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: index * 0.05 }}
             >
+              <Card 
+                className="group overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-1"
+              >
               {/* Image */}
               <div className="relative h-48 overflow-hidden">
                 <img
@@ -187,8 +198,9 @@ export function TemplateGallery({ onSelectTemplate }: TemplateGalleryProps) {
                 </div>
               </CardContent>
             </Card>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         {/* Empty state */}
         {filteredTemplates.length === 0 && (

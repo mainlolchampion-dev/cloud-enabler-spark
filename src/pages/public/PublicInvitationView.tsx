@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -9,6 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Calendar, MapPin, Share2, Copy, Facebook, Twitter, Mail, Heart } from 'lucide-react';
 import { PremiumTemplateConfig } from '@/config/premiumTemplates';
 import { getInvitation, submitRSVP } from '@/utils/invitationApi';
+import { AnimatedCountdown } from '@/components/editor/AnimatedCountdown';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 
@@ -150,7 +152,10 @@ export function PublicInvitationView() {
       {/* Main Content */}
       <main className="pt-20">
         {/* Hero Section */}
-        <section 
+        <motion.section 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1 }}
           className="relative h-screen flex flex-col items-center justify-center text-white p-8"
           style={{
             backgroundImage: `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.5)), url(${template.backgroundImage})`,
@@ -171,77 +176,146 @@ export function PublicInvitationView() {
           </div>
 
           {/* Main Content */}
-          <div className="text-center space-y-6 max-w-2xl animate-fade-in">
-            <h1 className="text-5xl md:text-7xl font-serif font-bold drop-shadow-2xl">
+          <motion.div 
+            initial={{ y: 30, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-center space-y-6 max-w-2xl"
+          >
+            <motion.h1 
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="text-5xl md:text-7xl font-serif font-bold drop-shadow-2xl"
+            >
               {template.title}
-            </h1>
+            </motion.h1>
             
             {template.subtitle && (
-              <p className="text-2xl font-light tracking-wide drop-shadow-lg">
+              <motion.p 
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.8, delay: 0.6 }}
+                className="text-2xl font-light tracking-wide drop-shadow-lg"
+              >
                 {template.subtitle}
-              </p>
+              </motion.p>
             )}
 
-            <p className="text-4xl md:text-5xl font-serif italic drop-shadow-2xl mt-12">
+            <motion.p 
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.8 }}
+              className="text-4xl md:text-5xl font-serif italic drop-shadow-2xl mt-12"
+            >
               {template.names}
-            </p>
+            </motion.p>
+
+            {/* Countdown Timer */}
+            {template.date && (
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.8, delay: 1.0 }}
+              >
+                <AnimatedCountdown
+                  targetDate={template.date}
+                  style="modern"
+                  accentColor={template.accentColor}
+                />
+              </motion.div>
+            )}
 
             {/* Date & Venue */}
             {(template.date || template.venue) && (
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mt-16 text-lg">
+              <motion.div 
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.8, delay: 1.2 }}
+                className="flex flex-col sm:flex-row items-center justify-center gap-6 mt-8 text-lg"
+              >
                 {template.date && (
-                  <div className="flex items-center gap-3 bg-black/30 backdrop-blur-sm px-6 py-3 rounded-full">
+                  <motion.div 
+                    whileHover={{ scale: 1.05 }}
+                    className="flex items-center gap-3 bg-black/30 backdrop-blur-sm px-6 py-3 rounded-full"
+                  >
                     <Calendar className="h-6 w-6" />
                     <span className="font-medium">
                       {format(new Date(template.date), 'EEEE, MMMM d, yyyy')}
                     </span>
-                  </div>
+                  </motion.div>
                 )}
                 {template.venue && (
-                  <div className="flex items-center gap-3 bg-black/30 backdrop-blur-sm px-6 py-3 rounded-full">
+                  <motion.div 
+                    whileHover={{ scale: 1.05 }}
+                    className="flex items-center gap-3 bg-black/30 backdrop-blur-sm px-6 py-3 rounded-full"
+                  >
                     <MapPin className="h-6 w-6" />
                     <span className="font-medium">{template.venue}</span>
-                  </div>
+                  </motion.div>
                 )}
-              </div>
+              </motion.div>
             )}
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mt-12">
-              <Button
-                size="lg"
-                className="text-lg px-8 py-6"
-                onClick={() => setRsvpModalOpen(true)}
-                style={{ backgroundColor: template.accentColor }}
-              >
-                <Calendar className="h-5 w-5 mr-2" />
-                RSVP Now
-              </Button>
-              <Button
-                size="lg"
-                variant="secondary"
-                className="text-lg px-8 py-6 bg-white/20 backdrop-blur-md border-white/30 hover:bg-white/30"
-                onClick={() => setShareModalOpen(true)}
-              >
-                <Share2 className="h-5 w-5 mr-2" />
-                Share
-              </Button>
-            </div>
-          </div>
+            <motion.div 
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.8, delay: 1.4 }}
+              className="flex flex-col sm:flex-row gap-4 justify-center mt-12"
+            >
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button
+                  size="lg"
+                  className="text-lg px-8 py-6"
+                  onClick={() => setRsvpModalOpen(true)}
+                  style={{ backgroundColor: template.accentColor }}
+                >
+                  <Calendar className="h-5 w-5 mr-2" />
+                  RSVP Now
+                </Button>
+              </motion.div>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button
+                  size="lg"
+                  variant="secondary"
+                  className="text-lg px-8 py-6 bg-white/20 backdrop-blur-md border-white/30 hover:bg-white/30"
+                  onClick={() => setShareModalOpen(true)}
+                >
+                  <Share2 className="h-5 w-5 mr-2" />
+                  Share
+                </Button>
+              </motion.div>
+            </motion.div>
+          </motion.div>
 
           {/* Scroll Indicator */}
-          <div className="absolute bottom-8 animate-bounce">
+          <motion.div 
+            className="absolute bottom-8"
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+          >
             <div className="w-6 h-10 border-2 border-white/50 rounded-full flex items-start justify-center p-2">
-              <div className="w-1 h-3 bg-white/50 rounded-full" />
+              <motion.div 
+                className="w-1 h-3 bg-white/50 rounded-full"
+                animate={{ y: [0, 12, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+              />
             </div>
-          </div>
+          </motion.div>
 
           {/* Accent decoration */}
-          <div 
+          <motion.div 
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ duration: 1, delay: 0.5 }}
             className="absolute bottom-0 left-0 right-0 h-2"
-            style={{ backgroundColor: template.accentColor }}
+            style={{ 
+              backgroundColor: template.accentColor,
+              transformOrigin: 'left'
+            }}
           />
-        </section>
+        </motion.section>
 
         {/* Description Section */}
         {template.description && (

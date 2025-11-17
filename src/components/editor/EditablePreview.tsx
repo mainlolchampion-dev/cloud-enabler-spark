@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { PremiumTemplateConfig } from '@/config/premiumTemplates';
 import { Calendar, MapPin } from 'lucide-react';
 import { Card } from '@/components/ui/card';
+import { AnimatedCountdown } from './AnimatedCountdown';
 
 interface EditablePreviewProps {
   template: PremiumTemplateConfig;
@@ -106,6 +107,17 @@ export function EditablePreview({ template, onUpdate, previewMode }: EditablePre
             value={template.names}
             className="text-3xl font-serif italic drop-shadow-lg mt-8"
           />
+
+          {/* Countdown Timer */}
+          {template.date && (
+            <div className="mt-12">
+              <AnimatedCountdown
+                targetDate={template.date}
+                style="classic"
+                accentColor={template.accentColor}
+              />
+            </div>
+          )}
 
           {/* Date & Venue */}
           {(template.date || template.venue) && (
