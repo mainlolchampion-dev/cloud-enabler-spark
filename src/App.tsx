@@ -20,6 +20,7 @@ import AllParties from "./pages/AllParties";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 import InvitationRouter from "./pages/public/InvitationRouter";
+import { PublicInvitationView } from "./pages/public/PublicInvitationView";
 import RSVPManagement from "./pages/RSVPManagement";
 import UserGuide from "./pages/UserGuide";
 import FAQ from "./pages/FAQ";
@@ -54,6 +55,7 @@ const App = () => (
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/prosklisi/:id" element={<InvitationRouter />} />
           <Route path="/proskisi/:id" element={<InvitationRouter />} /> {/* Alternative spelling for backwards compatibility */}
+          <Route path="/invitation/:id" element={<PublicInvitationView />} />
           <Route path="/user-guide" element={<UserGuide />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/terms-of-service" element={<TermsOfService />} />

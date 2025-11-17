@@ -10,15 +10,49 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Heart, CheckCircle, Image, Calendar, Share2, Users, Sparkles, Globe, Mail, Menu, FileText, HelpCircle, Phone } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FAQSection } from "@/components/FAQSection";
 import { useState } from "react";
 import weddingHero from "@/assets/wedding-hero-sample.jpg";
 import baptismHero from "@/assets/baptism-hero-sample.jpg";
 import partyHero from "@/assets/party-hero-sample.jpg";
+import { TemplateGallery } from "@/components/editor/TemplateGallery";
+import { CustomizationEditor } from "@/components/editor/CustomizationEditor";
+import { PremiumTemplateConfig } from "@/config/premiumTemplates";
+import { toast } from "sonner";
 
 const Home = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState<PremiumTemplateConfig | null>(null);
+  const navigate = useNavigate();
+
+  const handleSelectTemplate = (template: PremiumTemplateConfig) => {
+    setSelectedTemplate(template);
+  };
+
+  const handleCloseEditor = () => {
+    setSelectedTemplate(null);
+  };
+
+  const handleSaveTemplate = async (customizedTemplate: PremiumTemplateConfig) => {
+    try {
+      // For now, just show success message
+      // Backend integration will be added next
+      toast.success('🎉 Template saved!', {
+        description: 'Your customized invitation is ready to share'
+      });
+      
+      // Close editor
+      setSelectedTemplate(null);
+      
+      // Scroll to templates section
+      const templatesSection = document.getElementById('templates');
+      templatesSection?.scrollIntoView({ behavior: 'smooth' });
+    } catch (error) {
+      toast.error('Failed to save template');
+      console.error(error);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -648,12 +682,26 @@ const Home = () => {
         </div>
       </section>
 
+      {/* Template Gallery Section */}
+      <div id="templates">
+        <TemplateGallery onSelectTemplate={handleSelectTemplate} />
+      </div>
+
       {/* FAQ Section */}
       <section className="py-24 bg-background">
         <div className="container mx-auto px-6 max-w-4xl">
           <FAQSection />
         </div>
       </section>
+
+      {/* Customization Editor Modal */}
+      {selectedTemplate && (
+        <CustomizationEditor
+          template={selectedTemplate}
+          onClose={handleCloseEditor}
+          onSave={handleSaveTemplate}
+        />
+      )}
 
       {/* CTA Section */}
       <section className="py-24 bg-gradient-to-br from-primary/10 via-background to-secondary/10">
