@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      custom_invitations: {
+        Row: {
+          created_at: string | null
+          event_date: string
+          event_type: string
+          host_name: string
+          id: string
+          rsvps: Json | null
+          template_data: Json
+          updated_at: string | null
+          views: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          event_date: string
+          event_type: string
+          host_name: string
+          id: string
+          rsvps?: Json | null
+          template_data: Json
+          updated_at?: string | null
+          views?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          event_date?: string
+          event_type?: string
+          host_name?: string
+          id?: string
+          rsvps?: Json | null
+          template_data?: Json
+          updated_at?: string | null
+          views?: number | null
+        }
+        Relationships: []
+      }
       events_timeline: {
         Row: {
           created_at: string
